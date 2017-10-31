@@ -2,17 +2,12 @@ package com.example.ruireutov.organiser;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
-import android.widget.ListView;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ExpListControl mainViewControl;
+    private MainViewUIControl mainViewUIControl;
+    private MainViewControl mainViewControl;
     private ExpandableListView expListView;
 
     @Override
@@ -21,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         this.expListView = (ExpandableListView) findViewById(R.id.mainListView);
-        this.mainViewControl = new ExpListControl(this, expListView);
+        this.mainViewControl = new MainViewControl(this, expListView);
 
 //
 
