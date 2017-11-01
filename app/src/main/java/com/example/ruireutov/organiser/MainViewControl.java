@@ -14,32 +14,28 @@ import java.util.List;
  */
 
 public class MainViewControl implements MainViewNotification{
-    private BaseExpandableListAdapter expListAdapter;
-    private ExpandableListView expListView;
     private List<String> groupHeaders;
     private HashMap<String, List<String>> groupItems;
     private List<String> notReadyComponents;
+    private MainViewUIControl uiControl;
 
     //constants
     private static final String MAIN_VIEW_TAG = "MainViewControl";
 
 
-    MainViewControl(Context context, ExpandableListView view) {
-        this.expListView = view;
+    MainViewControl(Context context, MainViewUIControl uiControl) {
+        this.uiControl = uiControl;
         this.groupHeaders = new ArrayList<>();
         this.groupItems = new HashMap<>();
         this.notReadyComponents = new ArrayList<>();
 
         //read config in the future
-        this.notReadyComponents.add("toDoList");
-
-        this.expListAdapter = new ExpListAdapter(context, this.groupHeaders, this.groupItems);
-        this.expListView.setAdapter(this.expListAdapter);
+        //this.notReadyComponents.add("toDoList");
     }
 
     private void appReady() {
         if(this.notReadyComponents.isEmpty()) {
-            this.expListAdapter.notifyDataSetChanged();
+            this.uiControl.setData(this.groupHeaders, this.groupItems);
         } else {
             Log.v(MAIN_VIEW_TAG, "Not all components are ready");
         }
@@ -53,6 +49,9 @@ public class MainViewControl implements MainViewNotification{
 
     @Override
     public void onDataChange(String component, List<String> data) {
+        if(!this.groupHeaders.contains(component)) {
+            this.groupHeaders.add(component);
+        }
         this.groupItems.remove(component);
         this.groupItems.put(component, data);
         this.appReady();
