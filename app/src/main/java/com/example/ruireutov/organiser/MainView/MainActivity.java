@@ -1,8 +1,10 @@
-package com.example.ruireutov.organiser;
+package com.example.ruireutov.organiser.MainView;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ExpandableListView;
+
+import com.example.ruireutov.organiser.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;

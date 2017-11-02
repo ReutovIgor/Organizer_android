@@ -1,7 +1,8 @@
-package com.example.ruireutov.organiser;
+package com.example.ruireutov.organiser.MainView;
 
-import android.content.Context;
 import android.util.Log;
+
+import com.example.ruireutov.organiser.MainViewNotification;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,7 +12,7 @@ import java.util.List;
  * Created by ruireutov on 27-Oct-17.
  */
 
-public class MainViewControl implements MainViewNotification{
+public class MainViewControl implements MainViewNotification {
     private List<String> groupHeaders;
     private HashMap<String, List<String>> groupItems;
     private List<String> notReadyComponents;
