@@ -2,8 +2,6 @@ package com.example.ruireutov.organiser;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.BaseExpandableListAdapter;
-import android.widget.ExpandableListView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,15 +21,12 @@ public class MainViewControl implements MainViewNotification{
     private static final String MAIN_VIEW_TAG = "MainViewControl";
 
 
-    MainViewControl(Context context, MainViewUIControl uiControl) {
+    MainViewControl(MainViewUIControl uiControl) {
         this.uiControl = uiControl;
         this.groupHeaders = new ArrayList<>();
         this.groupItems = new HashMap<>();
         this.notReadyComponents = new ArrayList<>();
-
-        //read config in the future
-        //this.notReadyComponents.add("toDoList");
-    }
+}
 
     private void appReady() {
         if(this.notReadyComponents.isEmpty()) {

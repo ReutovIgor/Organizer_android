@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
         this.expListView = (ExpandableListView) findViewById(R.id.mainListView);
         this.mainViewUIControl = new MainViewUIControl(this, this.expListView);
-        this.mainViewControl = new MainViewControl(this, this.mainViewUIControl);
+        this.mainViewControl = new MainViewControl(this.mainViewUIControl);
 
         List<String> groupHeaders = new ArrayList<>();
         groupHeaders.add("group1");
@@ -36,8 +36,5 @@ public class MainActivity extends AppCompatActivity {
         HashMap<String, List<String>> groupItems = new HashMap<>();
         groupItems.put("group1", strs);
         this.mainViewControl.onDataChange("group1", strs);
-//
-//        this.listAdapter = new ExpListAdapter(this, this.groupHeaders, this.groupItems);
-//        this.listView.setAdapter(this.listAdapter);
     }
 }

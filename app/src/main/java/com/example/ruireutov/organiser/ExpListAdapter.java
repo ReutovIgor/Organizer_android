@@ -26,12 +26,8 @@ public class ExpListAdapter extends BaseExpandableListAdapter {
     }
 
     public void setData(List<String> groupHeaders, HashMap<String, List<String>> groupItems) {
-        for (String header: groupHeaders) {
-            this.groupHeaders.remove(header);
-            this.groupHeaders.add(header);
-            this.groupItems.remove(header);
-            this.groupItems.put(header, groupItems.get(header));
-        }
+        this.groupHeaders = groupHeaders;
+        this.groupItems = groupItems;
         this.notifyDataSetChanged();
     }
 
