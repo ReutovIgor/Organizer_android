@@ -1,29 +1,26 @@
 package com.example.ruireutov.organiser.ToDoList;
 
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-//import android.support.v7.widget.Toolbar;
+import android.widget.ListView;
 
 import com.example.ruireutov.organiser.R;
+import com.example.ruireutov.organiser.SideMenuBar;
 
 public class ToDoListActivity extends AppCompatActivity {
+
+    private SideMenuBar sideMenuBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_to_do_list);
 
-        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
+        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.toDoListView_drawer);
+        ListView drawerList = (ListView) findViewById(R.id.toDoListView_navList);
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
+        this.sideMenuBar = new SideMenuBar(this, drawerLayout, drawerList, android.R.layout.simple_list_item_1, "ToDoList");
     }
 
 }
