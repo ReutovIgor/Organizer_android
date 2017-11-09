@@ -3,7 +3,9 @@ package com.example.ruireutov.organiser.ToDoList;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.ruireutov.organiser.R;
 import com.example.ruireutov.organiser.SideMenuBar;
@@ -19,8 +21,11 @@ public class ToDoListActivity extends AppCompatActivity {
 
         DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.toDoListView_drawer);
         ListView drawerList = (ListView) findViewById(R.id.toDoListView_navList);
+        TextView textView = (TextView) findViewById(R.id.toDoListView_navList_item);
 
         this.sideMenuBar = new SideMenuBar(this, drawerLayout, drawerList, android.R.layout.simple_list_item_1, "ToDoList");
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
 }

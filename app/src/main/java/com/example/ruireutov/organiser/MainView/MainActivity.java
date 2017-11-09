@@ -3,7 +3,7 @@ package com.example.ruireutov.organiser.MainView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
+import android.view.MenuItem;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
 
@@ -29,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
         DrawerLayout drawerLayout = findViewById(R.id.mainView_drawer);
         ListView drawerList = findViewById(R.id.mainView_navList);
         this.sideMenuBar = new SideMenuBar(this, drawerLayout, drawerList, android.R.layout.simple_list_item_1, "MainView");
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         this.expListView = findViewById(R.id.mainListView);
         this.mainViewUIControl = new MainViewUIControl(this, this.expListView);
@@ -53,4 +55,11 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         this.sideMenuBar.hideSidebar();
     }
+
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        if (drawerLayout.onOptionsItemSelected(item)) {
+//            return true;
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
 }

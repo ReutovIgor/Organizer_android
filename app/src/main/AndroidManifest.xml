@@ -19,7 +19,7 @@
         <activity
             android:name=".ToDoList.ToDoListActivity"
             android:label="@string/title_activity_to_do_list"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>
