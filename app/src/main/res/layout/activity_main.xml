@@ -7,14 +7,26 @@
     android:layout_height="match_parent"
     tools:context="com.example.ruireutov.organiser.MainView.MainActivity">
 
-   <include layout="@layout/main_list"/>
+    <LinearLayout
+        android:id="@+id/main_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <include
+            android:id="@+id/mainView_toolbar"
+            layout="@layout/toolbar"/>
 
-   <ListView
-       android:id="@+id/mainView_navList"
-       android:layout_width="200dp"
-       android:layout_height="match_parent"
-       android:layout_gravity="left|start"
-       android:background="#ffeeeeee"/>
+        <include
+            layout="@layout/main_list"/>
+    </LinearLayout>
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/navigation"
+        android:layout_width="200dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="left|start">
+        <include layout="@layout/navigation_bar"/>
+    </android.support.design.widget.NavigationView>
 
 
 

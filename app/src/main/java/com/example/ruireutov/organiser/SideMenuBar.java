@@ -62,7 +62,7 @@ public class SideMenuBar {
     }
 
     public void hideSidebar() {
-        this.drawer.closeDrawer(this.sidebar);
+        this.drawer.closeDrawers();
     }
 }
 
