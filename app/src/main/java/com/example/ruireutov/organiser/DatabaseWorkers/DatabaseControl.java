@@ -18,9 +18,10 @@ public class DatabaseControl {
     private static final String DATABASE_NAME = "organiser_db";
 
     //Database version
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     //Database tables
+    private static final String TABLE_GROUPS = "groups_table";
     private static final String TABLE_CATEGORIES = "categories_table";
     private static final String TABLE_PRIORITIES = "priorities_table";
     private static final String TABLE_TASKS = "tasks_table";
@@ -29,6 +30,9 @@ public class DatabaseControl {
     public static final String KEY_ID = "id";
     public static final String KEY_NAME = "name";
     public static final String KEY_DETAILS = "details";
+
+    //Database Main screen group names
+    public static final String KEY_GROUP_NAME = "group_name";
 
     //Database Tasks table column names
     public static final String KEY_START = "startTime";
@@ -39,6 +43,11 @@ public class DatabaseControl {
 
 
     //Database Create tables queries
+    private static final String TABLE_GROUPS_CREATE = "create table "
+            + TABLE_GROUPS + " ("
+            + KEY_ID + " integer primary key autoincrement, "
+            + KEY_NAME + " text not null, "
+            + KEY_GROUP_NAME + " text not null);";
     private static final String TABLE_CATEGORIES_CREATE = "create table "
             + TABLE_CATEGORIES + " ("
             + KEY_ID + " integer primary key autoincrement, "
@@ -89,10 +98,12 @@ public class DatabaseControl {
         @Override
         public void onCreate(SQLiteDatabase db) {
             String s = "DROP TABLE IF EXISTS ";
+            db.execSQL(s + TABLE_GROUPS);
             db.execSQL(s + TABLE_TASKS);
             db.execSQL(s + TABLE_CATEGORIES);
             db.execSQL(s + TABLE_PRIORITIES);
 
+            db.execSQL(TABLE_GROUPS_CREATE);
             db.execSQL(TABLE_CATEGORIES_CREATE);
             db.execSQL(TABLE_PRIORITIES_CREATE);
             db.execSQL(TABLE_TASKS_CREATE);
@@ -100,6 +111,11 @@ public class DatabaseControl {
             //temporary data
             //Priorities data
             ContentValues cv = new ContentValues();
+            cv.put(KEY_NAME, TABLE_TASKS);
+            cv.put(KEY_GROUP_NAME, "To do list");
+            db.insert(TABLE_GROUPS, null, cv);
+
+            cv.clear();
             cv.put(KEY_NAME, "Low");
             db.insert(TABLE_PRIORITIES, null, cv);
             cv.clear();
