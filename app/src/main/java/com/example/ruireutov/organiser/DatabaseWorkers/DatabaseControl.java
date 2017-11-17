@@ -11,14 +11,11 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 
 public class DatabaseControl {
-    private static DatabaseControl instance;
-    private DatabaseHelper dbHelper;
-
     //Database name
     private static final String DATABASE_NAME = "organiser_db";
 
     //Database version
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 1;
 
     //Database tables
     private static final String TABLE_GROUPS = "groups_table";
@@ -72,6 +69,10 @@ public class DatabaseControl {
             + " FOREIGN KEY ( " + KEY_PRIORITY_ID + " ) REFERENCES " + TABLE_PRIORITIES + " ( "+ KEY_ID + " ) "
             + " ); ";
 
+    private static DatabaseControl instance;
+    private DatabaseHelper dbHelper;
+    private SQLiteDatabase db;
+
     public static synchronized DatabaseControl getInstance(Context context) {
         if (instance == null) {
             instance = new DatabaseControl(context.getApplicationContext());
@@ -82,17 +83,33 @@ public class DatabaseControl {
         this.dbHelper = new DatabaseHelper(context);
     }
 
+    public void open() {
+        //mDBHelper = new DBHelper(mCtx, DB_NAME, null, DB_VERSION);
+        this.db = this.dbHelper.getWritableDatabase();
+    }
+
+    // закрываем подключение
+    public void close() {
+        if (this.dbHelper != null)
+            this.dbHelper.close();
+    }
+
+    public Cursor getGroupTable() {
+        String[] a = {KEY_NAME, KEY_GROUP_NAME};
+        return this.get(TABLE_GROUPS, a);
+    }
+
     public Cursor get(String tables, String[] columns) {
-        SQLiteDatabase db = this.dbHelper.getReadableDatabase();
+        //SQLiteDatabase db = this.dbHelper.getReadableDatabase();
         Cursor c;
-        c = db.query(tables, columns, null, null, null, null, null);
-        db.close();
+        c = this.db.query(tables, columns, null, null, null, null, null);
+        //db.close();
         return c;
     }
 
     private class DatabaseHelper extends SQLiteOpenHelper {
         public DatabaseHelper(Context context) {
-            super(context, DATABASE_NAME, null, DATABASE_VERSION + 1);
+            super(context, DATABASE_NAME, null, DATABASE_VERSION);
         }
 
         @Override
@@ -113,7 +130,7 @@ public class DatabaseControl {
             ContentValues cv = new ContentValues();
             cv.put(KEY_NAME, TABLE_TASKS);
             cv.put(KEY_GROUP_NAME, "To do list");
-            db.insert(TABLE_GROUPS, null, cv);
+            long id = db.insert(TABLE_GROUPS, null, cv);
 
             cv.clear();
             cv.put(KEY_NAME, "Low");
@@ -151,6 +168,12 @@ public class DatabaseControl {
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+            this.onCreate(db);
+        }
+
+        @Override
+        public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+            //super.onDowngrade(db, oldVersion, newVersion);
             this.onCreate(db);
         }
     }
