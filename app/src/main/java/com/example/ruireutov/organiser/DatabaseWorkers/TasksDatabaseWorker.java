@@ -8,7 +8,7 @@ import android.database.Cursor;
  */
 
 public class TasksDatabaseWorker implements IDatabaseWorker{
-    private DatabaseHelper dbHelper;
+    //private DatabaseHelper dbHelper;
 
     private static final String TABLE_CATEGORIES = "categories_table";
     private static final String TABLE_PRIORITIES = "priorities_table";
@@ -20,24 +20,23 @@ public class TasksDatabaseWorker implements IDatabaseWorker{
     private static final String KEY_DETAILS = "details";
 
     //Database Tasks table column names
-    private static final String KEY_START = "start";
-    private static final String KEY_END = "end";
+    private static final String KEY_START = "startTime";
+    private static final String KEY_END = "endTime";
     private static final String KEY_STATUS = "status";
     private static final String KEY_CATEGORY_ID = "category_id";
     private static final String KEY_PRIORITY_ID = "priority_id";
 
 
     public TasksDatabaseWorker(Context context) {
-        this.dbHelper = DatabaseHelper.getInstance(context);
+        //this.dbHelper = DatabaseHelper.getInstance(context);
     }
 
     @Override
     public Cursor get(String[] vals, String sorting) {
-        this.dbHelper.getReadableDatabase();
         Cursor c = null;
         String table = TABLE_TASKS
-                + " LEFT JOIN " + TABLE_CATEGORIES + " ON " + TABLE_TASKS + "." + KEY_CATEGORY_ID + " = " + TABLE_CATEGORIES+ "." + KEY_ID
-                + " LEFT JOIN " + TABLE_PRIORITIES + " ON " + TABLE_TASKS + "." + KEY_PRIORITY_ID + " = " + TABLE_PRIORITIES+ "." + KEY_ID;
+                + " LEFT OUTER JOIN " + TABLE_CATEGORIES + " ON " + TABLE_TASKS + "." + KEY_CATEGORY_ID + " = " + TABLE_CATEGORIES+ "." + KEY_ID
+                + " LEFT OUTER JOIN " + TABLE_PRIORITIES + " ON " + TABLE_TASKS + "." + KEY_PRIORITY_ID + " = " + TABLE_PRIORITIES+ "." + KEY_ID;
 
         //TODO add column parser in the future
         String columns[] = {
@@ -49,8 +48,18 @@ public class TasksDatabaseWorker implements IDatabaseWorker{
                 TABLE_CATEGORIES + "." + KEY_NAME + " AS Category ",
                 TABLE_PRIORITIES + "." + KEY_NAME + " AS Priority "
         };
-        this.dbHelper.close();
-        return null;
+        //c = this.dbHelper.get(table, columns);
+        //c = db.query(table, columns, null, null, null, null, null);
+//        if(c != null) {
+//            if(c.moveToFirst()) {
+//                String str = "";
+//                for (String cn : c.getColumnNames()) {
+//                    str = str.concat(cn + " = " + c.getString(c.getColumnIndex(cn)) + "; ");
+//                }
+//            }
+//        }
+
+        return c;
     }
 
     @Override

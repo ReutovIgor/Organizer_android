@@ -35,14 +35,14 @@ public class MainActivity extends AppCompatActivity {
         this.mainViewUIControl = new MainViewUIControl(this, this.expListView);
         this.mainViewControl = new MainViewControl(this.mainViewUIControl);
 
-        List<String> strs = new ArrayList<>();
-        strs.add("line1");
-        strs.add("line2");
-        strs.add("line3");
-        strs.add("line4");
-        strs.add("line5");
-
-        this.mainViewControl.onDataChange("group1", strs);
+//        List<String> strs = new ArrayList<>();
+//        strs.add("line1");
+//        strs.add("line2");
+//        strs.add("line3");
+//        strs.add("line4");
+//        strs.add("line5");
+//
+//        this.mainViewControl.onDataChange("group1", strs);
     }
 
     @Override
