@@ -1,10 +1,15 @@
 package com.example.ruireutov.organiser.DatabaseWorkers;
 
+import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Loader;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Bundle;
+
+import java.util.HashMap;
 
 /**
  * Created by ruireutov on 14-Nov-17.
@@ -69,9 +74,18 @@ public class DatabaseControl {
             + " FOREIGN KEY ( " + KEY_PRIORITY_ID + " ) REFERENCES " + TABLE_PRIORITIES + " ( "+ KEY_ID + " ) "
             + " ); ";
 
+    private static final String GET_TO_DO_LIST_TABLE = TABLE_TASKS +
+            " LEFT JOIN " + TABLE_CATEGORIES + " on " + TABLE_TASKS + "." + KEY_CATEGORY_ID + "=" + TABLE_CATEGORIES + "." + KEY_ID +
+            " LEFT JOIN " + TABLE_PRIORITIES + " on " + TABLE_TASKS + "." + KEY_PRIORITY_ID + "=" + TABLE_PRIORITIES + "." + KEY_ID;
+//    private static final String[] GET_TO_DO_LIST_TABLE_COLUMNS = {};
+
+
+    private Context context;
     private static DatabaseControl instance;
     private DatabaseHelper dbHelper;
     private SQLiteDatabase db;
+    private int connectionCount;
+    private HashMap<String, Cursor> storedValues;
 
     public static synchronized DatabaseControl getInstance(Context context) {
         if (instance == null) {
@@ -80,30 +94,49 @@ public class DatabaseControl {
         return instance;
     }
     private DatabaseControl(Context context) {
+        this.connectionCount = 0;
+        this.context = context;
+
+        this.storedValues = new HashMap<>();
+        //TODO add new values when needed
+        this.storedValues.put("ToDoList", null);
+
         this.dbHelper = new DatabaseHelper(context);
     }
 
     public void open() {
-        //mDBHelper = new DBHelper(mCtx, DB_NAME, null, DB_VERSION);
-        this.db = this.dbHelper.getWritableDatabase();
+        this.connectionCount++;
+        if(this.db == null) {
+            this.db = this.dbHelper.getWritableDatabase();
+        }
     }
 
-    // закрываем подключение
     public void close() {
-        if (this.dbHelper != null)
+        this.connectionCount--;
+        if(this.connectionCount == 0) {
             this.dbHelper.close();
+            this.db = null;
+        }
     }
 
-    public Cursor getGroupTable() {
-        String[] a = {KEY_NAME, KEY_GROUP_NAME};
-        return this.get(TABLE_GROUPS, a);
-    }
-
-    public Cursor get(String tables, String[] columns) {
-        //SQLiteDatabase db = this.dbHelper.getReadableDatabase();
+    public Cursor getToDoList() {
+        String[] columns = {
+                TABLE_TASKS + "." + KEY_ID + " AS _id",
+                TABLE_TASKS + "." + KEY_NAME + " AS Name",
+                TABLE_TASKS + "." + KEY_DETAILS + " AS Details",
+                TABLE_TASKS + "." + KEY_START + " AS Start",
+                TABLE_TASKS + "." + KEY_END + " AS End",
+                TABLE_TASKS + "." + KEY_STATUS + " AS Status",
+                TABLE_CATEGORIES + "." + KEY_NAME + " AS Category",
+                TABLE_PRIORITIES + "." + KEY_NAME + " AS Priority"
+        };
         Cursor c;
-        c = this.db.query(tables, columns, null, null, null, null, null);
-        //db.close();
+        try {
+            c = this.db.query(GET_TO_DO_LIST_TABLE, columns, null, null, null, null, null);
+        } catch(Exception e) {
+            return null;
+        }
+
         return c;
     }
 

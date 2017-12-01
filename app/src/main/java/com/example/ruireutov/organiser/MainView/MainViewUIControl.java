@@ -26,19 +26,18 @@ public class MainViewUIControl {
         this.context = context;
         //this.expListAdapter = new ExpListAdapter(context, new ArrayList<String>(), new HashMap<String, List<String>>());
 
-        DatabaseControl db = DatabaseControl.getInstance(context);
-        db.open();
-        Cursor c = db.getGroupTable();
+//        DatabaseControl db = DatabaseControl.getInstance(context);
+//        db.open();
+//        Cursor c = db.getGroupTable();
 
-        this.expListCursorAdapter = new ExpListCursorAdapter(c, context);
+//        this.expListCursorAdapter = new ExpListCursorAdapter(c, context);
         //view.setAdapter(this.expListAdapter);
-        view.setAdapter(this.expListCursorAdapter);
+//        view.setAdapter(this.expListCursorAdapter);
     }
 
     public void onActivityDestroy() {
-        DatabaseControl db = DatabaseControl.getInstance(context);
-        db.close();
-
+//        DatabaseControl db = DatabaseControl.getInstance(context);
+//        db.close();
     }
 
 }

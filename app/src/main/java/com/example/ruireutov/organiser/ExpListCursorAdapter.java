@@ -58,6 +58,4 @@ public class ExpListCursorAdapter extends CursorTreeAdapter {
         String title = "Child element";
         textView.setText(title);
     }
-
-
 }
