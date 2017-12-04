@@ -36,17 +36,6 @@ public class ToDoListActivity extends AppCompatActivity implements IToDoListUiCo
 
         this.listView = findViewById(R.id.toDoListView_list);
         this.cursorAdapter = new ListCursorAdapter(this, null, 0);
-//        ArrayList<Map<String, Object>> data = new ArrayList<>(5);
-//        Map<String, Object> m;
-//        for(int i = 0; i < 5; i++) {
-//            m = new HashMap<>();
-//            m.put("text", "Listitem " + (i + 1));
-//            data.add(m);
-//        }
-//        String[] from = {"text"};
-//        int[] to = {R.id.textView};
-        //SimpleAdapter sAdapter = new SimpleAdapter(this, data, R.layout.to_do_list_child_view, from, to);
-        //this.listView.setAdapter(sAdapter);
         this.listView.setAdapter(this.cursorAdapter);
 
         this.listControl = new ToDoListControl(this, this);
@@ -60,9 +49,7 @@ public class ToDoListActivity extends AppCompatActivity implements IToDoListUiCo
 
     @Override
     public void updateList(Cursor cursor) {
-        int count = cursor.getCount();
-        this.cursorAdapter.changeCursor(cursor);
-        //this.cursorAdapter.notifyDataSetChanged();
+        this.cursorAdapter.swapCursor(cursor);
     }
 
     @Override

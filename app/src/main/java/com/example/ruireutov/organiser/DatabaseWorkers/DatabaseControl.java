@@ -122,13 +122,13 @@ public class DatabaseControl {
     public Cursor getToDoList() {
         String[] columns = {
                 TABLE_TASKS + "." + KEY_ID + " AS _id",
-                TABLE_TASKS + "." + KEY_NAME + " AS Name",
-                TABLE_TASKS + "." + KEY_DETAILS + " AS Details",
-                TABLE_TASKS + "." + KEY_START + " AS Start",
-                TABLE_TASKS + "." + KEY_END + " AS End",
-                TABLE_TASKS + "." + KEY_STATUS + " AS Status",
-                TABLE_CATEGORIES + "." + KEY_NAME + " AS Category",
-                TABLE_PRIORITIES + "." + KEY_NAME + " AS Priority"
+                TABLE_TASKS + "." + KEY_NAME + " AS " + DatabaseDefines.TODO_LIST_NAME,
+                TABLE_TASKS + "." + KEY_DETAILS + " AS " + DatabaseDefines.TODO_LIST_DETAILS,
+                TABLE_TASKS + "." + KEY_START + " AS " + DatabaseDefines.TODO_LIST_START,
+                TABLE_TASKS + "." + KEY_END + " AS " + DatabaseDefines.TODO_LIST_END,
+                TABLE_TASKS + "." + KEY_STATUS + " AS " + DatabaseDefines.TODO_LIST_STATUS,
+                TABLE_CATEGORIES + "." + KEY_NAME + " AS " + DatabaseDefines.TODO_LIST_CATEGORY,
+                TABLE_PRIORITIES + "." + KEY_NAME + " AS " + DatabaseDefines.TODO_LIST_PRIORITY
         };
         Cursor c;
         try {
