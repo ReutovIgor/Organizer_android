@@ -18,7 +18,10 @@
         </activity>
         <activity
             android:name=".ToDoList.ToDoListActivity"
-            android:label="@string/title_activity_to_do_list"></activity>
+            android:label="@string/title_activity_to_do_list" />
+        <activity
+            android:name=".TaskDetails.TaskDetailsActivity"
+            android:label="@string/title_activity_task_details"></activity>
     </application>
 
 </manifest>

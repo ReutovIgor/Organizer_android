@@ -8,5 +8,4 @@ import android.database.Cursor;
 
 public interface IToDoListUiControl {
     void updateList(Cursor cursor);
-    void showDetails(int id);
 }

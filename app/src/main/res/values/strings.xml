@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Organiser</string>
     <string name="title_activity_to_do_list">To do list </string>
+    <string name="title_activity_task_details">Task details </string>
 </resources>

@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
+import com.example.ruireutov.organiser.DatabaseWorkers.DatabaseDefines;
+
 import java.util.HashMap;
 
 /**
@@ -34,7 +36,7 @@ public class ListCursorAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         TextView textView = (TextView) view.findViewById(R.id.textView);
-        String title = cursor.getString( cursor.getColumnIndex( "Name" ) );
+        String title = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TODO_LIST_NAME) );
         textView.setText(title);
     }
 }

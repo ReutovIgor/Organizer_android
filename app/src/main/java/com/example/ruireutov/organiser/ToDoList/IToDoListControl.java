@@ -7,7 +7,7 @@ import java.util.HashMap;
  */
 
 public interface IToDoListControl {
-    void addTask(HashMap<String, String> task);
-    void getDetails();
+    void newTask();
+    void showDetails(int position);
     void onDestroy();
 }

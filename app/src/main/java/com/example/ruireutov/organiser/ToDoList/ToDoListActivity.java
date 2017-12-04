@@ -5,16 +5,13 @@ import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 
 import com.example.ruireutov.organiser.ListCursorAdapter;
 import com.example.ruireutov.organiser.R;
 import com.example.ruireutov.organiser.SideMenuBar;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ToDoListActivity extends AppCompatActivity implements IToDoListUiControl {
 
@@ -37,8 +34,13 @@ public class ToDoListActivity extends AppCompatActivity implements IToDoListUiCo
         this.listView = findViewById(R.id.toDoListView_list);
         this.cursorAdapter = new ListCursorAdapter(this, null, 0);
         this.listView.setAdapter(this.cursorAdapter);
+        this.listView.setOnItemClickListener(new ListViewEventListener());
 
         this.listControl = new ToDoListControl(this, this);
+    }
+
+    private void listItemClick(int id) {
+        this.listControl.showDetails(id);
     }
 
     @Override
@@ -52,8 +54,10 @@ public class ToDoListActivity extends AppCompatActivity implements IToDoListUiCo
         this.cursorAdapter.swapCursor(cursor);
     }
 
-    @Override
-    public void showDetails(int id) {
-
+    private class ListViewEventListener implements AdapterView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            listItemClick(position);
+        }
     }
 }
