@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.example.ruireutov.organiser.ListCursorAdapter;
@@ -19,6 +20,7 @@ public class ToDoListActivity extends AppCompatActivity implements IToDoListUiCo
     private ListView listView;
     private ListCursorAdapter cursorAdapter;
     private IToDoListControl listControl;
+    private Button newTaskButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,11 +38,18 @@ public class ToDoListActivity extends AppCompatActivity implements IToDoListUiCo
         this.listView.setAdapter(this.cursorAdapter);
         this.listView.setOnItemClickListener(new ListViewEventListener());
 
+        this.newTaskButton = findViewById(R.id.new_task_button);
+        this.newTaskButton.setOnClickListener(new ElementClickListener());
+
         this.listControl = new ToDoListControl(this, this);
     }
 
     private void listItemClick(int id) {
         this.listControl.showDetails(id);
+    }
+
+    private void createNewTask() {
+        this.listControl.newTask();
     }
 
     @Override
@@ -58,6 +67,18 @@ public class ToDoListActivity extends AppCompatActivity implements IToDoListUiCo
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             listItemClick(position);
+        }
+    }
+
+    private class ElementClickListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            switch(v.getId()) {
+                case R.id.new_task_button:
+                    createNewTask();
+                    break;
+            }
         }
     }
 }

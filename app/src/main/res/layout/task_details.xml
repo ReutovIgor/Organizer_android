@@ -1,129 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
-    <TextView
-        android:id="@+id/task_name_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/task_name"
-        android:layout_alignBottom="@+id/task_name"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:paddingLeft="10dp"
-        android:textColor="@android:color/black"
-        android:text="Task name:" />
-
     <EditText
-        android:id="@+id/task_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/task_name_label"
-        android:layout_toRightOf="@+id/task_name_label"
-        android:drawableBottom="@android:color/black"
-        android:textColor="@android:color/black"
-        android:ems="10"
-        android:inputType="text" />
-
-    <TextView
-        android:id="@+id/task_status_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/task_status"
-        android:layout_alignBottom="@+id/task_status"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:paddingLeft="10dp"
-        android:textColor="@android:color/black"
-        android:text="Status:" />
-
-    <EditText
-        android:id="@+id/task_status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/task_name"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignStart="@+id/task_name"
-        android:layout_below="@+id/task_name"
-        android:textColor="@android:color/black"
-        android:ems="10"
-        android:inputType="text" />
-
-    <TextView
-        android:id="@+id/task_priority_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/task_priority"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:textColor="@android:color/black"
-        android:paddingLeft="10dp"
-        android:text="Task priority:" />
-
-    <ImageView
-        android:id="@+id/task_priority"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_below="@+id/task_status"
-        android:layout_marginLeft="32dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="22dp"
-        android:layout_toEndOf="@+id/task_priority_label"
-        android:layout_toRightOf="@+id/task_priority_label"
-        app:srcCompat="@android:color/holo_green_light" />
-
-    <TextView
-        android:id="@+id/task_category_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/task_priority_label"
-        android:layout_marginTop="28dp"
-        android:textColor="@android:color/black"
-        android:paddingLeft="10dp"
-        android:text="Task category:" />
-
-    <EditText
-        android:id="@+id/task_category"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/task_category_label"
-        android:layout_alignBottom="@+id/task_category_label"
-        android:layout_alignLeft="@+id/task_priority"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignStart="@+id/task_priority"
-        android:textColor="@android:color/black"
-        android:ems="10"
-        android:inputType="text" />
-
-    <TextView
-        android:id="@+id/task_details_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/task_category"
-        android:textColor="@android:color/black"
-        android:paddingLeft="10dp"
-        android:text="Task details:" />
-
-    <EditText
-        android:id="@+id/task_details"
+        android:padding="10dp"
+        android:hint="@string/task_hint_name"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="task_hint_time_options"/>
+    </LinearLayout>
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:maxHeight="250dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/task_details_label"
-        android:textColor="@android:color/black"
-        android:ems="10"
-        android:inputType="textMultiLine" />
-</RelativeLayout>
+        android:text="@string/task_hint_from"/>
+    <DatePicker
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></DatePicker>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/task_hint_from"/>
+    <DatePicker
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></DatePicker>
+</LinearLayout>
