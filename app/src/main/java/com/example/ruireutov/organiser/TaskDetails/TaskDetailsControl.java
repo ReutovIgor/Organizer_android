@@ -17,8 +17,6 @@ public class TaskDetailsControl implements ITaskDetailsControl{
         this.uiControl = (ITaskDetailsUIControl) context;
         this.dbControl = DatabaseControl.getInstance(this.context);
         dbControl.open();
-        Cursor c = this.dbControl.getPriorities();
-        int count = c.getCount();
         this.uiControl.fillPriorities(this.dbControl.getPriorities());
         this.uiControl.fillCategories(this.dbControl.getCategories());
     }

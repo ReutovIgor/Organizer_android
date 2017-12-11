@@ -147,7 +147,16 @@ public class DatabaseControl {
         String priorityId = pId.getString(pId.getColumnIndex(KEY_ID));
 
         //insert new task
-        //db.insert(TABLE_STATUSES, null, cv);
+        ContentValues cv = new ContentValues();
+        cv.put(KEY_NAME, taskData.getName());
+        cv.put(KEY_STATUS_ID, statusId);
+        cv.put(KEY_START, taskData.getDateFrom());
+        cv.put(KEY_END, taskData.getDateTo());
+        cv.put(KEY_CATEGORY_ID, categoryId);
+        cv.put(KEY_PRIORITY_ID, priorityId);
+        cv.put(KEY_DETAILS, taskData.getName());
+
+        db.insert(TABLE_TASKS, null, cv);
     }
 
     public Cursor getCategories() {
