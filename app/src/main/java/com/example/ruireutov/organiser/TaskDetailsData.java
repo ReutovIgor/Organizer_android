@@ -1,10 +1,12 @@
 package com.example.ruireutov.organiser;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 
 import com.example.ruireutov.organiser.DatabaseWorkers.DatabaseDefines;
 
 import java.io.Serializable;
+import java.util.HashMap;
 
 /**
  * Created by ruireutov on 04-Dec-17.
@@ -13,21 +15,37 @@ import java.io.Serializable;
 public class TaskDetailsData implements Serializable{
     public static final String TASK_DETAILS_NAME = "TaskData";
     private String name;
+    private String dateFrom;
+    private String dateTo;
     private String status;
     private String priority;
+    private String priorityColor;
     private String category;
+    private String categoryColor;
     private String details;
 
     public TaskDetailsData(Cursor cursor) {
-        this.name = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TODO_LIST_NAME) );
-        this.status = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TODO_LIST_STATUS) );
-        this.priority = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TODO_LIST_PRIORITY) );
-        this.category = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TODO_LIST_CATEGORY) );
-        this.details = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TODO_LIST_DETAILS) );
+        this.name           = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TODO_LIST_NAME) );
+        this.status         = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TODO_LIST_STATUS) );
+        this.dateFrom       = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TODO_LIST_START) );
+        this.dateTo         = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TODO_LIST_END) );
+        this.priority       = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TODO_LIST_PRIORITY) );
+        this.priorityColor  = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TODO_LIST_PRIORITY_COLOR) );
+        this.category       = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TODO_LIST_CATEGORY) );
+        this.categoryColor  = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TODO_LIST_CATEGORY_COLOR) );
+        this.details        = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TODO_LIST_DETAILS) );
     }
 
-    public String getDetails() {
-        return details;
+    public TaskDetailsData(HashMap<String, String> taskDetails) {
+        this.name           = taskDetails.get(DatabaseDefines.TODO_LIST_NAME);
+        this.status         = taskDetails.get(DatabaseDefines.TODO_LIST_STATUS);
+        this.dateFrom       = taskDetails.get(DatabaseDefines.TODO_LIST_START);
+        this.dateTo         = taskDetails.get(DatabaseDefines.TODO_LIST_END);
+        this.priority       = taskDetails.get(DatabaseDefines.TODO_LIST_PRIORITY);
+        this.priorityColor  = taskDetails.get(DatabaseDefines.TODO_LIST_PRIORITY_COLOR);
+        this.category       = taskDetails.get(DatabaseDefines.TODO_LIST_CATEGORY);
+        this.categoryColor  = taskDetails.get(DatabaseDefines.TODO_LIST_CATEGORY_COLOR);
+        this.details        = taskDetails.get(DatabaseDefines.TODO_LIST_DETAILS);
     }
 
     public String getName() {
@@ -38,11 +56,31 @@ public class TaskDetailsData implements Serializable{
         return status;
     }
 
+    public String getDateFrom() {
+        return dateFrom;
+    }
+
+    public String getDateTo() {
+        return dateTo;
+    }
+
     public String getPriority() {
         return priority;
     }
 
+    public String getPriorityColor() {
+        return priorityColor;
+    }
+
     public String getCategory() {
         return category;
+    }
+
+    public String getCategoryColor() {
+        return categoryColor;
+    }
+
+    public String getDetails() {
+        return details;
     }
 }

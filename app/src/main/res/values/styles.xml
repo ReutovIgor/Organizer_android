@@ -5,13 +5,39 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/checkBoxInnerColor</item>
+
+        <item name="android:textViewStyle">@style/OrganiserTextViewStyle</item>
+        <item name="editTextStyle">@style/OrganiserEditTextViewStyle</item>
+        <item name="android:checkboxStyle">@style/OrganiserCheckbox</item>
+        <!--<item name="android:dropDownListViewStyle">@style/OrganiserSpinner</item>-->
     </style>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
+    <style name="OrganiserTextViewStyle" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">@color/colorText</item>
+
+    </style>
+
+    <style name="OrganiserEditTextViewStyle" parent="@android:style/Widget.EditText">
+        <item name="android:textColor">@color/colorText</item>
+        <item name="android:textColorHint">@color/colorTextHint</item>
+        <item name="android:backgroundTint">@color/checkBoxInnerColor</item>
+    </style>
+
+    <style name="OrganiserCheckbox" parent="Widget.AppCompat.CompoundButton.CheckBox">
+        <item name="android:buttonTint">@color/checkBoxInnerColor</item>
+    </style>
+
+    <!--<style name="OrganiserSpinner" parent="@style/Base.Widget.AppCompat.Spinner.Underlined">-->
+        <!--<item name="android:colorControlHighlight">@color/checkBoxInnerColor</item>-->
+        <!--<item name="android:colorControlNormal">@color/checkBoxInnerColor</item>-->
+        <!--<item name="android:backgroundTint">@color/checkBoxInnerColor</item>-->
+    <!--</style>-->
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 

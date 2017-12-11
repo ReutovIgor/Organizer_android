@@ -24,7 +24,7 @@ public class ToDoListControl implements IToDoListControl {
         this.uiControl = uiControl;
         this.dbControl = DatabaseControl.getInstance(this.context);
         dbControl.open();
-        this.listData = this.dbControl.getToDoList();
+        this.listData = this.dbControl.getTasks();
         this.uiControl.updateList(this.listData);
     }
 

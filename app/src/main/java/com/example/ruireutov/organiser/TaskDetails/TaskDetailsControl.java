@@ -2,13 +2,10 @@ package com.example.ruireutov.organiser.TaskDetails;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 
 import com.example.ruireutov.organiser.DatabaseWorkers.DatabaseControl;
 import com.example.ruireutov.organiser.TaskDetailsData;
-
-/**
- * Created by ruireutov on 04-Dec-17.
- */
 
 public class TaskDetailsControl implements ITaskDetailsControl{
     private Context context;
@@ -20,6 +17,10 @@ public class TaskDetailsControl implements ITaskDetailsControl{
         this.uiControl = (ITaskDetailsUIControl) context;
         this.dbControl = DatabaseControl.getInstance(this.context);
         dbControl.open();
+        Cursor c = this.dbControl.getPriorities();
+        int count = c.getCount();
+        this.uiControl.fillPriorities(this.dbControl.getPriorities());
+        this.uiControl.fillCategories(this.dbControl.getCategories());
     }
 
     public void parseIntentData(Intent intent) {
@@ -32,7 +33,7 @@ public class TaskDetailsControl implements ITaskDetailsControl{
     }
 
     public void addTask(TaskDetailsData data) {
-
+        this.dbControl.addTask(data);
     }
 
     public void update(TaskDetailsData data) {

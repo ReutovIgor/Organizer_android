@@ -8,9 +8,18 @@
     <string name="task_hint_name">Task name</string>
     <string name="task_hint_priority">Priority</string>
     <string name="task_hint_category">Category</string>
-    <string name="task_hint_time_options">Scheduled</string>
+    <string name="task_hint_time_options">Add date and time</string>
     <string name="task_hint_from">From</string>
     <string name="task_hint_to">To</string>
     <string name="task_hint_details">Details</string>
+    <string name="task_button_create">Create</string>
+    <string name="task_button_finish">Finish</string>
+
+    <!--Stub spinner values-->
+    <string-array name="array_name">
+        <item>Array Item One</item>
+        <item>Array Item Two</item>
+        <item>Array Item Three</item>
+    </string-array>
 
 </resources>
