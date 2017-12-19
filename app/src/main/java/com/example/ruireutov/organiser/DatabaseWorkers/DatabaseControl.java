@@ -156,7 +156,7 @@ public class DatabaseControl {
         cv.put(KEY_PRIORITY_ID, priorityId);
         cv.put(KEY_DETAILS, taskData.getName());
 
-        db.insert(TABLE_TASKS, null, cv);
+        long id = db.insert(TABLE_TASKS, null, cv);
     }
 
     public Cursor getCategories() {

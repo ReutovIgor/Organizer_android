@@ -1,6 +1,5 @@
 package com.example.ruireutov.organiser;
 
-import android.content.ContentValues;
 import android.database.Cursor;
 
 import com.example.ruireutov.organiser.DatabaseWorkers.DatabaseDefines;

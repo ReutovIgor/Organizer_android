@@ -24,8 +24,6 @@ public class ToDoListControl implements IToDoListControl {
         this.uiControl = uiControl;
         this.dbControl = DatabaseControl.getInstance(this.context);
         dbControl.open();
-        this.listData = this.dbControl.getTasks();
-        this.uiControl.updateList(this.listData);
     }
 
     @Override
@@ -46,5 +44,11 @@ public class ToDoListControl implements IToDoListControl {
     @Override
     public void onDestroy() {
         this.dbControl.close();
+    }
+
+    @Override
+    public void getTaskList() {
+        this.listData = this.dbControl.getTasks();
+        this.uiControl.updateList(this.listData);
     }
 }

@@ -42,6 +42,13 @@ public class ToDoListActivity extends AppCompatActivity implements IToDoListUiCo
         this.newTaskButton.setOnClickListener(new ElementClickListener());
 
         this.listControl = new ToDoListControl(this, this);
+        this.listControl.getTaskList();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        this.listControl.getTaskList();
     }
 
     private void listItemClick(int id) {

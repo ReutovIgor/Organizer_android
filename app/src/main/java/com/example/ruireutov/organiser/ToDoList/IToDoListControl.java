@@ -10,4 +10,5 @@ public interface IToDoListControl {
     void newTask();
     void showDetails(int position);
     void onDestroy();
+    void getTaskList();
 }

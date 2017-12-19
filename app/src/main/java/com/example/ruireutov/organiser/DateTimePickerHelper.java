@@ -8,6 +8,7 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -22,6 +23,8 @@ public class DateTimePickerHelper {
     private TextView timeView;
     private Context context;
     private Calendar calendar;
+    private DatePickerDialog datePickerDialog;
+    private TimePickerDialog timePickerDialog;
 
     public DateTimePickerHelper(Context context, TextView dateView, TextView timeView) {
         this.context = context;
@@ -30,6 +33,23 @@ public class DateTimePickerHelper {
         this.timeView = timeView;
         this.timeView.setOnClickListener(new TextViewClickHandlers());
         this.calendar = Calendar.getInstance();
+        this.datePickerDialog = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, month);
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                setDateView();
+            }
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+        this.timePickerDialog = new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                calendar.set(Calendar.MINUTE, minute);
+                setTimeView();
+            }
+        }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true);
     }
 
     public void setDefault(boolean next) {
@@ -46,9 +66,16 @@ public class DateTimePickerHelper {
         this.timeView.setText(strTime);
     }
 
-    public void setDateTime(String date, String time) {
-        this.dateView.setText(date);
-        this.timeView.setText(time);
+    public void setDateTime(String date) {
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MMMM/yyyy HH:mm");
+            this.calendar.setTime(dateFormat.parse(date));
+            int i = date.indexOf(' ');
+            this.dateView.setText(date.substring(0, i));
+            this.timeView.setText(date.substring(i + 1, date.length()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     private void setDateView() {
@@ -68,24 +95,11 @@ public class DateTimePickerHelper {
         @Override
         public void onClick(View v) {
             if(v.getId() == dateView.getId()) {
-                new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        calendar.set(Calendar.YEAR, year);
-                        calendar.set(Calendar.MONTH, month);
-                        calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                        setDateView();
-                    }
-                }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+                datePickerDialog.updateDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
+                datePickerDialog.show();
             } else if(v.getId() == timeView.getId()){
-                new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                        calendar.set(Calendar.MINUTE, minute);
-                        setTimeView();
-                    }
-                }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show();
+                timePickerDialog.updateTime(calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
+                timePickerDialog.show();
             }
         }
     }

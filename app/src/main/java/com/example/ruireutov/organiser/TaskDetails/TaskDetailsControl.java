@@ -2,7 +2,6 @@ package com.example.ruireutov.organiser.TaskDetails;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 
 import com.example.ruireutov.organiser.DatabaseWorkers.DatabaseControl;
 import com.example.ruireutov.organiser.TaskDetailsData;

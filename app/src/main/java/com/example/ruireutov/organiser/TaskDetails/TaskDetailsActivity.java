@@ -159,10 +159,17 @@ public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetai
     @Override
     public void showTaskDetails(TaskDetailsData data) {
         this.toggleDataEdit(false);
-//        this.taskName.setText(data.getName());
-//        this.taskStatus.setText(data.getStatus());
-//        this.taskCategory.setText(data.getCategory());
-//        this.taskDetails.setText(data.getDetails());
+        this.taskName.setText(data.getName());
+        boolean showDateTime = data.getDateFrom().length() > 0 ? true : false;
+        this.taskSchedulable.setChecked(showDateTime);
+        this.toggleDateTime(showDateTime);
+        this.fromDateTimeHelper.setDateTime(this.dateTimeConverter(data.getDateFrom(), false));
+        this.toDateTimeHelper.setDateTime(this.dateTimeConverter(data.getDateTo(), false));
+        int priorityPos = this.taskPriorityAdapter.getItemPosition(data.getPriority());
+        this.taskPriority.setSelection(priorityPos);
+        int categoryPos = this.taskPriorityAdapter.getItemPosition(data.getCategory());
+        this.taskCategory.setSelection(categoryPos);
+        this.taskDetails.setText(data.getDetails());
         this.taskButton.setText(R.string.task_button_finish);
     }
 
@@ -174,6 +181,8 @@ public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetai
         this.taskSchedulable.setChecked(false);
         this.fromDateTimeHelper.setDefault(false);
         this.toDateTimeHelper.setDefault(true);
+        this.taskPriority.setSelection(0);
+        this.taskCategory.setSelection(0);
         this.taskDetails.setText("");
         this.taskButton.setText(R.string.task_button_create);
     }
@@ -194,6 +203,20 @@ public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetai
             this.blockedStatus = blocked;
             this.taskName.setEnabled(blocked);
             this.taskName.setFocusable(blocked);
+            this.taskSchedulable.setEnabled(blocked);
+            this.taskSchedulable.setFocusable(blocked);
+            this.taskFromDate.setEnabled(blocked);
+            this.taskFromDate.setFocusable(blocked);
+            this.taskFromTime.setEnabled(blocked);
+            this.taskFromTime.setFocusable(blocked);
+            this.taskToDate.setEnabled(blocked);
+            this.taskToDate.setFocusable(blocked);
+            this.taskToTime.setEnabled(blocked);
+            this.taskToTime.setFocusable(blocked);
+            this.taskPriority.setEnabled(blocked);
+            this.taskPriority.setFocusable(blocked);
+            this.taskCategory.setEnabled(blocked);
+            this.taskCategory.setFocusable(blocked);
             this.taskDetails.setEnabled(blocked);
             this.taskDetails.setFocusable(blocked);
         }

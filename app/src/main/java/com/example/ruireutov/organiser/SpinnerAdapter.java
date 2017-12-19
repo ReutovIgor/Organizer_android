@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import com.example.ruireutov.organiser.DatabaseWorkers.DatabaseDefines;
 
+import java.util.HashMap;
+
 /**
  * Created by ruireutov on 08-Dec-17.
  */
@@ -24,13 +26,19 @@ public class SpinnerAdapter extends CursorAdapter {
     private Context context;
     private LayoutInflater layoutInflater;
     private String type;
+    private HashMap<String, Integer> mapping;
 
     public SpinnerAdapter(@NonNull Context context, Cursor cursor, int flags, String type) {
         super(context, cursor, flags);
 
         this.context = context;
         this.type = type;
+        this.mapping = new HashMap<>();
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    }
+
+    public int getItemPosition(String name) {
+        return this.mapping.containsKey(name) ? this.mapping.get(name) : 0;
     }
 
     @Override
@@ -65,5 +73,12 @@ public class SpinnerAdapter extends CursorAdapter {
         String title = cursor.getString( cursor.getColumnIndex(titleKey) );
         textView.setText(title);
         colorView.setBackgroundColor(Color.parseColor(cursor.getString( cursor.getColumnIndex(colorKey) )));
+        this.mapping.put(title, cursor.getPosition());
+    }
+
+    @Override
+    public Cursor swapCursor(Cursor newCursor) {
+        this.mapping.clear();
+        return super.swapCursor(newCursor);
     }
 }
