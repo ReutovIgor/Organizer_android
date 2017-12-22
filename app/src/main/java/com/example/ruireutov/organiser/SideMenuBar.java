@@ -9,11 +9,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.ruireutov.organiser.MainView.MainActivity;
-import com.example.ruireutov.organiser.ToDoList.ToDoListActivity;
+import com.example.ruireutov.organiser.TaskList.TaskListActivity;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by ruireutov on 07-Nov-17.
@@ -37,7 +35,7 @@ public class SideMenuBar {
         this.context = context;
         this.components = new HashMap<>();
         this.components.put("MainView", MainActivity.class);
-        this.components.put("ToDoList", ToDoListActivity.class);
+        this.components.put("ToDoList", TaskListActivity.class);
 
         this.mAdapter = new ArrayAdapter<>(context, listItem, this.screens);
         sidebar.setAdapter(this.mAdapter);

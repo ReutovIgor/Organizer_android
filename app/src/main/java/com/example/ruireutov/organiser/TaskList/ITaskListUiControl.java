@@ -1,4 +1,4 @@
-package com.example.ruireutov.organiser.ToDoList;
+package com.example.ruireutov.organiser.TaskList;
 
 import android.database.Cursor;
 
@@ -6,6 +6,6 @@ import android.database.Cursor;
  * Created by ruireutov on 29-Nov-17.
  */
 
-public interface IToDoListUiControl {
+public interface ITaskListUiControl {
     void updateList(Cursor cursor);
 }

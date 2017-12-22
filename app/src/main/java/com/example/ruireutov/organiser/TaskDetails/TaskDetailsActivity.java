@@ -1,10 +1,15 @@
 package com.example.ruireutov.organiser.TaskDetails;
 
 import android.database.Cursor;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -56,8 +61,11 @@ public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetai
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_details);
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toDoListView_toolbar);
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.taskDetailsView_toolbar);
         setSupportActionBar(myToolbar);
+
+        ActionBar ab = getSupportActionBar();
+        ab.setDisplayHomeAsUpEnabled(true);
 
         this.blockedStatus = true;
 

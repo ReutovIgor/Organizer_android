@@ -1,8 +1,8 @@
 <resources>
     <!--App headers strings-->
     <string name="app_name">Organiser</string>
-    <string name="title_activity_to_do_list">To do list </string>
-    <string name="title_activity_task_details">Task details </string>
+    <string name="title_activity_to_do_list">Task list</string>
+    <string name="title_activity_task_details">Task details</string>
 
     <!--Task Details strings-->
     <string name="task_hint_name">Task name</string>
@@ -15,11 +15,10 @@
     <string name="task_button_create">Create</string>
     <string name="task_button_finish">Finish</string>
 
-    <!--Stub spinner values-->
-    <string-array name="array_name">
-        <item>Array Item One</item>
-        <item>Array Item Two</item>
-        <item>Array Item Three</item>
-    </string-array>
-
+    <!--Tasks Menu strings-->
+    <string name="task_option_categories">Categories</string>
+    <string name="task_option_edit_task">Edit</string>
+    <string name="task_option_sort_tasks">Sort</string>
+    <string name="task_option_completed_tasks">Show completed</string>
+    <string name="task_option_failed_tasks">Show failed</string>
 </resources>

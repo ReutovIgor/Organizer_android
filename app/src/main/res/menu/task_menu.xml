@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/categories_button"
+        app:showAsAction="collapseActionView"
+        android:title="@string/task_option_categories"/>
+    <item
+        android:id="@+id/edit_button"
+        app:showAsAction="collapseActionView"
+        android:title="@string/task_option_edit_task"/>
+    <item
+        android:id="@+id/sort_button"
+        app:showAsAction="collapseActionView"
+        android:title="@string/task_option_sort_tasks"/>
+    <group android:checkableBehavior="all">
+        <item
+            android:id="@+id/show_completed_button"
+            android:title="@string/task_option_completed_tasks"/>
+        <item
+            android:id="@+id/sort_failed_button"
+            android:title="@string/task_option_failed_tasks"/>
+    </group>
+</menu>

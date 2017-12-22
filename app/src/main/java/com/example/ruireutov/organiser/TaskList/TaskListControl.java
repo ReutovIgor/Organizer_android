@@ -1,4 +1,4 @@
-package com.example.ruireutov.organiser.ToDoList;
+package com.example.ruireutov.organiser.TaskList;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,14 +12,14 @@ import com.example.ruireutov.organiser.TaskDetailsData;
  * Created by ruireutov on 31-Oct-17.
  */
 
-public class ToDoListControl implements IToDoListControl {
+public class TaskListControl implements ITaskListControl {
     private Context context;
-    private IToDoListUiControl uiControl;
+    private ITaskListUiControl uiControl;
     private DatabaseControl dbControl;
     private Cursor listData;
 
 
-    ToDoListControl(Context context, IToDoListUiControl uiControl){
+    TaskListControl(Context context, ITaskListUiControl uiControl){
         this.context = context;
         this.uiControl = uiControl;
         this.dbControl = DatabaseControl.getInstance(this.context);

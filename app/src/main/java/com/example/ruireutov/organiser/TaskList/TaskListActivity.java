@@ -1,10 +1,11 @@
-package com.example.ruireutov.organiser.ToDoList;
+package com.example.ruireutov.organiser.TaskList;
 
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -14,12 +15,12 @@ import com.example.ruireutov.organiser.ListCursorAdapter;
 import com.example.ruireutov.organiser.R;
 import com.example.ruireutov.organiser.SideMenuBar;
 
-public class ToDoListActivity extends AppCompatActivity implements IToDoListUiControl {
+public class TaskListActivity extends AppCompatActivity implements ITaskListUiControl {
 
     private SideMenuBar sideMenuBar;
     private ListView listView;
     private ListCursorAdapter cursorAdapter;
-    private IToDoListControl listControl;
+    private ITaskListControl listControl;
     private Button newTaskButton;
 
     @Override
@@ -28,6 +29,8 @@ public class ToDoListActivity extends AppCompatActivity implements IToDoListUiCo
         setContentView(R.layout.activity_to_do_list);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.toDoListView_toolbar);
         setSupportActionBar(myToolbar);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+//        getSupportActionBar().setIcon(R.drawable.menu);
 
         DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.toDoList_drawer);
         ListView drawerList = (ListView) findViewById(R.id.navigation_list);
@@ -41,9 +44,16 @@ public class ToDoListActivity extends AppCompatActivity implements IToDoListUiCo
         this.newTaskButton = findViewById(R.id.new_task_button);
         this.newTaskButton.setOnClickListener(new ElementClickListener());
 
-        this.listControl = new ToDoListControl(this, this);
+        this.listControl = new TaskListControl(this, this);
         this.listControl.getTaskList();
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.task_menu, menu);
+
+        return super.onCreateOptionsMenu(menu);
+}
 
     @Override
     protected void onResume() {
