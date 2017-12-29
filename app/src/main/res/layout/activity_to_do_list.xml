@@ -29,7 +29,8 @@
                 layout="@layout/toolbar"/>
             <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:fillViewport="true">
                 <include layout="@layout/to_do_list" />
             </ScrollView>
         </LinearLayout>

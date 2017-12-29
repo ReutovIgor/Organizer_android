@@ -5,6 +5,7 @@ import android.content.Intent;
 
 import com.example.ruireutov.organiser.DatabaseWorkers.DatabaseControl;
 import com.example.ruireutov.organiser.TaskDetailsData;
+import com.example.ruireutov.organiser.TaskList.TaskListActivity;
 
 public class TaskDetailsControl implements ITaskDetailsControl{
     private Context context;
@@ -31,6 +32,8 @@ public class TaskDetailsControl implements ITaskDetailsControl{
 
     public void addTask(TaskDetailsData data) {
         this.dbControl.addTask(data);
+        Intent intent = new Intent(this.context, TaskListActivity.class);
+        this.context.startActivity(intent);
     }
 
     public void update(TaskDetailsData data) {

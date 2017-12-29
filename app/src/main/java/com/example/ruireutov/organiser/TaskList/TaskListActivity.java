@@ -37,15 +37,13 @@ public class TaskListActivity extends AppCompatActivity implements ITaskListUiCo
         this.sideMenuBar = new SideMenuBar(this, drawerLayout, drawerList, android.R.layout.simple_list_item_1, "ToDoList");
 
         this.listView = findViewById(R.id.toDoListView_list);
-        this.cursorAdapter = new ListCursorAdapter(this, null, 0);
-        this.listView.setAdapter(this.cursorAdapter);
         this.listView.setOnItemClickListener(new ListViewEventListener());
 
         this.newTaskButton = findViewById(R.id.new_task_button);
         this.newTaskButton.setOnClickListener(new ElementClickListener());
 
         this.listControl = new TaskListControl(this, this);
-        this.listControl.getTaskList();
+        //this.listControl.getTaskList();
     }
 
     @Override
@@ -77,7 +75,12 @@ public class TaskListActivity extends AppCompatActivity implements ITaskListUiCo
 
     @Override
     public void updateList(Cursor cursor) {
-        this.cursorAdapter.swapCursor(cursor);
+        if (this.cursorAdapter == null) {
+            this.cursorAdapter = new ListCursorAdapter(this, cursor, 0);
+            this.listView.setAdapter(this.cursorAdapter);
+        } else {
+            this.cursorAdapter.swapCursor(cursor);
+        }
     }
 
     private class ListViewEventListener implements AdapterView.OnItemClickListener {

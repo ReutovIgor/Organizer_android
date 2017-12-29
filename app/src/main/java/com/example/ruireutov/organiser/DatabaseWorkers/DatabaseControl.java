@@ -17,7 +17,7 @@ public class DatabaseControl {
     private static final String DATABASE_NAME = "organiser_db";
 
     //Database version
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     //Database tables
     private static final String TABLE_STATUSES = "statuses_table";
@@ -211,8 +211,18 @@ public class DatabaseControl {
             cv.clear();
 
             //Priority date
+            cv.put(KEY_NAME, "High");
+            cv.put(KEY_COLOR, "#FF0000");
+            db.insert(TABLE_PRIORITIES, null, cv);
+            cv.clear();
+
             cv.put(KEY_NAME, "Normal");
-            cv.put(KEY_COLOR, "#ffffff");
+            cv.put(KEY_COLOR, "#FFD600");
+            db.insert(TABLE_PRIORITIES, null, cv);
+            cv.clear();
+
+            cv.put(KEY_NAME, "Low");
+            cv.put(KEY_COLOR, "#38E156");
             db.insert(TABLE_PRIORITIES, null, cv);
             cv.clear();
 

@@ -11,6 +11,8 @@
         <item name="editTextStyle">@style/OrganiserEditTextViewStyle</item>
         <item name="android:checkboxStyle">@style/OrganiserCheckbox</item>
         <!--<item name="android:dropDownListViewStyle">@style/OrganiserSpinner</item>-->
+
+        <item name="android:dropDownListViewStyle">@style/App.Style.Spinner</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -44,6 +46,11 @@
     <style name="ThemeOverlay.MyTheme" parent="ThemeOverlay.AppCompat.Light">
         <item name="android:colorBackground">@color/colorDateTime</item>
         <item name="android:textColor">@color/colorText</item>
+    </style>
+
+    <style name="App.Style.Spinner" parent="Widget.AppCompat.DropDownItem.Spinner">
+        <item name="android:dividerHeight">1dp</item>
+        <item name="android:divider">@color/colorTextHint</item>
     </style>
 
 </resources>

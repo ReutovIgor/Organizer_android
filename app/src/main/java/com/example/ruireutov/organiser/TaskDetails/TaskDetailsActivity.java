@@ -108,6 +108,12 @@ public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetai
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        this.taskDetailsControl.parseIntentData(getIntent());
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         this.taskDetailsControl.onDestroy();

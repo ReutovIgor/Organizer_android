@@ -17,14 +17,12 @@ import java.util.HashMap;
  */
 
 public class ListCursorAdapter extends CursorAdapter {
-    private Context context;
-    private Cursor groups;
-    private HashMap<String, Cursor> groupItems;
+    //private Context context;
     private LayoutInflater layoutInflater;
 
     public ListCursorAdapter (Context context, Cursor cursor, int flags) {
         super(context, cursor, flags);
-        this.context = context;
+        //this.context = context;
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
     @Override
@@ -35,8 +33,11 @@ public class ListCursorAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
+        int count = cursor.getPosition();
+
         TextView textView = (TextView) view.findViewById(R.id.textView);
         String title = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TODO_LIST_NAME) );
         textView.setText(title);
+        cursor.moveToNext();
     }
 }
