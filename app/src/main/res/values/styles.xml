@@ -1,11 +1,13 @@
 <resources>
-
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="AppTheme.Base">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/checkBoxInnerColor</item>
+        <item name="android:colorPrimary">@color/colorPrimary</item>
+        <item name="android:colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:colorAccent">@color/checkBoxInnerColor</item>
+
+        <!--<item name="android:windowActionBar">false</item>-->
+        <!--<item name="windowNoTitle">true</item>-->
 
         <item name="android:textViewStyle">@style/OrganiserTextViewStyle</item>
         <item name="editTextStyle">@style/OrganiserEditTextViewStyle</item>
@@ -15,9 +17,12 @@
         <item name="android:dropDownListViewStyle">@style/App.Style.Spinner</item>
     </style>
 
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+    <style name="AppTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
+
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="android:ThemeOverlay.Material.Dark.ActionBar">
+        <item name="android:textColorPrimary">@color/actionBarText</item>
     </style>
 
     <style name="OrganiserTextViewStyle" parent="@android:style/Widget.TextView">
@@ -41,16 +46,15 @@
         <!--<item name="android:backgroundTint">@color/checkBoxInnerColor</item>-->
     <!--</style>-->
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <!--<style name="ThemeOverlay.MyTheme" parent="ThemeOverlay.AppCompat.Light">-->
+        <!--<item name="android:colorBackground">@color/colorDateTime</item>-->
+        <!--<item name="android:textColor">@color/colorText</item>-->
+    <!--</style>-->
 
-    <style name="ThemeOverlay.MyTheme" parent="ThemeOverlay.AppCompat.Light">
-        <item name="android:colorBackground">@color/colorDateTime</item>
-        <item name="android:textColor">@color/colorText</item>
-    </style>
-
-    <style name="App.Style.Spinner" parent="Widget.AppCompat.DropDownItem.Spinner">
-        <item name="android:dividerHeight">1dp</item>
-        <item name="android:divider">@color/colorTextHint</item>
+    <style name="App.Style.Spinner" parent="Widget.AppCompat.ListView.DropDown">
+    <!--<style name="App.Style.Spinner" parent="android:Theme.">-->
+        <!--<item name="android:dividerHeight">1dp</item>-->
+        <!--<item name="android:divider">@color/colorTextHint</item>-->
     </style>
 
 </resources>

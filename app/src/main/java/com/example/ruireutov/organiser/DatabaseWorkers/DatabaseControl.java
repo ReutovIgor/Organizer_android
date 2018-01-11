@@ -17,7 +17,7 @@ public class DatabaseControl {
     private static final String DATABASE_NAME = "organiser_db";
 
     //Database version
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
 
     //Database tables
     private static final String TABLE_STATUSES = "statuses_table";
@@ -110,15 +110,15 @@ public class DatabaseControl {
     public Cursor getTasks() {
         String[] columns = {
                 TABLE_TASKS + "." + KEY_ID + " AS _id",
-                TABLE_TASKS + "." + KEY_NAME + " AS " + DatabaseDefines.TODO_LIST_NAME,
-                TABLE_TASKS + "." + KEY_DETAILS + " AS " + DatabaseDefines.TODO_LIST_DETAILS,
-                TABLE_TASKS + "." + KEY_START + " AS " + DatabaseDefines.TODO_LIST_START,
-                TABLE_TASKS + "." + KEY_END + " AS " + DatabaseDefines.TODO_LIST_END,
-                TABLE_STATUSES + "." + KEY_NAME + " AS " + DatabaseDefines.TODO_LIST_STATUS,
-                TABLE_CATEGORIES + "." + KEY_NAME + " AS " + DatabaseDefines.TODO_LIST_CATEGORY,
-                TABLE_CATEGORIES + "." + KEY_COLOR + " AS " + DatabaseDefines.TODO_LIST_CATEGORY_COLOR,
-                TABLE_PRIORITIES + "." + KEY_NAME + " AS " + DatabaseDefines.TODO_LIST_PRIORITY,
-                TABLE_PRIORITIES + "." + KEY_COLOR + " AS " + DatabaseDefines.TODO_LIST_PRIORITY_COLOR,
+                TABLE_TASKS + "." + KEY_NAME + " AS " + DatabaseDefines.TASK_LIST_NAME,
+                TABLE_TASKS + "." + KEY_DETAILS + " AS " + DatabaseDefines.TASK_LIST_DETAILS,
+                TABLE_TASKS + "." + KEY_START + " AS " + DatabaseDefines.TASK_LIST_START,
+                TABLE_TASKS + "." + KEY_END + " AS " + DatabaseDefines.TASK_LIST_END,
+                TABLE_STATUSES + "." + KEY_NAME + " AS " + DatabaseDefines.TASK_LIST_STATUS,
+                TABLE_CATEGORIES + "." + KEY_NAME + " AS " + DatabaseDefines.TASK_LIST_CATEGORY,
+                TABLE_CATEGORIES + "." + KEY_COLOR + " AS " + DatabaseDefines.TASK_LIST_CATEGORY_COLOR,
+                TABLE_PRIORITIES + "." + KEY_NAME + " AS " + DatabaseDefines.TASK_LIST_PRIORITY,
+                TABLE_PRIORITIES + "." + KEY_COLOR + " AS " + DatabaseDefines.TASK_LIST_PRIORITY_COLOR,
         };
         Cursor c;
         try {
@@ -227,8 +227,12 @@ public class DatabaseControl {
             cv.clear();
 
             //Category data
-            cv.put(KEY_NAME, "Default");
-            cv.put(KEY_COLOR, "#ffffff");
+            cv.put(KEY_NAME, "Category1");
+            cv.put(KEY_COLOR, "#1240AB");
+            db.insert(TABLE_CATEGORIES, null, cv);
+            cv.clear();
+            cv.put(KEY_NAME, "Category2");
+            cv.put(KEY_COLOR, "#1DD300");
             db.insert(TABLE_CATEGORIES, null, cv);
             cv.clear();
         }

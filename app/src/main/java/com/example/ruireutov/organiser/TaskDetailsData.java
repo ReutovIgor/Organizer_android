@@ -24,27 +24,27 @@ public class TaskDetailsData implements Serializable{
     private String details;
 
     public TaskDetailsData(Cursor cursor) {
-        this.name           = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TODO_LIST_NAME) );
-        this.status         = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TODO_LIST_STATUS) );
-        this.dateFrom       = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TODO_LIST_START) );
-        this.dateTo         = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TODO_LIST_END) );
-        this.priority       = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TODO_LIST_PRIORITY) );
-        this.priorityColor  = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TODO_LIST_PRIORITY_COLOR) );
-        this.category       = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TODO_LIST_CATEGORY) );
-        this.categoryColor  = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TODO_LIST_CATEGORY_COLOR) );
-        this.details        = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TODO_LIST_DETAILS) );
+        this.name           = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_NAME) );
+        this.status         = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_STATUS) );
+        this.dateFrom       = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_START) );
+        this.dateTo         = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_END) );
+        this.priority       = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_PRIORITY) );
+        this.priorityColor  = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_PRIORITY_COLOR) );
+        this.category       = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_CATEGORY) );
+        this.categoryColor  = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_CATEGORY_COLOR) );
+        this.details        = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_DETAILS) );
     }
 
     public TaskDetailsData(HashMap<String, String> taskDetails) {
-        this.name           = taskDetails.get(DatabaseDefines.TODO_LIST_NAME);
-        this.status         = taskDetails.get(DatabaseDefines.TODO_LIST_STATUS);
-        this.dateFrom       = taskDetails.get(DatabaseDefines.TODO_LIST_START);
-        this.dateTo         = taskDetails.get(DatabaseDefines.TODO_LIST_END);
-        this.priority       = taskDetails.get(DatabaseDefines.TODO_LIST_PRIORITY);
-        this.priorityColor  = taskDetails.get(DatabaseDefines.TODO_LIST_PRIORITY_COLOR);
-        this.category       = taskDetails.get(DatabaseDefines.TODO_LIST_CATEGORY);
-        this.categoryColor  = taskDetails.get(DatabaseDefines.TODO_LIST_CATEGORY_COLOR);
-        this.details        = taskDetails.get(DatabaseDefines.TODO_LIST_DETAILS);
+        this.name           = taskDetails.get(DatabaseDefines.TASK_LIST_NAME);
+        this.status         = taskDetails.get(DatabaseDefines.TASK_LIST_STATUS);
+        this.dateFrom       = taskDetails.get(DatabaseDefines.TASK_LIST_START);
+        this.dateTo         = taskDetails.get(DatabaseDefines.TASK_LIST_END);
+        this.priority       = taskDetails.get(DatabaseDefines.TASK_LIST_PRIORITY);
+        this.priorityColor  = taskDetails.get(DatabaseDefines.TASK_LIST_PRIORITY_COLOR);
+        this.category       = taskDetails.get(DatabaseDefines.TASK_LIST_CATEGORY);
+        this.categoryColor  = taskDetails.get(DatabaseDefines.TASK_LIST_CATEGORY_COLOR);
+        this.details        = taskDetails.get(DatabaseDefines.TASK_LIST_DETAILS);
     }
 
     public String getName() {

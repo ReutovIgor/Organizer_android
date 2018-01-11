@@ -6,6 +6,8 @@
     <color name="colorText">#000000</color>
     <color name="colorTextHint">#808080</color>
 
+    <color name="actionBarText">#ececec</color>
+
     <color name="colorDateTime">#ececec</color>
 
     <color name="checkBoxOuterColor">#000000</color>

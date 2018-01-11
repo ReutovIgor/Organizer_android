@@ -1,15 +1,11 @@
 package com.example.ruireutov.organiser.TaskDetails;
 
 import android.database.Cursor;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -91,11 +87,11 @@ public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetai
         this.toDateTimeHelper = new DateTimePickerHelper(this, this.taskToDate, this.taskToTime);
 
         this.taskPriority = findViewById(R.id.task_priority);
-        this.taskPriorityAdapter = new SpinnerAdapter(this, null, 0, SpinnerAdapter.TYPE_PRIORITY);
+        this.taskPriorityAdapter = new SpinnerAdapter(this,null, R.layout.task_details_drop_down_item,0, SpinnerAdapter.TYPE_PRIORITY);
         this.taskPriority.setAdapter(this.taskPriorityAdapter);
 
         this.taskCategory = findViewById(R.id.task_category);
-        this.taskCategoryAdapter = new SpinnerAdapter(this, null, 0, SpinnerAdapter.TYPE_CATEGORY);
+        this.taskCategoryAdapter = new SpinnerAdapter(this, null, R.layout.task_details_drop_down_item, 0, SpinnerAdapter.TYPE_CATEGORY);
         this.taskCategory.setAdapter(this.taskCategoryAdapter);
 
         this.taskDetails = findViewById(R.id.task_details);
@@ -151,21 +147,21 @@ public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetai
 
     private HashMap<String, String> getTaskData() {
         HashMap<String, String> data = new HashMap<>();
-        data.put(DatabaseDefines.TODO_LIST_NAME, taskName.getText().toString());
-        data.put(DatabaseDefines.TODO_LIST_STATUS, DatabaseDefines.STATUS_IN_PROGRESS);
+        data.put(DatabaseDefines.TASK_LIST_NAME, taskName.getText().toString());
+        data.put(DatabaseDefines.TASK_LIST_STATUS, DatabaseDefines.STATUS_IN_PROGRESS);
         if(taskSchedulable.isChecked()) {
             String str = this.taskFromDate.getText().toString() + " " + this.taskFromTime.getText().toString();
             String fromDate = this.dateTimeConverter(str, true);
-            data.put(DatabaseDefines.TODO_LIST_START, fromDate);
+            data.put(DatabaseDefines.TASK_LIST_START, fromDate);
             str = this.taskToDate.getText().toString() + " " + this.taskToTime.getText().toString();
             String toDate = this.dateTimeConverter(str, true);
-            data.put(DatabaseDefines.TODO_LIST_END, toDate);
+            data.put(DatabaseDefines.TASK_LIST_END, toDate);
         }else {
-            data.put(DatabaseDefines.TODO_LIST_START, "");
-            data.put(DatabaseDefines.TODO_LIST_END, "");
+            data.put(DatabaseDefines.TASK_LIST_START, "");
+            data.put(DatabaseDefines.TASK_LIST_END, "");
         }
-        data.put(DatabaseDefines.TODO_LIST_PRIORITY, this.taskPriority.getSelectedItem().toString());
-        data.put(DatabaseDefines.TODO_LIST_CATEGORY, this.taskCategory.getSelectedItem().toString());
+        data.put(DatabaseDefines.TASK_LIST_PRIORITY, this.taskPriority.getSelectedItem().toString());
+        data.put(DatabaseDefines.TASK_LIST_CATEGORY, this.taskCategory.getSelectedItem().toString());
 
         return data;
     }
