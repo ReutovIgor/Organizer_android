@@ -10,4 +10,13 @@
     <color name="colorDateTime">#ececec</color>
 
     <color name="checkBoxInnerColor">#a71717</color>
+
+    <!--Category colors-->
+    <color name="redCategory">#FF7373</color>
+    <color name="yellowCategory">#F2FD3F</color>
+    <color name="orangeCategory">#FFB873</color>
+    <color name="blueCategory">#4F4FD9</color>
+    <color name="purpleCategory">#7373D9</color>
+    <color name="aquaCategory">#61B4CF</color>
+    <color name="greenCategory">#A9F16C</color>
 </resources>

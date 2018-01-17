@@ -12,16 +12,20 @@ public class DatabaseDefines {
     public static final String TASK_LIST_END = "End";
     public static final String TASK_LIST_STATUS = "Status";
     public static final String TASK_LIST_CATEGORY = "Category";
+    public static final String TASK_LIST_CATEGORY_ICON = "CategoryIcon";
     public static final String TASK_LIST_CATEGORY_COLOR = "CategoryColor";
     public static final String TASK_LIST_PRIORITY = "Priority";
+    public static final String TASK_LIST_PRIORITY_MARK = "PriorityMark";
     public static final String TASK_LIST_PRIORITY_COLOR = "PriorityColor";
 
     //Categories table names
     public static final String CATEGORIES_NAME = "Name";
+    public static final String CATEGORIES_ICON = "CategoryIcon";
     public static final String CATEGORIES_COLOR = "CategoryColor";
 
     //Categories table names
     public static final String PRIORITIES_NAME = "Name";
+    public static final String PRIORITIES_MARK = "PriorityMark";
     public static final String PRIORITIES_COLOR = "PriorityColor";
 
     //task statuses

@@ -17,7 +17,7 @@ public class DatabaseControl {
     private static final String DATABASE_NAME = "organiser_db";
 
     //Database version
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 1;
 
     //Database tables
     private static final String TABLE_STATUSES = "statuses_table";
@@ -26,17 +26,23 @@ public class DatabaseControl {
     private static final String TABLE_TASKS = "tasks_table";
 
     //Database common column names
-    public static final String KEY_ID = "id";
-    public static final String KEY_NAME = "name";
-    public static final String KEY_DETAILS = "details";
-    public static final String KEY_COLOR = "color";
+    private static final String KEY_ID = "id";
+    private static final String KEY_NAME = "name";
+    private static final String KEY_DETAILS = "details";
+    private static final String KEY_COLOR = "color";
+
+    //Database Priority table column names
+    private  static final String KEY_MARK = "mark";
+
+    //Database Category table column names
+    private static final String KEY_ICON = "icon";
 
     //Database Tasks table column names
-    public static final String KEY_START = "startTime";
-    public static final String KEY_END = "endTime";
-    public static final String KEY_STATUS_ID = "status_id";
-    public static final String KEY_CATEGORY_ID = "category_id";
-    public static final String KEY_PRIORITY_ID = "priority_id";
+    private static final String KEY_START = "startTime";
+    private static final String KEY_END = "endTime";
+    private static final String KEY_STATUS_ID = "status_id";
+    private static final String KEY_CATEGORY_ID = "category_id";
+    private static final String KEY_PRIORITY_ID = "priority_id";
 
 
     //Database Create tables queries
@@ -49,12 +55,14 @@ public class DatabaseControl {
             + TABLE_CATEGORIES + " ("
             + KEY_ID + " integer primary key autoincrement, "
             + KEY_NAME + " text not null,"
+            + KEY_ICON + " text not null,"
             + KEY_COLOR + " text not null);";
 
     private static final String TABLE_PRIORITIES_CREATE = "create table "
             + TABLE_PRIORITIES + " ("
             + KEY_ID + " integer primary key autoincrement, "
             + KEY_NAME + " text not null,"
+            + KEY_MARK + " text not null,"
             + KEY_COLOR + " text not null);";
 
     private static final String TABLE_TASKS_CREATE = "create table "
@@ -117,7 +125,9 @@ public class DatabaseControl {
                 TABLE_STATUSES + "." + KEY_NAME + " AS " + DatabaseDefines.TASK_LIST_STATUS,
                 TABLE_CATEGORIES + "." + KEY_NAME + " AS " + DatabaseDefines.TASK_LIST_CATEGORY,
                 TABLE_CATEGORIES + "." + KEY_COLOR + " AS " + DatabaseDefines.TASK_LIST_CATEGORY_COLOR,
+                TABLE_CATEGORIES + "." + KEY_ICON + " AS " + DatabaseDefines.TASK_LIST_CATEGORY_ICON,
                 TABLE_PRIORITIES + "." + KEY_NAME + " AS " + DatabaseDefines.TASK_LIST_PRIORITY,
+                TABLE_PRIORITIES + "." + KEY_MARK + " AS " + DatabaseDefines.TASK_LIST_PRIORITY_MARK,
                 TABLE_PRIORITIES + "." + KEY_COLOR + " AS " + DatabaseDefines.TASK_LIST_PRIORITY_COLOR,
         };
         Cursor c;
@@ -156,14 +166,15 @@ public class DatabaseControl {
         cv.put(KEY_PRIORITY_ID, priorityId);
         cv.put(KEY_DETAILS, taskData.getName());
 
-        long id = db.insert(TABLE_TASKS, null, cv);
+        db.insert(TABLE_TASKS, null, cv);
     }
 
     public Cursor getCategories() {
         String[] columns = {
                 KEY_ID + " AS _id",
                 KEY_NAME + " AS " + DatabaseDefines.CATEGORIES_NAME,
-                KEY_COLOR + " AS " + DatabaseDefines.CATEGORIES_COLOR
+                KEY_COLOR + " AS " + DatabaseDefines.CATEGORIES_COLOR,
+                KEY_ICON + " AS " + DatabaseDefines.CATEGORIES_ICON
         };
         Cursor c  = this.db.query(TABLE_CATEGORIES, columns, null, null, null, null, null);
         return c;
@@ -173,6 +184,7 @@ public class DatabaseControl {
         String[] columns = {
                 KEY_ID + " AS _id",
                 KEY_NAME + " AS " + DatabaseDefines.PRIORITIES_NAME,
+                KEY_MARK + " AS " + DatabaseDefines.PRIORITIES_MARK,
                 KEY_COLOR + " AS " + DatabaseDefines.PRIORITIES_COLOR
         };
         Cursor c  = this.db.query(TABLE_PRIORITIES, columns, null, null, null, null, null);
@@ -203,36 +215,68 @@ public class DatabaseControl {
             cv.put(KEY_NAME, DatabaseDefines.STATUS_IN_PROGRESS);
             db.insert(TABLE_STATUSES, null, cv);
             cv.clear();
+
             cv.put(KEY_NAME, DatabaseDefines.STATUS_FAILED);
             db.insert(TABLE_STATUSES, null, cv);
             cv.clear();
+
             cv.put(KEY_NAME, DatabaseDefines.STATUS_FINISHED);
             db.insert(TABLE_STATUSES, null, cv);
             cv.clear();
 
             //Priority date
             cv.put(KEY_NAME, "High");
-            cv.put(KEY_COLOR, "#FF0000");
+            cv.put(KEY_MARK, "!!!");
+            cv.put(KEY_COLOR, "#FF3500");
             db.insert(TABLE_PRIORITIES, null, cv);
             cv.clear();
 
             cv.put(KEY_NAME, "Normal");
-            cv.put(KEY_COLOR, "#FFD600");
+            cv.put(KEY_MARK, "!!");
+            cv.put(KEY_COLOR, "#FF9900");
             db.insert(TABLE_PRIORITIES, null, cv);
             cv.clear();
 
             cv.put(KEY_NAME, "Low");
-            cv.put(KEY_COLOR, "#38E156");
+            cv.put(KEY_MARK, "!");
+            cv.put(KEY_COLOR, "#FFD600");
             db.insert(TABLE_PRIORITIES, null, cv);
             cv.clear();
 
             //Category data
-            cv.put(KEY_NAME, "Category1");
-            cv.put(KEY_COLOR, "#1240AB");
+            cv.put(KEY_NAME, "Default");
+            cv.put(KEY_COLOR, "#FFB873");
+            cv.put(KEY_ICON, "default_task_category");
             db.insert(TABLE_CATEGORIES, null, cv);
             cv.clear();
-            cv.put(KEY_NAME, "Category2");
-            cv.put(KEY_COLOR, "#1DD300");
+
+            cv.put(KEY_NAME, "Favourite");
+            cv.put(KEY_COLOR, "#F2FD3F");
+            cv.put(KEY_ICON, "favourite_task_category");
+            db.insert(TABLE_CATEGORIES, null, cv);
+            cv.clear();
+
+            cv.put(KEY_NAME, "Home");
+            cv.put(KEY_COLOR, "#A9F16C");
+            cv.put(KEY_ICON, "home_task_category");
+            db.insert(TABLE_CATEGORIES, null, cv);
+            cv.clear();
+
+            cv.put(KEY_NAME, "Shopping");
+            cv.put(KEY_COLOR, "#7373D9");
+            cv.put(KEY_ICON, "shopping_task_category");
+            db.insert(TABLE_CATEGORIES, null, cv);
+            cv.clear();
+
+            cv.put(KEY_NAME, "Travel");
+            cv.put(KEY_COLOR, "#61B4CF");
+            cv.put(KEY_ICON, "travel_task_category");
+            db.insert(TABLE_CATEGORIES, null, cv);
+            cv.clear();
+
+            cv.put(KEY_NAME, "Work");
+            cv.put(KEY_COLOR, "#FF7373");
+            cv.put(KEY_ICON, "work_task_category");
             db.insert(TABLE_CATEGORIES, null, cv);
             cv.clear();
         }

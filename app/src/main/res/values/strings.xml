@@ -4,6 +4,9 @@
     <string name="title_activity_to_do_list">Task list</string>
     <string name="title_activity_task_details">Task details</string>
 
+    <!--Task List strings-->
+    <string name="task_list_due">Due:</string>
+
     <!--Task Details strings-->
     <string name="task_hint_name">Task name</string>
     <string name="task_hint_priority">Priority</string>

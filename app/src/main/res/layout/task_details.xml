@@ -51,7 +51,7 @@
             android:padding="10dp"
             android:layout_marginLeft="10dp"
             android:background="@color/colorDateTime"
-            android:hint="FromDate"></TextView>
+            android:hint="FromDate"/>
 
         <TextView
             android:id="@+id/task_from_time"
@@ -61,7 +61,7 @@
             android:background="@color/colorDateTime"
             android:gravity="right"
             android:hint="FromTime"
-            android:padding="10dp"></TextView>
+            android:padding="10dp"/>
     </LinearLayout>
 
     <TextView
@@ -82,7 +82,7 @@
             android:padding="10dp"
             android:layout_marginLeft="10dp"
             android:background="@color/colorDateTime"
-            android:hint="ToDate"></TextView>
+            android:hint="ToDate"/>
         <TextView
             android:id="@+id/task_to_time"
             android:layout_width="90dp"
@@ -91,7 +91,7 @@
             android:layout_marginLeft="20dp"
             android:background="@color/colorDateTime"
             android:padding="10dp"
-            android:hint="ToTime"></TextView>
+            android:hint="ToTime"/>
     </LinearLayout>
 
     <TextView
@@ -105,8 +105,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:popupBackground="@color/colorDateTime"
-
-        android:padding="10dp"></Spinner>
+        android:padding="10dp"/>
 
     <TextView
         android:layout_width="match_parent"

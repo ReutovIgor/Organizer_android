@@ -6,15 +6,11 @@
         <item name="android:colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="android:colorAccent">@color/checkBoxInnerColor</item>
 
-        <!--<item name="android:windowActionBar">false</item>-->
-        <!--<item name="windowNoTitle">true</item>-->
-
         <item name="android:textViewStyle">@style/OrganiserTextViewStyle</item>
         <item name="editTextStyle">@style/OrganiserEditTextViewStyle</item>
         <item name="android:checkboxStyle">@style/OrganiserCheckbox</item>
-        <!--<item name="android:dropDownListViewStyle">@style/OrganiserSpinner</item>-->
 
-        <item name="android:dropDownListViewStyle">@style/App.Style.Spinner</item>
+        <!--<item name="android:dropDownListViewStyle">@style/App.Style.Spinner</item>-->
     </style>
 
     <style name="AppTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
@@ -40,21 +36,8 @@
         <item name="android:buttonTint">@color/checkBoxInnerColor</item>
     </style>
 
-    <!--<style name="OrganiserSpinner" parent="@style/Base.Widget.AppCompat.Spinner.Underlined">-->
-        <!--<item name="android:colorControlHighlight">@color/checkBoxInnerColor</item>-->
-        <!--<item name="android:colorControlNormal">@color/checkBoxInnerColor</item>-->
-        <!--<item name="android:backgroundTint">@color/checkBoxInnerColor</item>-->
+    <!--<style name="App.Style.Spinner" parent="Widget.AppCompat.ListView.DropDown">-->
+    <!---->
     <!--</style>-->
-
-    <!--<style name="ThemeOverlay.MyTheme" parent="ThemeOverlay.AppCompat.Light">-->
-        <!--<item name="android:colorBackground">@color/colorDateTime</item>-->
-        <!--<item name="android:textColor">@color/colorText</item>-->
-    <!--</style>-->
-
-    <style name="App.Style.Spinner" parent="Widget.AppCompat.ListView.DropDown">
-    <!--<style name="App.Style.Spinner" parent="android:Theme.">-->
-        <!--<item name="android:dividerHeight">1dp</item>-->
-        <!--<item name="android:divider">@color/colorTextHint</item>-->
-    </style>
 
 </resources>

@@ -1,6 +1,7 @@
 package com.example.ruireutov.organiser;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CursorAdapter;
+import android.widget.ImageView;
 import android.widget.ResourceCursorAdapter;
 import android.widget.TextView;
 
@@ -58,22 +60,29 @@ public class SpinnerAdapter extends ResourceCursorAdapter {
 
         @Override
         public void bindView(View view, Context context, Cursor cursor) {
-            TextView textView = view.findViewById(R.id.task_detail_name);
-            Button colorView = view.findViewById(R.id.task_detail_color);
+            TextView titleView = view.findViewById(R.id.task_detail_name);
+            ImageView imageView = view.findViewById(R.id.task_detail_icon);
+            TextView textView = view.findViewById(R.id.task_detail_text);
             String titleKey = "", colorKey = "";
             switch(this.type) {
                 case TYPE_CATEGORY:
                     titleKey = DatabaseDefines.CATEGORIES_NAME;
-                    colorKey = DatabaseDefines.CATEGORIES_COLOR;
+                    textView.setVisibility(View.GONE);
+                    Resources resources = this.context.getResources();
+                    String iconName = cursor.getString( cursor.getColumnIndex(DatabaseDefines.CATEGORIES_ICON) );
+                    int id = resources.getIdentifier(iconName, "drawable", context.getPackageName());
+                    imageView.setImageDrawable(resources.getDrawable(id));
+                    imageView.setBackgroundColor(Color.parseColor(cursor.getString( cursor.getColumnIndex(DatabaseDefines.CATEGORIES_COLOR) )));
                     break;
                 case TYPE_PRIORITY:
                     titleKey = DatabaseDefines.PRIORITIES_NAME;
-                    colorKey = DatabaseDefines.PRIORITIES_COLOR;
+                    imageView.setVisibility(View.GONE);
+                    textView.setText(cursor.getString( cursor.getColumnIndex(DatabaseDefines.PRIORITIES_MARK) ));
+                    textView.setTextColor(Color.parseColor(cursor.getString( cursor.getColumnIndex(DatabaseDefines.PRIORITIES_COLOR) )));
                     break;
             }
             String title = cursor.getString( cursor.getColumnIndex(titleKey) );
-            textView.setText(title);
-            colorView.setBackgroundColor(Color.parseColor(cursor.getString( cursor.getColumnIndex(colorKey) )));
+            titleView.setText(title);
             this.mapping.put(title, cursor.getPosition());
         }
 
