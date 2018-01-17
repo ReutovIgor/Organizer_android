@@ -42,6 +42,7 @@ public class SpinnerAdapter extends ResourceCursorAdapter {
 
         public int getItemPosition(String name) {
             return this.mapping.containsKey(name) ? this.mapping.get(name) : 0;
+            //return 0;
         }
 
         @Override
@@ -63,11 +64,10 @@ public class SpinnerAdapter extends ResourceCursorAdapter {
             TextView titleView = view.findViewById(R.id.task_detail_name);
             ImageView imageView = view.findViewById(R.id.task_detail_icon);
             TextView textView = view.findViewById(R.id.task_detail_text);
-            String titleKey = "", colorKey = "";
             switch(this.type) {
                 case TYPE_CATEGORY:
-                    titleKey = DatabaseDefines.CATEGORIES_NAME;
                     textView.setVisibility(View.GONE);
+                    titleView.setText(cursor.getString( cursor.getColumnIndex(DatabaseDefines.CATEGORIES_NAME) ));
                     Resources resources = this.context.getResources();
                     String iconName = cursor.getString( cursor.getColumnIndex(DatabaseDefines.CATEGORIES_ICON) );
                     int id = resources.getIdentifier(iconName, "drawable", context.getPackageName());
@@ -75,20 +75,29 @@ public class SpinnerAdapter extends ResourceCursorAdapter {
                     imageView.setBackgroundColor(Color.parseColor(cursor.getString( cursor.getColumnIndex(DatabaseDefines.CATEGORIES_COLOR) )));
                     break;
                 case TYPE_PRIORITY:
-                    titleKey = DatabaseDefines.PRIORITIES_NAME;
                     imageView.setVisibility(View.GONE);
+                    titleView.setText(cursor.getString( cursor.getColumnIndex(DatabaseDefines.PRIORITIES_NAME) ));
                     textView.setText(cursor.getString( cursor.getColumnIndex(DatabaseDefines.PRIORITIES_MARK) ));
                     textView.setTextColor(Color.parseColor(cursor.getString( cursor.getColumnIndex(DatabaseDefines.PRIORITIES_COLOR) )));
                     break;
             }
-            String title = cursor.getString( cursor.getColumnIndex(titleKey) );
-            titleView.setText(title);
-            this.mapping.put(title, cursor.getPosition());
         }
 
         @Override
-        public Cursor swapCursor(Cursor newCursor) {
+        public Cursor swapCursor(Cursor c) {
+            String key = "";
             this.mapping.clear();
-            return super.swapCursor(newCursor);
+            switch (this.type) {
+                case TYPE_CATEGORY:
+                    key = DatabaseDefines.CATEGORIES_NAME;
+                    break;
+                case TYPE_PRIORITY:
+                    key = DatabaseDefines.PRIORITIES_NAME;
+                    break;
+            }
+            while(c.moveToNext()) {
+                this.mapping.put(c.getString( c.getColumnIndex(key) ), c.getPosition());
+            }
+            return super.swapCursor(c);
         }
 }

@@ -18,8 +18,10 @@ public class TaskDetailsData implements Serializable{
     private String dateTo;
     private String status;
     private String priority;
+    private String priorityMark;
     private String priorityColor;
     private String category;
+    private String categoryIcon;
     private String categoryColor;
     private String details;
 
@@ -29,8 +31,10 @@ public class TaskDetailsData implements Serializable{
         this.dateFrom       = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_START) );
         this.dateTo         = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_END) );
         this.priority       = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_PRIORITY) );
+        this.priorityMark   = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_PRIORITY_MARK) );
         this.priorityColor  = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_PRIORITY_COLOR) );
         this.category       = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_CATEGORY) );
+        this.categoryIcon   = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_CATEGORY_ICON) );
         this.categoryColor  = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_CATEGORY_COLOR) );
         this.details        = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_DETAILS) );
     }

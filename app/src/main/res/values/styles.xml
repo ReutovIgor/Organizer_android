@@ -19,7 +19,14 @@
 
     <style name="AppTheme.AppBarOverlay" parent="android:ThemeOverlay.Material.Dark.ActionBar">
         <item name="android:textColorPrimary">@color/actionBarText</item>
+        <item name="android:colorBackground">@color/colorOptionsMenu</item>
+        <item name="android:textColor">@color/colorText</item>
     </style>
+
+    <!--<style name="MyDarkToolbarStyle" parent="ThemeOverlay.AppCompat.Light">-->
+        <!--<item name="android:colorBackground">@color/colorPrimaryDark</item>-->
+        <!--<item name="android:textColor">@color/actionBarText</item>-->
+    <!--</style>-->
 
     <style name="OrganiserTextViewStyle" parent="@android:style/Widget.TextView">
         <item name="android:textColor">@color/colorText</item>

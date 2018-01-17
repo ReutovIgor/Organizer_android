@@ -100,7 +100,6 @@ public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetai
         this.taskButton.setOnClickListener(new ElementClickListener());
 
         this.taskDetailsControl = new TaskDetailsControl(this);
-        this.taskDetailsControl.parseIntentData(getIntent());
     }
 
     @Override
@@ -177,7 +176,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetai
         this.toDateTimeHelper.setDateTime(this.dateTimeConverter(data.getDateTo(), false));
         int priorityPos = this.taskPriorityAdapter.getItemPosition(data.getPriority());
         this.taskPriority.setSelection(priorityPos);
-        int categoryPos = this.taskPriorityAdapter.getItemPosition(data.getCategory());
+        int categoryPos = this.taskCategoryAdapter.getItemPosition(data.getCategory());
         this.taskCategory.setSelection(categoryPos);
         this.taskDetails.setText(data.getDetails());
         this.taskButton.setText(R.string.task_button_finish);
