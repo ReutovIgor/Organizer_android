@@ -9,13 +9,13 @@
 
     <!--Task Details strings-->
     <string name="task_hint_name">Task name</string>
-    <string name="task_hint_priority">Priority</string>
-    <string name="task_hint_category">Category</string>
-    <string name="task_hint_time_options">Add date and time</string>
+    <string name="task_hint_priority">Priority:</string>
+    <string name="task_hint_category">Category:</string>
+    <string name="task_hint_time_options">Deadline</string>
     <string name="task_hint_from">From</string>
     <string name="task_hint_to">To</string>
     <string name="task_hint_details">Details</string>
-    <string name="task_button_create">Create</string>
+    <string name="task_button_create">Create task</string>
     <string name="task_button_finish">Finish</string>
 
     <!--Tasks Menu strings-->

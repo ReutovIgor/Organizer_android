@@ -32,22 +32,16 @@ public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetai
     private TaskDetailsControl taskDetailsControl;
 
     private EditText taskName;
-    private CheckBox taskSchedulable;
-    private TextView taskFromDateTimeHint;
-    private LinearLayout taskFromDateTime;
-    private TextView taskFromDate;
-    private TextView taskFromTime;
-    private TextView taskToDateTimeHint;
-    private LinearLayout taskToDateTime;
-    private TextView taskToDate;
-    private TextView taskToTime;
+    private CheckBox dedlineCheckbox;
+    private LinearLayout taskDueDateTime;
+    private TextView taskDueDate;
+    private TextView taskDueTime;
     private Spinner taskPriority;
     private SpinnerAdapter taskPriorityAdapter;
     private Spinner taskCategory;
     private SpinnerAdapter taskCategoryAdapter;
     private EditText taskDetails;
     private Button taskButton;
-    private DateTimePickerHelper fromDateTimeHelper;
     private DateTimePickerHelper toDateTimeHelper;
 
     private boolean blockedStatus;
@@ -57,7 +51,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetai
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_details);
 
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.taskDetailsView_toolbar);
+        Toolbar myToolbar = findViewById(R.id.taskDetailsView_toolbar);
         setSupportActionBar(myToolbar);
 
         ActionBar ab = getSupportActionBar();
@@ -66,25 +60,18 @@ public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetai
         this.blockedStatus = true;
 
         this.taskName = findViewById(R.id.task_name);
-        this.taskSchedulable =findViewById(R.id.task_scheduled_checkbox);
-        this.taskSchedulable.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        this.dedlineCheckbox =findViewById(R.id.task_scheduled_checkbox);
+        this.dedlineCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 toggleDateTime(isChecked);
             }
         });
 
-        this.taskFromDateTimeHint = findViewById(R.id.from_date_time_hint);
-        this.taskFromDateTime = findViewById(R.id.from_date_time);
-        this.taskFromDate = findViewById(R.id.task_from_date);
-        this.taskFromTime = findViewById(R.id.task_from_time);
-        this.fromDateTimeHelper = new DateTimePickerHelper(this, this.taskFromDate, this.taskFromTime);
-
-        this.taskToDateTimeHint = findViewById(R.id.to_date_time_hint);
-        this.taskToDateTime = findViewById(R.id.to_date_time);
-        this.taskToDate = findViewById(R.id.task_to_date);
-        this.taskToTime = findViewById(R.id.task_to_time);
-        this.toDateTimeHelper = new DateTimePickerHelper(this, this.taskToDate, this.taskToTime);
+        this.taskDueDateTime = findViewById(R.id.to_date_time);
+        this.taskDueDate = findViewById(R.id.task_to_date);
+        this.taskDueTime = findViewById(R.id.task_to_time);
+        this.toDateTimeHelper = new DateTimePickerHelper(this, this.taskDueDate, this.taskDueTime);
 
         this.taskPriority = findViewById(R.id.task_priority);
         this.taskPriorityAdapter = new SpinnerAdapter(this,null, R.layout.task_details_drop_down_item,0, SpinnerAdapter.TYPE_PRIORITY);
@@ -137,22 +124,21 @@ public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetai
     }
 
     private void toggleDateTime(boolean show) {
-        int visible = show ? View.VISIBLE : View.GONE;
-        this.taskFromDateTimeHint.setVisibility(visible);
-        this.taskFromDateTime.setVisibility(visible);
-        this.taskToDateTimeHint.setVisibility(visible);
-        this.taskToDateTime.setVisibility(visible);
+        this.taskDueDateTime.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     private HashMap<String, String> getTaskData() {
         HashMap<String, String> data = new HashMap<>();
         data.put(DatabaseDefines.TASK_LIST_NAME, taskName.getText().toString());
         data.put(DatabaseDefines.TASK_LIST_STATUS, DatabaseDefines.STATUS_IN_PROGRESS);
-        if(taskSchedulable.isChecked()) {
-            String str = this.taskFromDate.getText().toString() + " " + this.taskFromTime.getText().toString();
+        if(dedlineCheckbox.isChecked()) {
+            //get time now for new task
+            Date d = new Date ((Calendar.getInstance().getTime()).getTime());
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MMMM/yyyy HH:mm");
+            String str = dateFormatter.format(d);
             String fromDate = this.dateTimeConverter(str, true);
             data.put(DatabaseDefines.TASK_LIST_START, fromDate);
-            str = this.taskToDate.getText().toString() + " " + this.taskToTime.getText().toString();
+            str = this.taskDueDate.getText().toString() + " " + this.taskDueTime.getText().toString();
             String toDate = this.dateTimeConverter(str, true);
             data.put(DatabaseDefines.TASK_LIST_END, toDate);
         }else {
@@ -170,9 +156,8 @@ public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetai
         this.toggleDataEdit(false);
         this.taskName.setText(data.getName());
         boolean showDateTime = data.getDateFrom().length() > 0 ? true : false;
-        this.taskSchedulable.setChecked(showDateTime);
+        this.dedlineCheckbox.setChecked(showDateTime);
         this.toggleDateTime(showDateTime);
-        this.fromDateTimeHelper.setDateTime(this.dateTimeConverter(data.getDateFrom(), false));
         this.toDateTimeHelper.setDateTime(this.dateTimeConverter(data.getDateTo(), false));
         int priorityPos = this.taskPriorityAdapter.getItemPosition(data.getPriority());
         this.taskPriority.setSelection(priorityPos);
@@ -187,8 +172,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetai
         this.toggleDataEdit(true);
         this.toggleDateTime(false);
         this.taskName.setText("");
-        this.taskSchedulable.setChecked(false);
-        this.fromDateTimeHelper.setDefault(false);
+        this.dedlineCheckbox.setChecked(false);
         this.toDateTimeHelper.setDefault(true);
         this.taskPriority.setSelection(0);
         this.taskCategory.setSelection(0);
@@ -212,16 +196,12 @@ public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetai
             this.blockedStatus = blocked;
             this.taskName.setEnabled(blocked);
             this.taskName.setFocusable(blocked);
-            this.taskSchedulable.setEnabled(blocked);
-            this.taskSchedulable.setFocusable(blocked);
-            this.taskFromDate.setEnabled(blocked);
-            this.taskFromDate.setFocusable(blocked);
-            this.taskFromTime.setEnabled(blocked);
-            this.taskFromTime.setFocusable(blocked);
-            this.taskToDate.setEnabled(blocked);
-            this.taskToDate.setFocusable(blocked);
-            this.taskToTime.setEnabled(blocked);
-            this.taskToTime.setFocusable(blocked);
+            this.dedlineCheckbox.setEnabled(blocked);
+            this.dedlineCheckbox.setFocusable(blocked);
+            this.taskDueDate.setEnabled(blocked);
+            this.taskDueDate.setFocusable(blocked);
+            this.taskDueTime.setEnabled(blocked);
+            this.taskDueTime.setFocusable(blocked);
             this.taskPriority.setEnabled(blocked);
             this.taskPriority.setFocusable(blocked);
             this.taskCategory.setEnabled(blocked);

@@ -10,6 +10,8 @@
 
     <color name="colorDateTime">#ececec</color>
 
+    <color name="colorTaskDetailsSpinner">#ececec</color>
+
     <color name="checkBoxInnerColor">#a71717</color>
 
     <!--Category colors-->

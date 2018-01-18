@@ -7,12 +7,16 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.ruireutov.organiser.DatabaseWorkers.DatabaseDefines;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class ListCursorAdapter extends CursorAdapter {
     private LayoutInflater layoutInflater;
@@ -39,11 +43,41 @@ public class ListCursorAdapter extends CursorAdapter {
         String iconName = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_CATEGORY_ICON) );
         categoryImage.setImageDrawable(resources.getDrawable(resources.getIdentifier(iconName, "drawable", context.getPackageName())));
         categoryImage.setBackgroundColor(Color.parseColor(cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_CATEGORY_COLOR))));
-
         taskTitle.setText(cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_NAME)));
-        dueDate.setText(cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_END)));
         priority.setText(cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_PRIORITY_MARK)));
         priority.setTextColor(Color.parseColor(cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_PRIORITY_COLOR))));
-        timeLeft.setText("12h");
+        String dueDateStr = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_END));
+        dueDate.setText(dueDateStr + " (" + this.getTimeLeft(dueDateStr) + ")");
+        //timeLeft.setText(this.getTimeLeft(dueDateStr) + " (" + dueDateStr + ")");
+    }
+
+    private String getTimeLeft(String dueDateStr) {
+        Date currentDate = new Date ((Calendar.getInstance().getTime()).getTime());
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        Date dueDate;
+        try {
+            dueDate = dateFormatter.parse(dueDateStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "12h";
+        }
+
+        long secondsInMilli = 1000;
+        long minutesInMilli = secondsInMilli * 60;
+        long hoursInMilli = minutesInMilli * 60;
+        long daysInMilli = hoursInMilli * 24;
+
+
+        long difference =  dueDate.getTime() - currentDate.getTime();
+
+        if(difference / daysInMilli > 0) {
+            return String.valueOf(difference / daysInMilli) + " days left";
+        } else if( difference / hoursInMilli > 0 ) {
+            return String.valueOf(difference / hoursInMilli) + "h left";
+        } else if( difference / minutesInMilli <= 0 ) {
+            return "Overdue";
+        } else {
+            return "Hurry";
+        }
     }
 }
