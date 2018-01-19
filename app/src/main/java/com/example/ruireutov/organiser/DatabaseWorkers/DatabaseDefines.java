@@ -6,6 +6,7 @@ package com.example.ruireutov.organiser.DatabaseWorkers;
 
 public class DatabaseDefines {
     //task table names
+    public static final String TASK_LIST_ID = "_id";
     public static final String TASK_LIST_NAME = "Name";
     public static final String TASK_LIST_DETAILS = "Details";
     public static final String TASK_LIST_START = "Start";

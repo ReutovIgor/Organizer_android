@@ -1,6 +1,7 @@
 package com.example.ruireutov.organiser.TaskDetails;
 
 import android.database.Cursor;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -30,7 +31,7 @@ import java.util.HashMap;
 public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetailsUIControl {
 
     private TaskDetailsControl taskDetailsControl;
-
+    private ConstraintLayout parentLayout;
     private EditText taskName;
     private CheckBox dedlineCheckbox;
     private LinearLayout taskDueDateTime;
@@ -41,10 +42,12 @@ public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetai
     private Spinner taskCategory;
     private SpinnerAdapter taskCategoryAdapter;
     private EditText taskDetails;
-    private Button taskButton;
+    private Button taskButton1;
+    private Button taskButton2;
+    private Button taskButton3;
     private DateTimePickerHelper toDateTimeHelper;
 
-    private boolean blockedStatus;
+    private boolean editMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +60,8 @@ public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetai
         ActionBar ab = getSupportActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
 
-        this.blockedStatus = true;
+        this.parentLayout = findViewById(R.id.task_detail_root);
+        this.setDetailMode(false);
 
         this.taskName = findViewById(R.id.task_name);
         this.dedlineCheckbox =findViewById(R.id.task_scheduled_checkbox);
@@ -83,8 +87,14 @@ public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetai
 
         this.taskDetails = findViewById(R.id.task_details);
 
-        this.taskButton = findViewById(R.id.task_button);
-        this.taskButton.setOnClickListener(new ElementClickListener());
+        this.taskButton1 = findViewById(R.id.task_button_1);
+        this.taskButton1.setOnClickListener(new ElementClickListener());
+
+        this.taskButton2 = findViewById(R.id.task_button_2);
+        this.taskButton2.setOnClickListener(new ElementClickListener());
+
+        this.taskButton3 = findViewById(R.id.task_button_3);
+        this.taskButton3.setOnClickListener(new ElementClickListener());
 
         this.taskDetailsControl = new TaskDetailsControl(this);
     }
@@ -127,6 +137,11 @@ public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetai
         this.taskDueDateTime.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
+    private void setDetailMode(boolean active) {
+        this.editMode = active;
+        this.parentLayout.setFocusableInTouchMode(this.editMode);
+    }
+
     private HashMap<String, String> getTaskData() {
         HashMap<String, String> data = new HashMap<>();
         data.put(DatabaseDefines.TASK_LIST_NAME, taskName.getText().toString());
@@ -153,8 +168,9 @@ public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetai
 
     @Override
     public void showTaskDetails(TaskDetailsData data) {
-        this.toggleDataEdit(false);
+        this.setDetailMode(true);
         this.taskName.setText(data.getName());
+        //TODO change in DB to timed tasks
         boolean showDateTime = data.getDateFrom().length() > 0 ? true : false;
         this.dedlineCheckbox.setChecked(showDateTime);
         this.toggleDateTime(showDateTime);
@@ -164,12 +180,14 @@ public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetai
         int categoryPos = this.taskCategoryAdapter.getItemPosition(data.getCategory());
         this.taskCategory.setSelection(categoryPos);
         this.taskDetails.setText(data.getDetails());
-        this.taskButton.setText(R.string.task_button_finish);
+        this.taskButton1.setVisibility(View.VISIBLE);
+        this.taskButton2.setText(R.string.task_button_save);
+        this.taskButton1.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void showTaskCreation() {
-        this.toggleDataEdit(true);
+        this.setDetailMode(false);
         this.toggleDateTime(false);
         this.taskName.setText("");
         this.dedlineCheckbox.setChecked(false);
@@ -177,7 +195,9 @@ public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetai
         this.taskPriority.setSelection(0);
         this.taskCategory.setSelection(0);
         this.taskDetails.setText("");
-        this.taskButton.setText(R.string.task_button_create);
+        this.taskButton1.setVisibility(View.GONE);
+        this.taskButton2.setText(R.string.task_button_create);
+        this.taskButton3.setVisibility(View.GONE);
     }
 
     @Override
@@ -190,35 +210,20 @@ public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetai
         this.taskPriorityAdapter.swapCursor(cursor);
     }
 
-    @Override
-    public void toggleDataEdit(boolean blocked) {
-        if(this.blockedStatus != blocked) {
-            this.blockedStatus = blocked;
-            this.taskName.setEnabled(blocked);
-            this.taskName.setFocusable(blocked);
-            this.dedlineCheckbox.setEnabled(blocked);
-            this.dedlineCheckbox.setFocusable(blocked);
-            this.taskDueDate.setEnabled(blocked);
-            this.taskDueDate.setFocusable(blocked);
-            this.taskDueTime.setEnabled(blocked);
-            this.taskDueTime.setFocusable(blocked);
-            this.taskPriority.setEnabled(blocked);
-            this.taskPriority.setFocusable(blocked);
-            this.taskCategory.setEnabled(blocked);
-            this.taskCategory.setFocusable(blocked);
-            this.taskDetails.setEnabled(blocked);
-            this.taskDetails.setFocusable(blocked);
-        }
-    }
-
     private class ElementClickListener implements View.OnClickListener{
         @Override
         public void onClick(View v) {
             switch(v.getId()) {
-                case R.id.task_button:
-                    if(taskButton.getText().toString() != getString(R.string.task_button_finish)) {
+                case R.id.task_button_1:
+                    break;
+                case R.id.task_button_2:
+                    if(taskButton2.getText().toString() != getString(R.string.task_button_save)) {
                         taskDetailsControl.addTask(new TaskDetailsData( getTaskData()));
+                    } else {
+                        //update task details
                     }
+                    break;
+                case R.id.task_button_3:
                     break;
             }
         }

@@ -37,7 +37,7 @@ public class ListCursorAdapter extends CursorAdapter {
         TextView taskTitle = view.findViewById(R.id.task_title_text);
         TextView priority = view.findViewById(R.id.task_priority_icon);//TODO: change to image in future
         TextView dueDate = view.findViewById(R.id.due_time_text);
-        TextView timeLeft = view.findViewById(R.id.time_left_text);
+        //TextView timeLeft = view.findViewById(R.id.time_left_text);
 
         Resources resources = context.getResources();
         String iconName = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_CATEGORY_ICON) );

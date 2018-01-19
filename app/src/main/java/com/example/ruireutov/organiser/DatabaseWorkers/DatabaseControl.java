@@ -117,7 +117,7 @@ public class DatabaseControl {
 
     public Cursor getTasks() {
         String[] columns = {
-                TABLE_TASKS + "." + KEY_ID + " AS _id",
+                TABLE_TASKS + "." + KEY_ID + " AS " + DatabaseDefines.TASK_LIST_ID,
                 TABLE_TASKS + "." + KEY_NAME + " AS " + DatabaseDefines.TASK_LIST_NAME,
                 TABLE_TASKS + "." + KEY_DETAILS + " AS " + DatabaseDefines.TASK_LIST_DETAILS,
                 TABLE_TASKS + "." + KEY_START + " AS " + DatabaseDefines.TASK_LIST_START,
@@ -141,6 +141,36 @@ public class DatabaseControl {
     }
 
     public void addTask(TaskDetailsData taskData) {
+        //get Status ID
+        Cursor sId = this.db.query(TABLE_STATUSES, null, KEY_NAME + " = ?", new String[] {taskData.getStatus()}, null, null, null);
+        sId.moveToFirst();
+        String statusId = sId.getString(sId.getColumnIndex(KEY_ID));
+
+        //get Category ID
+        Cursor cId = this.db.query(TABLE_CATEGORIES, null, KEY_NAME + " = ?", new String[] {taskData.getCategory()}, null, null, null);
+        cId.moveToFirst();
+        String categoryId = cId.getString(cId.getColumnIndex(KEY_ID));
+
+        //get Priority ID
+        Cursor pId = this.db.query(TABLE_PRIORITIES, null, KEY_NAME + " = ?", new String[] {taskData.getPriority()}, null, null, null);
+        pId.moveToFirst();
+        String priorityId = pId.getString(pId.getColumnIndex(KEY_ID));
+
+        //insert new task
+        ContentValues cv = new ContentValues();
+        cv.put(KEY_NAME, taskData.getName());
+        cv.put(KEY_STATUS_ID, statusId);
+        cv.put(KEY_START, taskData.getDateFrom());
+        cv.put(KEY_END, taskData.getDateTo());
+        cv.put(KEY_CATEGORY_ID, categoryId);
+        cv.put(KEY_PRIORITY_ID, priorityId);
+        cv.put(KEY_DETAILS, taskData.getName());
+
+        db.insert(TABLE_TASKS, null, cv);
+        db.update(TABLE_TASKS, cv, KEY_ID + " = ?", new String[] {taskData.getId()});
+    }
+
+    public void updateTask(TaskDetailsData taskData) {
         //get Status ID
         Cursor sId = this.db.query(TABLE_STATUSES, null, KEY_NAME + " = ?", new String[] {taskData.getStatus()}, null, null, null);
         sId.moveToFirst();

@@ -35,6 +35,7 @@ public class TaskListControl implements ITaskListControl {
     @Override
     public void showDetails(int position) {
         Intent intent = new Intent(this.context, TaskDetailsActivity.class);
+        if(!this.listData.isClosed()) this.listData.close();
         this.listData.moveToPosition(position);
         TaskDetailsData data = new TaskDetailsData(this.listData);
         intent.putExtra(TaskDetailsData.TASK_DETAILS_NAME, data);
@@ -43,6 +44,7 @@ public class TaskListControl implements ITaskListControl {
 
     @Override
     public void onDestroy() {
+        this.listData.close();
         this.dbControl.close();
     }
 

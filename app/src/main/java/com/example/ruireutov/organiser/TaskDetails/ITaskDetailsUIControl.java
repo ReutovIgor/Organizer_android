@@ -13,5 +13,4 @@ public interface ITaskDetailsUIControl {
     void showTaskCreation();
     void fillCategories(Cursor cursor);
     void fillPriorities(Cursor cursor);
-    void toggleDataEdit(boolean blocked);
 }

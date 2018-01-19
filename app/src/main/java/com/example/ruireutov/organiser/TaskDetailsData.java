@@ -13,6 +13,7 @@ import java.util.HashMap;
 
 public class TaskDetailsData implements Serializable{
     public static final String TASK_DETAILS_NAME = "TaskData";
+    private String id;
     private String name;
     private String dateFrom;
     private String dateTo;
@@ -26,6 +27,7 @@ public class TaskDetailsData implements Serializable{
     private String details;
 
     public TaskDetailsData(Cursor cursor) {
+        this.id             = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_NAME) );
         this.name           = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_NAME) );
         this.status         = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_STATUS) );
         this.dateFrom       = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_START) );
@@ -85,5 +87,9 @@ public class TaskDetailsData implements Serializable{
 
     public String getDetails() {
         return details;
+    }
+
+    public String getId() {
+        return id;
     }
 }
