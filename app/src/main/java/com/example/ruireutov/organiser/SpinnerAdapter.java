@@ -42,7 +42,6 @@ public class SpinnerAdapter extends ResourceCursorAdapter {
 
         public int getItemPosition(String name) {
             return this.mapping.containsKey(name) ? this.mapping.get(name) : 0;
-            //return 0;
         }
 
         @Override

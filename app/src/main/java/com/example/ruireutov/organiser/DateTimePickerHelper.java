@@ -8,26 +8,20 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-
-/**
- * Created by ruireutov on 07-Dec-17.
- */
-
 public class DateTimePickerHelper {
     private TextView dateView;
     private TextView timeView;
-    private Context context;
     private Calendar calendar;
     private DatePickerDialog datePickerDialog;
     private TimePickerDialog timePickerDialog;
 
     public DateTimePickerHelper(Context context, TextView dateView, TextView timeView) {
-        this.context = context;
         this.dateView = dateView;
         this.dateView.setOnClickListener(new TextViewClickHandlers());
         this.timeView = timeView;
@@ -52,41 +46,34 @@ public class DateTimePickerHelper {
         }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true);
     }
 
-    public void setDefault(boolean next) {
-        int offset = next ? 1800000 : 0;
-        Date d = new Date ((Calendar.getInstance().getTime()).getTime() + offset);
+    public void setDefault() {
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.MINUTE, 30);
 
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MMMM/yyyy");
-        SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm");
-
-        String strDate = dateFormatter.format(d);
-        String strTime = timeFormatter.format(d);
+        String strDate = SimpleDateFormat.getTimeInstance().format(c.getTime());
+        String strTime = SimpleDateFormat.getDateInstance().format(c.getTime());
 
         this.dateView.setText(strDate);
         this.timeView.setText(strTime);
     }
 
-    public void setDateTime(String date) {
-        try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MMMM/yyyy HH:mm");
-            this.calendar.setTime(dateFormat.parse(date));
-            int i = date.indexOf(' ');
-            this.dateView.setText(date.substring(0, i));
-            this.timeView.setText(date.substring(i + 1, date.length()));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+    public void setDateTime(Date date) {
+        this.calendar.setTime(date);
+        this.dateView.setText(SimpleDateFormat.getDateInstance().format(this.calendar.getTime()));
+        this.timeView.setText(SimpleDateFormat.getTimeInstance().format(this.calendar.getTime()));
+    }
+
+    public Date getDateTime() {
+        return this.calendar.getTime();
     }
 
     private void setDateView() {
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MMMM/YYYY");
-        String strDate = dateFormatter.format(this.calendar.getTime());
+        String strDate = SimpleDateFormat.getDateTimeInstance().format(this.calendar.getTime());
         this.dateView.setText(strDate);
     }
 
     private void setTimeView() {
-        SimpleDateFormat timeFormatter = new SimpleDateFormat("HH:mm");
-        String strTime = timeFormatter.format(this.calendar.getTime());
+        String strTime = SimpleDateFormat.getTimeInstance().format(this.calendar.getTime());
         this.timeView.setText(strTime);
     }
 

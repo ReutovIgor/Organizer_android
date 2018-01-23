@@ -19,6 +19,9 @@ public class DatabaseDefines {
     public static final String TASK_LIST_PRIORITY_MARK = "PriorityMark";
     public static final String TASK_LIST_PRIORITY_COLOR = "PriorityColor";
 
+    public static final int TASK_STATUS_IN_PROGRESS = 0;
+    public static final int TASK_STATUS_CLOSED = 1;
+
     //Categories table names
     public static final String CATEGORIES_NAME = "Name";
     public static final String CATEGORIES_ICON = "CategoryIcon";
@@ -28,9 +31,4 @@ public class DatabaseDefines {
     public static final String PRIORITIES_NAME = "Name";
     public static final String PRIORITIES_MARK = "PriorityMark";
     public static final String PRIORITIES_COLOR = "PriorityColor";
-
-    //task statuses
-    public static final String STATUS_IN_PROGRESS = "inProgress";
-    public static final String STATUS_FINISHED = "finished";
-    public static final String STATUS_FAILED = "failed";
 }

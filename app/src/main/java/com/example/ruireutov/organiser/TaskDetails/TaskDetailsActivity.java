@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.example.ruireutov.organiser.DatabaseWorkers.DatabaseDefines;
 import com.example.ruireutov.organiser.DateTimePickerHelper;
 import com.example.ruireutov.organiser.R;
 import com.example.ruireutov.organiser.SpinnerAdapter;
@@ -26,7 +25,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 
 public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetailsUIControl {
 
@@ -45,7 +43,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetai
     private Button taskButton1;
     private Button taskButton2;
     private Button taskButton3;
-    private DateTimePickerHelper toDateTimeHelper;
+    private DateTimePickerHelper dueDateTimeHelper;
 
     private boolean editMode;
 
@@ -64,6 +62,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetai
         this.setDetailMode(false);
 
         this.taskName = findViewById(R.id.task_name);
+        //this.taskName.on
         this.dedlineCheckbox =findViewById(R.id.task_scheduled_checkbox);
         this.dedlineCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -75,7 +74,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetai
         this.taskDueDateTime = findViewById(R.id.to_date_time);
         this.taskDueDate = findViewById(R.id.task_to_date);
         this.taskDueTime = findViewById(R.id.task_to_time);
-        this.toDateTimeHelper = new DateTimePickerHelper(this, this.taskDueDate, this.taskDueTime);
+        this.dueDateTimeHelper = new DateTimePickerHelper(this, this.taskDueDate, this.taskDueTime);
 
         this.taskPriority = findViewById(R.id.task_priority);
         this.taskPriorityAdapter = new SpinnerAdapter(this,null, R.layout.task_details_drop_down_item,0, SpinnerAdapter.TYPE_PRIORITY);
@@ -115,11 +114,11 @@ public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetai
         DateFormat fromFormat, toFormat;
 
         if(toDb) {
-            fromFormat = new SimpleDateFormat("dd/MMMM/yyyy HH:mm");
+            fromFormat = SimpleDateFormat.getDateTimeInstance();
             toFormat = new SimpleDateFormat("yyyy-MM-DD HH:mm");
         } else {
             fromFormat = new SimpleDateFormat("yyyy-MM-DD HH:mm");
-            toFormat = new SimpleDateFormat("dd/MMMM/yyyy HH:mm");
+            toFormat = SimpleDateFormat.getDateTimeInstance();
         }
 
         Date d;
@@ -142,43 +141,49 @@ public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetai
         this.parentLayout.setFocusableInTouchMode(this.editMode);
     }
 
-    private HashMap<String, String> getTaskData() {
-        HashMap<String, String> data = new HashMap<>();
-        data.put(DatabaseDefines.TASK_LIST_NAME, taskName.getText().toString());
-        data.put(DatabaseDefines.TASK_LIST_STATUS, DatabaseDefines.STATUS_IN_PROGRESS);
-        if(dedlineCheckbox.isChecked()) {
-            //get time now for new task
-            Date d = new Date ((Calendar.getInstance().getTime()).getTime());
-            SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MMMM/yyyy HH:mm");
-            String str = dateFormatter.format(d);
-            String fromDate = this.dateTimeConverter(str, true);
-            data.put(DatabaseDefines.TASK_LIST_START, fromDate);
-            str = this.taskDueDate.getText().toString() + " " + this.taskDueTime.getText().toString();
-            String toDate = this.dateTimeConverter(str, true);
-            data.put(DatabaseDefines.TASK_LIST_END, toDate);
-        }else {
-            data.put(DatabaseDefines.TASK_LIST_START, "");
-            data.put(DatabaseDefines.TASK_LIST_END, "");
-        }
-        data.put(DatabaseDefines.TASK_LIST_PRIORITY, this.taskPriority.getSelectedItem().toString());
-        data.put(DatabaseDefines.TASK_LIST_CATEGORY, this.taskCategory.getSelectedItem().toString());
-
-        return data;
-    }
+//    private HashMap<String, String> getTaskData() {
+//        HashMap<String, String> data = new HashMap<>();
+//        //data.put(DatabaseDefines.TASK_LIST_ID, this.taskDetailsControl.getTaskId());
+//        data.put(DatabaseDefines.TASK_LIST_NAME, taskName.getText().toString());
+//        data.put(DatabaseDefines.TASK_LIST_STATUS, Integer.toString(DatabaseDefines.TASK_STATUS_IN_PROGRESS));
+//        Date d = Calendar.getInstance().getTime();
+//        DateFormat dateFormatter = SimpleDateFormat.getDateTimeInstance();
+//        String str = dateFormatter.format(d);
+//        String fromDate = this.dateTimeConverter(str, true);
+//        data.put(DatabaseDefines.TASK_LIST_START, fromDate);
+//        if(dedlineCheckbox.isChecked()) {
+//            str = this.taskDueDate.getText().toString() + " " + this.taskDueTime.getText().toString();
+//            String toDate = this.dateTimeConverter(str, true);
+//            data.put(DatabaseDefines.TASK_LIST_END, toDate);
+//        }else {
+//            data.put(DatabaseDefines.TASK_LIST_END, "");
+//        }
+//        data.put(DatabaseDefines.TASK_LIST_PRIORITY, this.taskPriority.getSelectedItem().toString());
+//        data.put(DatabaseDefines.TASK_LIST_CATEGORY, this.taskCategory.getSelectedItem().toString());
+//
+//        return data;
+//    }
 
     @Override
     public void showTaskDetails(TaskDetailsData data) {
         this.setDetailMode(true);
+
         this.taskName.setText(data.getName());
-        //TODO change in DB to timed tasks
-        boolean showDateTime = data.getDateFrom().length() > 0 ? true : false;
-        this.dedlineCheckbox.setChecked(showDateTime);
-        this.toggleDateTime(showDateTime);
-        this.toDateTimeHelper.setDateTime(this.dateTimeConverter(data.getDateTo(), false));
+
+        this.dedlineCheckbox.setChecked(data.hasDeadline());
+        this.toggleDateTime(data.hasDeadline());
+        if(data.hasDeadline()) {
+            this.dueDateTimeHelper.setDateTime(data.getDateDue());
+        } else {
+            this.dueDateTimeHelper.setDefault();
+        }
+
         int priorityPos = this.taskPriorityAdapter.getItemPosition(data.getPriority());
         this.taskPriority.setSelection(priorityPos);
+
         int categoryPos = this.taskCategoryAdapter.getItemPosition(data.getCategory());
         this.taskCategory.setSelection(categoryPos);
+
         this.taskDetails.setText(data.getDetails());
         this.taskButton1.setVisibility(View.VISIBLE);
         this.taskButton2.setText(R.string.task_button_save);
@@ -191,7 +196,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetai
         this.toggleDateTime(false);
         this.taskName.setText("");
         this.dedlineCheckbox.setChecked(false);
-        this.toDateTimeHelper.setDefault(true);
+        this.dueDateTimeHelper.setDefault();
         this.taskPriority.setSelection(0);
         this.taskCategory.setSelection(0);
         this.taskDetails.setText("");
@@ -218,9 +223,9 @@ public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetai
                     break;
                 case R.id.task_button_2:
                     if(taskButton2.getText().toString() != getString(R.string.task_button_save)) {
-                        taskDetailsControl.addTask(new TaskDetailsData( getTaskData()));
+                        //taskDetailsControl.addTask(new TaskDetailsData( getTaskData()));
                     } else {
-                        //update task details
+                        //taskDetailsControl.updateTask(new TaskDetailsData( getTaskData()));
                     }
                     break;
                 case R.id.task_button_3:

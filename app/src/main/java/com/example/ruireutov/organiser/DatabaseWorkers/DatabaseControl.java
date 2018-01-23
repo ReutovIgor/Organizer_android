@@ -17,10 +17,9 @@ public class DatabaseControl {
     private static final String DATABASE_NAME = "organiser_db";
 
     //Database version
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 3;
 
     //Database tables
-    private static final String TABLE_STATUSES = "statuses_table";
     private static final String TABLE_CATEGORIES = "categories_table";
     private static final String TABLE_PRIORITIES = "priorities_table";
     private static final String TABLE_TASKS = "tasks_table";
@@ -28,7 +27,6 @@ public class DatabaseControl {
     //Database common column names
     private static final String KEY_ID = "id";
     private static final String KEY_NAME = "name";
-    private static final String KEY_DETAILS = "details";
     private static final String KEY_COLOR = "color";
 
     //Database Priority table column names
@@ -40,17 +38,13 @@ public class DatabaseControl {
     //Database Tasks table column names
     private static final String KEY_START = "startTime";
     private static final String KEY_END = "endTime";
-    private static final String KEY_STATUS_ID = "status_id";
+    private static final String KEY_STATUS = "status";
     private static final String KEY_CATEGORY_ID = "category_id";
     private static final String KEY_PRIORITY_ID = "priority_id";
+    private static final String KEY_DETAILS = "details";
 
 
     //Database Create tables queries
-    private static final String TABLE_STATUSES_CREATE = "create table "
-            + TABLE_STATUSES + " ("
-            + KEY_ID + " integer primary key autoincrement, "
-            + KEY_NAME + " text not null);";
-
     private static final String TABLE_CATEGORIES_CREATE = "create table "
             + TABLE_CATEGORIES + " ("
             + KEY_ID + " integer primary key autoincrement, "
@@ -70,9 +64,9 @@ public class DatabaseControl {
             + KEY_ID + " integer primary key autoincrement, "
             + KEY_NAME + " text not null, "
             + KEY_DETAILS + " text, "
-            + KEY_START + " text, "
+            + KEY_START + " text not null, "
             + KEY_END + " text, "
-            + KEY_STATUS_ID + " boolean not null, "
+            + KEY_STATUS + " integer not null, "
             + KEY_CATEGORY_ID + " integer not null, "
             + KEY_PRIORITY_ID + " integer not null, "
             + " FOREIGN KEY ( " + KEY_CATEGORY_ID + " ) REFERENCES " + TABLE_CATEGORIES + " ( "+ KEY_ID + " ) "
@@ -80,7 +74,6 @@ public class DatabaseControl {
             + " ); ";
 
     private static final String GET_TO_DO_LIST_TABLE = TABLE_TASKS +
-            " LEFT JOIN " + TABLE_STATUSES   + " on " + TABLE_TASKS + "." + KEY_STATUS_ID   + "=" + TABLE_STATUSES   + "." + KEY_ID +
             " LEFT JOIN " + TABLE_CATEGORIES + " on " + TABLE_TASKS + "." + KEY_CATEGORY_ID + "=" + TABLE_CATEGORIES + "." + KEY_ID +
             " LEFT JOIN " + TABLE_PRIORITIES + " on " + TABLE_TASKS + "." + KEY_PRIORITY_ID + "=" + TABLE_PRIORITIES + "." + KEY_ID;
 
@@ -122,7 +115,7 @@ public class DatabaseControl {
                 TABLE_TASKS + "." + KEY_DETAILS + " AS " + DatabaseDefines.TASK_LIST_DETAILS,
                 TABLE_TASKS + "." + KEY_START + " AS " + DatabaseDefines.TASK_LIST_START,
                 TABLE_TASKS + "." + KEY_END + " AS " + DatabaseDefines.TASK_LIST_END,
-                TABLE_STATUSES + "." + KEY_NAME + " AS " + DatabaseDefines.TASK_LIST_STATUS,
+                TABLE_TASKS + "." + KEY_STATUS + " AS " + DatabaseDefines.TASK_LIST_STATUS,
                 TABLE_CATEGORIES + "." + KEY_NAME + " AS " + DatabaseDefines.TASK_LIST_CATEGORY,
                 TABLE_CATEGORIES + "." + KEY_COLOR + " AS " + DatabaseDefines.TASK_LIST_CATEGORY_COLOR,
                 TABLE_CATEGORIES + "." + KEY_ICON + " AS " + DatabaseDefines.TASK_LIST_CATEGORY_ICON,
@@ -141,11 +134,6 @@ public class DatabaseControl {
     }
 
     public void addTask(TaskDetailsData taskData) {
-        //get Status ID
-        Cursor sId = this.db.query(TABLE_STATUSES, null, KEY_NAME + " = ?", new String[] {taskData.getStatus()}, null, null, null);
-        sId.moveToFirst();
-        String statusId = sId.getString(sId.getColumnIndex(KEY_ID));
-
         //get Category ID
         Cursor cId = this.db.query(TABLE_CATEGORIES, null, KEY_NAME + " = ?", new String[] {taskData.getCategory()}, null, null, null);
         cId.moveToFirst();
@@ -159,23 +147,17 @@ public class DatabaseControl {
         //insert new task
         ContentValues cv = new ContentValues();
         cv.put(KEY_NAME, taskData.getName());
-        cv.put(KEY_STATUS_ID, statusId);
-        cv.put(KEY_START, taskData.getDateFrom());
-        cv.put(KEY_END, taskData.getDateTo());
+        cv.put(KEY_STATUS, taskData.getStatus());
+        cv.put(KEY_START, taskData.getDateStartString(""));
+        cv.put(KEY_END, taskData.getDateDueString(""));
         cv.put(KEY_CATEGORY_ID, categoryId);
         cv.put(KEY_PRIORITY_ID, priorityId);
         cv.put(KEY_DETAILS, taskData.getName());
 
         db.insert(TABLE_TASKS, null, cv);
-        db.update(TABLE_TASKS, cv, KEY_ID + " = ?", new String[] {taskData.getId()});
     }
 
     public void updateTask(TaskDetailsData taskData) {
-        //get Status ID
-        Cursor sId = this.db.query(TABLE_STATUSES, null, KEY_NAME + " = ?", new String[] {taskData.getStatus()}, null, null, null);
-        sId.moveToFirst();
-        String statusId = sId.getString(sId.getColumnIndex(KEY_ID));
-
         //get Category ID
         Cursor cId = this.db.query(TABLE_CATEGORIES, null, KEY_NAME + " = ?", new String[] {taskData.getCategory()}, null, null, null);
         cId.moveToFirst();
@@ -189,14 +171,24 @@ public class DatabaseControl {
         //insert new task
         ContentValues cv = new ContentValues();
         cv.put(KEY_NAME, taskData.getName());
-        cv.put(KEY_STATUS_ID, statusId);
-        cv.put(KEY_START, taskData.getDateFrom());
-        cv.put(KEY_END, taskData.getDateTo());
+        cv.put(KEY_STATUS, taskData.getStatus());
+        cv.put(KEY_START, taskData.getDateStartString(""));
+        cv.put(KEY_END, taskData.getDateDueString(""));
         cv.put(KEY_CATEGORY_ID, categoryId);
         cv.put(KEY_PRIORITY_ID, priorityId);
         cv.put(KEY_DETAILS, taskData.getName());
 
-        db.insert(TABLE_TASKS, null, cv);
+        db.update(TABLE_TASKS, cv, KEY_ID + " = ?", new String[] {Long.toString(taskData.getId())});
+    }
+
+    public void closeTask(String id) {
+        ContentValues cv = new ContentValues();
+        cv.put(KEY_NAME, DatabaseDefines.TASK_STATUS_CLOSED);
+        db.update(TABLE_TASKS, cv, KEY_ID + " = ?", new String[] {id});
+    }
+
+    public void removeTask(String id) {
+        db.delete(TABLE_TASKS, KEY_ID + " = ?", new String[] {id});
     }
 
     public Cursor getCategories() {
@@ -229,12 +221,10 @@ public class DatabaseControl {
         @Override
         public void onCreate(SQLiteDatabase db) {
             String s = "DROP TABLE IF EXISTS ";
-            db.execSQL(s + TABLE_STATUSES);
             db.execSQL(s + TABLE_TASKS);
             db.execSQL(s + TABLE_CATEGORIES);
             db.execSQL(s + TABLE_PRIORITIES);
 
-            db.execSQL(TABLE_STATUSES_CREATE);
             db.execSQL(TABLE_CATEGORIES_CREATE);
             db.execSQL(TABLE_PRIORITIES_CREATE);
             db.execSQL(TABLE_TASKS_CREATE);
@@ -242,19 +232,6 @@ public class DatabaseControl {
             //initial data for Organiser tasks
             //Priorities data
             ContentValues cv = new ContentValues();
-            cv.put(KEY_NAME, DatabaseDefines.STATUS_IN_PROGRESS);
-            db.insert(TABLE_STATUSES, null, cv);
-            cv.clear();
-
-            cv.put(KEY_NAME, DatabaseDefines.STATUS_FAILED);
-            db.insert(TABLE_STATUSES, null, cv);
-            cv.clear();
-
-            cv.put(KEY_NAME, DatabaseDefines.STATUS_FINISHED);
-            db.insert(TABLE_STATUSES, null, cv);
-            cv.clear();
-
-            //Priority date
             cv.put(KEY_NAME, "High");
             cv.put(KEY_MARK, "!!!");
             cv.put(KEY_COLOR, "#FF3500");
