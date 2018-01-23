@@ -2,6 +2,7 @@ package com.example.ruireutov.organiser;
 
 import android.annotation.SuppressLint;
 import android.database.Cursor;
+import android.util.Log;
 
 import com.example.ruireutov.organiser.DatabaseWorkers.DatabaseDefines;
 
@@ -67,6 +68,7 @@ public class TaskDetailsData implements Serializable{
                 this.timed = false;
             }
         } catch (ParseException e) {
+            Log.e("TaskDetailsData", "TaskDetails error date parsing error: " + e.toString());
             //TODO: add error handling
         }
     }
@@ -102,7 +104,7 @@ public class TaskDetailsData implements Serializable{
     public String getDateStartString(String pattern) {
         if(pattern.length() > 0){
             @SuppressLint("SimpleDateFormat")
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-DD HH:mm");
+            SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
             return dateFormat.format(this.dateStart);
 
         } else {
@@ -121,7 +123,7 @@ public class TaskDetailsData implements Serializable{
     public String getDateDueString(String pattern) {
         if(pattern.length() > 0){
             @SuppressLint("SimpleDateFormat")
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-DD HH:mm");
+            SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
             return dateFormat.format(this.dateDue);
 
         } else {
@@ -130,6 +132,7 @@ public class TaskDetailsData implements Serializable{
     }
 
     public void setDateDue(Date dateDue) {
+        this.timed = dateDue == null ? false : true;
         this.dateDue = dateDue;
     }
 

@@ -47,19 +47,19 @@ public class TaskDetailsControl implements ITaskDetailsControl{
     }
 
     public void updateTask() {
-        //this.dbControl.updateTask(data);
+        this.dbControl.updateTask(this.taskDetailsData);
         Intent intent = new Intent(this.context, TaskListActivity.class);
         this.context.startActivity(intent);
     }
 
     public void closeTask() {
-        //this.dbControl.closeTask(this.taskDetailsData.getId());
+        this.dbControl.closeTask(this.taskDetailsData.getId());
         Intent intent = new Intent(this.context, TaskListActivity.class);
         this.context.startActivity(intent);
     }
 
     public void deleteTask() {
-        //this.dbControl.removeTask(this.taskDetailsData.getId());
+        this.dbControl.removeTask(this.taskDetailsData.getId());
         Intent intent = new Intent(this.context, TaskListActivity.class);
         this.context.startActivity(intent);
     }

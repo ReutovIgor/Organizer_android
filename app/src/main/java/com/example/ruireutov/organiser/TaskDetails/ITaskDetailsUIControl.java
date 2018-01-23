@@ -14,3 +14,5 @@ public interface ITaskDetailsUIControl {
     void fillCategories(Cursor cursor);
     void fillPriorities(Cursor cursor);
 }
+
+

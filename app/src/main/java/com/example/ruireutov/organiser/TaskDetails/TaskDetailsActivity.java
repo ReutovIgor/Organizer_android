@@ -6,7 +6,10 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -20,18 +23,16 @@ import com.example.ruireutov.organiser.R;
 import com.example.ruireutov.organiser.SpinnerAdapter;
 import com.example.ruireutov.organiser.TaskDetailsData;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+//import java.text.DateFormat;
+import android.text.format.DateFormat;
 import java.util.Date;
 
-public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetailsUIControl {
+public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetailsUIControl, ITaskDetailsUINotification{
 
     private TaskDetailsControl taskDetailsControl;
     private ConstraintLayout parentLayout;
     private EditText taskName;
-    private CheckBox dedlineCheckbox;
+    private CheckBox deadlineCheckbox;
     private LinearLayout taskDueDateTime;
     private TextView taskDueDate;
     private TextView taskDueTime;
@@ -62,9 +63,10 @@ public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetai
         this.setDetailMode(false);
 
         this.taskName = findViewById(R.id.task_name);
-        //this.taskName.on
-        this.dedlineCheckbox =findViewById(R.id.task_scheduled_checkbox);
-        this.dedlineCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        this.taskName.addTextChangedListener(new ViewTextWatcher(this.taskName));
+
+        this.deadlineCheckbox =findViewById(R.id.task_scheduled_checkbox);
+        this.deadlineCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 toggleDateTime(isChecked);
@@ -79,12 +81,15 @@ public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetai
         this.taskPriority = findViewById(R.id.task_priority);
         this.taskPriorityAdapter = new SpinnerAdapter(this,null, R.layout.task_details_drop_down_item,0, SpinnerAdapter.TYPE_PRIORITY);
         this.taskPriority.setAdapter(this.taskPriorityAdapter);
+        this.taskPriority.setOnItemSelectedListener(new SpinnerSelectionChangeListener());
 
         this.taskCategory = findViewById(R.id.task_category);
         this.taskCategoryAdapter = new SpinnerAdapter(this, null, R.layout.task_details_drop_down_item, 0, SpinnerAdapter.TYPE_CATEGORY);
         this.taskCategory.setAdapter(this.taskCategoryAdapter);
+        this.taskCategory.setOnItemSelectedListener(new SpinnerSelectionChangeListener());
 
         this.taskDetails = findViewById(R.id.task_details);
+        this.taskDetails.addTextChangedListener(new ViewTextWatcher(this.taskDetails));
 
         this.taskButton1 = findViewById(R.id.task_button_1);
         this.taskButton1.setOnClickListener(new ElementClickListener());
@@ -110,30 +115,9 @@ public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetai
         this.taskDetailsControl.onDestroy();
     }
 
-    private String dateTimeConverter(String date, boolean toDb) {
-        DateFormat fromFormat, toFormat;
-
-        if(toDb) {
-            fromFormat = SimpleDateFormat.getDateTimeInstance();
-            toFormat = new SimpleDateFormat("yyyy-MM-DD HH:mm");
-        } else {
-            fromFormat = new SimpleDateFormat("yyyy-MM-DD HH:mm");
-            toFormat = SimpleDateFormat.getDateTimeInstance();
-        }
-
-        Date d;
-        try {
-            d = fromFormat.parse(date);
-        } catch (ParseException e) {
-            d = Calendar.getInstance().getTime();
-            e.printStackTrace();
-        }
-        String strDateNew = toFormat.format(d);
-        return strDateNew;
-    }
-
     private void toggleDateTime(boolean show) {
         this.taskDueDateTime.setVisibility(show ? View.VISIBLE : View.GONE);
+        this.taskDetailsControl.setDueDate(show ? this.dueDateTimeHelper.getDateTime(): null);
     }
 
     private void setDetailMode(boolean active) {
@@ -141,36 +125,13 @@ public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetai
         this.parentLayout.setFocusableInTouchMode(this.editMode);
     }
 
-//    private HashMap<String, String> getTaskData() {
-//        HashMap<String, String> data = new HashMap<>();
-//        //data.put(DatabaseDefines.TASK_LIST_ID, this.taskDetailsControl.getTaskId());
-//        data.put(DatabaseDefines.TASK_LIST_NAME, taskName.getText().toString());
-//        data.put(DatabaseDefines.TASK_LIST_STATUS, Integer.toString(DatabaseDefines.TASK_STATUS_IN_PROGRESS));
-//        Date d = Calendar.getInstance().getTime();
-//        DateFormat dateFormatter = SimpleDateFormat.getDateTimeInstance();
-//        String str = dateFormatter.format(d);
-//        String fromDate = this.dateTimeConverter(str, true);
-//        data.put(DatabaseDefines.TASK_LIST_START, fromDate);
-//        if(dedlineCheckbox.isChecked()) {
-//            str = this.taskDueDate.getText().toString() + " " + this.taskDueTime.getText().toString();
-//            String toDate = this.dateTimeConverter(str, true);
-//            data.put(DatabaseDefines.TASK_LIST_END, toDate);
-//        }else {
-//            data.put(DatabaseDefines.TASK_LIST_END, "");
-//        }
-//        data.put(DatabaseDefines.TASK_LIST_PRIORITY, this.taskPriority.getSelectedItem().toString());
-//        data.put(DatabaseDefines.TASK_LIST_CATEGORY, this.taskCategory.getSelectedItem().toString());
-//
-//        return data;
-//    }
-
     @Override
     public void showTaskDetails(TaskDetailsData data) {
         this.setDetailMode(true);
 
         this.taskName.setText(data.getName());
 
-        this.dedlineCheckbox.setChecked(data.hasDeadline());
+        this.deadlineCheckbox.setChecked(data.hasDeadline());
         this.toggleDateTime(data.hasDeadline());
         if(data.hasDeadline()) {
             this.dueDateTimeHelper.setDateTime(data.getDateDue());
@@ -195,10 +156,12 @@ public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetai
         this.setDetailMode(false);
         this.toggleDateTime(false);
         this.taskName.setText("");
-        this.dedlineCheckbox.setChecked(false);
+        this.deadlineCheckbox.setChecked(false);
         this.dueDateTimeHelper.setDefault();
         this.taskPriority.setSelection(0);
+        //this.taskDetailsControl.setPriority(this.taskPriority.getSelectedItem().toString());
         this.taskCategory.setSelection(0);
+        //this.taskDetailsControl.setCategory(this.taskCategory.getSelectedItem().toString());
         this.taskDetails.setText("");
         this.taskButton1.setVisibility(View.GONE);
         this.taskButton2.setText(R.string.task_button_create);
@@ -215,22 +178,76 @@ public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetai
         this.taskPriorityAdapter.swapCursor(cursor);
     }
 
+    @Override
+    public void onDateDueChange(Date d) {
+        this.taskDetailsControl.setDueDate(d);
+    }
+
     private class ElementClickListener implements View.OnClickListener{
         @Override
         public void onClick(View v) {
             switch(v.getId()) {
                 case R.id.task_button_1:
+                    taskDetailsControl.closeTask();
                     break;
                 case R.id.task_button_2:
                     if(taskButton2.getText().toString() != getString(R.string.task_button_save)) {
-                        //taskDetailsControl.addTask(new TaskDetailsData( getTaskData()));
+                        taskDetailsControl.addTask();
                     } else {
-                        //taskDetailsControl.updateTask(new TaskDetailsData( getTaskData()));
+                        taskDetailsControl.updateTask();
                     }
                     break;
                 case R.id.task_button_3:
+                    taskDetailsControl.deleteTask();
                     break;
             }
         }
+    }
+
+    private class ViewTextWatcher implements TextWatcher{
+        private View textView;
+        public ViewTextWatcher(View textView) {
+            this.textView = textView;
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+        @Override
+        public void afterTextChanged(Editable editable) {
+            switch (this.textView.getId()) {
+                case R.id.task_name:
+                    taskDetailsControl.setName(editable.toString());
+                    break;
+                case R.id.task_details:
+                    taskDetailsControl.setDetails(editable.toString());
+                    break;
+                case R.id.task_to_date:
+                    taskDetailsControl.setDueDate(dueDateTimeHelper.getDateTime());
+                    break;
+                case R.id.task_to_time:
+                    taskDetailsControl.setDueDate(dueDateTimeHelper.getDateTime());
+                    break;
+            }
+        }
+    }
+
+    private class SpinnerSelectionChangeListener implements AdapterView.OnItemSelectedListener {
+        @Override
+        public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+            int isa = adapterView.getId();
+            switch (adapterView.getId()) {
+                case R.id.task_priority:
+                    taskDetailsControl.setPriority(taskPriority.getSelectedItem().toString());
+                    break;
+                case R.id.task_category:
+                    taskDetailsControl.setCategory(taskCategory.getSelectedItem().toString());
+                    break;
+            }
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> adapterView) { return;}
     }
 }

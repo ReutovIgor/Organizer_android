@@ -8,20 +8,26 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.example.ruireutov.organiser.TaskDetails.ITaskDetailsUINotification;
+import com.example.ruireutov.organiser.TaskDetails.TaskDetailsControl;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class DateTimePickerHelper {
+    private Calendar calendar;
     private TextView dateView;
     private TextView timeView;
-    private Calendar calendar;
     private DatePickerDialog datePickerDialog;
     private TimePickerDialog timePickerDialog;
+    private ITaskDetailsUINotification taskDetailsUINotification;
 
     public DateTimePickerHelper(Context context, TextView dateView, TextView timeView) {
+        this.taskDetailsUINotification = (ITaskDetailsUINotification) context;
         this.dateView = dateView;
         this.dateView.setOnClickListener(new TextViewClickHandlers());
         this.timeView = timeView;
@@ -50,8 +56,8 @@ public class DateTimePickerHelper {
         Calendar c = Calendar.getInstance();
         c.add(Calendar.MINUTE, 30);
 
-        String strDate = SimpleDateFormat.getTimeInstance().format(c.getTime());
-        String strTime = SimpleDateFormat.getDateInstance().format(c.getTime());
+        String strDate = SimpleDateFormat.getDateInstance().format(c.getTime());
+        String strTime = SimpleDateFormat.getTimeInstance(DateFormat.SHORT).format(c.getTime());
 
         this.dateView.setText(strDate);
         this.timeView.setText(strTime);
@@ -60,7 +66,7 @@ public class DateTimePickerHelper {
     public void setDateTime(Date date) {
         this.calendar.setTime(date);
         this.dateView.setText(SimpleDateFormat.getDateInstance().format(this.calendar.getTime()));
-        this.timeView.setText(SimpleDateFormat.getTimeInstance().format(this.calendar.getTime()));
+        this.timeView.setText(SimpleDateFormat.getTimeInstance(DateFormat.SHORT).format(this.calendar.getTime()));
     }
 
     public Date getDateTime() {
@@ -68,13 +74,15 @@ public class DateTimePickerHelper {
     }
 
     private void setDateView() {
-        String strDate = SimpleDateFormat.getDateTimeInstance().format(this.calendar.getTime());
+        String strDate = SimpleDateFormat.getDateInstance().format(this.calendar.getTime());
         this.dateView.setText(strDate);
+        this.taskDetailsUINotification.onDateDueChange(this.calendar.getTime());
     }
 
     private void setTimeView() {
-        String strTime = SimpleDateFormat.getTimeInstance().format(this.calendar.getTime());
+        String strTime = SimpleDateFormat.getTimeInstance(DateFormat.SHORT).format(this.calendar.getTime());
         this.timeView.setText(strTime);
+        this.taskDetailsUINotification.onDateDueChange(this.calendar.getTime());
     }
 
     private class TextViewClickHandlers implements View.OnClickListener {

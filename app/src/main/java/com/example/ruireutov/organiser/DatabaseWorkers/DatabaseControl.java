@@ -148,11 +148,11 @@ public class DatabaseControl {
         ContentValues cv = new ContentValues();
         cv.put(KEY_NAME, taskData.getName());
         cv.put(KEY_STATUS, taskData.getStatus());
-        cv.put(KEY_START, taskData.getDateStartString(""));
-        cv.put(KEY_END, taskData.getDateDueString(""));
+        cv.put(KEY_START, taskData.getDateStartString("yyyy-MM-DD HH:mm"));
+        cv.put(KEY_END, taskData.getDateDueString("yyyy-MM-DD HH:mm"));
         cv.put(KEY_CATEGORY_ID, categoryId);
         cv.put(KEY_PRIORITY_ID, priorityId);
-        cv.put(KEY_DETAILS, taskData.getName());
+        cv.put(KEY_DETAILS, taskData.getDetails());
 
         db.insert(TABLE_TASKS, null, cv);
     }
@@ -172,23 +172,23 @@ public class DatabaseControl {
         ContentValues cv = new ContentValues();
         cv.put(KEY_NAME, taskData.getName());
         cv.put(KEY_STATUS, taskData.getStatus());
-        cv.put(KEY_START, taskData.getDateStartString(""));
-        cv.put(KEY_END, taskData.getDateDueString(""));
+        cv.put(KEY_START, taskData.getDateStartString("yyyy-MM-DD HH:mm"));
+        cv.put(KEY_END, taskData.getDateDueString("yyyy-MM-DD HH:mm"));
         cv.put(KEY_CATEGORY_ID, categoryId);
         cv.put(KEY_PRIORITY_ID, priorityId);
-        cv.put(KEY_DETAILS, taskData.getName());
+        cv.put(KEY_DETAILS, taskData.getDetails());
 
         db.update(TABLE_TASKS, cv, KEY_ID + " = ?", new String[] {Long.toString(taskData.getId())});
     }
 
-    public void closeTask(String id) {
+    public void closeTask(long id) {
         ContentValues cv = new ContentValues();
         cv.put(KEY_NAME, DatabaseDefines.TASK_STATUS_CLOSED);
-        db.update(TABLE_TASKS, cv, KEY_ID + " = ?", new String[] {id});
+        db.update(TABLE_TASKS, cv, KEY_ID + " = ?", new String[] {Long.toString(id)});
     }
 
-    public void removeTask(String id) {
-        db.delete(TABLE_TASKS, KEY_ID + " = ?", new String[] {id});
+    public void removeTask(long id) {
+        db.delete(TABLE_TASKS, KEY_ID + " = ?", new String[] {Long.toString(id)});
     }
 
     public Cursor getCategories() {
