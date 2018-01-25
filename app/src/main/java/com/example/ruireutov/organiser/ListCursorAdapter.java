@@ -1,5 +1,6 @@
 package com.example.ruireutov.organiser;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -35,9 +36,9 @@ public class ListCursorAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         ImageView categoryImage = view.findViewById(R.id.task_category_icon);
         TextView taskTitle = view.findViewById(R.id.task_title_text);
-        TextView priority = view.findViewById(R.id.task_priority_icon);//TODO: change to image in future
-        TextView dueDate = view.findViewById(R.id.due_time_text);
-        //TextView timeLeft = view.findViewById(R.id.time_left_text);
+        TextView priority = view.findViewById(R.id.task_priority_icon);
+        TextView taskTimeLabel = view.findViewById(R.id.task_time_label);
+        TextView taskTime = view.findViewById(R.id.task_time_text);
 
         Resources resources = context.getResources();
         String iconName = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_CATEGORY_ICON) );
@@ -46,38 +47,74 @@ public class ListCursorAdapter extends CursorAdapter {
         taskTitle.setText(cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_NAME)));
         priority.setText(cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_PRIORITY_MARK)));
         priority.setTextColor(Color.parseColor(cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_PRIORITY_COLOR))));
+        String startDateStr = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_START));
         String dueDateStr = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_END));
-        dueDate.setText(dueDateStr + " (" + this.getTimeLeft(dueDateStr) + ")");
-        //timeLeft.setText(this.getTimeLeft(dueDateStr) + " (" + dueDateStr + ")");
+        if(dueDateStr.length() <= 0 ) {
+            taskTimeLabel.setText(context.getResources().getString(R.string.task_list_lasts));
+        }
+        taskTime.setText(this.getDisplayTime(startDateStr, dueDateStr));
     }
 
-    private String getTimeLeft(String dueDateStr) {
-        Date currentDate = new Date ((Calendar.getInstance().getTime()).getTime());
+    private String getDisplayTime(String startDate, String dueDate) {
+        @SuppressLint("SimpleDateFormat")
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        Date dueDate;
+        Date date;
         try {
-            dueDate = dateFormatter.parse(dueDateStr);
+            if(dueDate.length() > 0) {
+                date = dateFormatter.parse(dueDate);
+                return this.getTimeLeft(date);
+            }else {
+                date = dateFormatter.parse(startDate);
+                return this.getTimeSpent(date);
+            }
         } catch (ParseException e) {
             e.printStackTrace();
-            return "12h";
+            return "";
         }
+    }
+
+    private String getTimeSpent(Date date) {
+        Date currentDate = new Date ((Calendar.getInstance().getTime()).getTime());
 
         long secondsInMilli = 1000;
         long minutesInMilli = secondsInMilli * 60;
         long hoursInMilli = minutesInMilli * 60;
         long daysInMilli = hoursInMilli * 24;
 
-
-        long difference =  dueDate.getTime() - currentDate.getTime();
+        long difference =  currentDate.getTime() - date.getTime();
 
         if(difference / daysInMilli > 0) {
-            return String.valueOf(difference / daysInMilli) + " days left";
+            return String.valueOf(difference / daysInMilli) + " days ";
         } else if( difference / hoursInMilli > 0 ) {
-            return String.valueOf(difference / hoursInMilli) + "h left";
-        } else if( difference / minutesInMilli <= 0 ) {
-            return "Overdue";
+            return String.valueOf(difference / hoursInMilli) + "h";
+        } else if( difference / minutesInMilli > 0 ) {
+            return " less than a minute";
         } else {
-            return "Hurry";
+            return "FOREVER";
         }
+    }
+
+    private String getTimeLeft(Date date) {
+        String outputStr = SimpleDateFormat.getDateTimeInstance().format(date);
+        Date currentDate = new Date ((Calendar.getInstance().getTime()).getTime());
+
+        long secondsInMilli = 1000;
+        long minutesInMilli = secondsInMilli * 60;
+        long hoursInMilli = minutesInMilli * 60;
+        long daysInMilli = hoursInMilli * 24;
+
+        long difference =  date.getTime() - currentDate.getTime();
+
+        String timeStr;
+        if(difference / daysInMilli > 0) {
+            timeStr = String.valueOf(difference / daysInMilli) + " days left";
+        } else if( difference / hoursInMilli > 0 ) {
+            timeStr = String.valueOf(difference / hoursInMilli) + "h left";
+        } else if( difference / minutesInMilli <= 0 ) {
+            timeStr = "Overdue";
+        } else {
+            timeStr = "Hurry";
+        }
+        return outputStr + "(" + timeStr + ")";
     }
 }

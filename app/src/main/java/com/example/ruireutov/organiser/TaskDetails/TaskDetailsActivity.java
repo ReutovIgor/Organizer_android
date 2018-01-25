@@ -128,23 +128,17 @@ public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetai
     @Override
     public void showTaskDetails(TaskDetailsData data) {
         this.setDetailMode(true);
-
         this.taskName.setText(data.getName());
-
-        this.deadlineCheckbox.setChecked(data.hasDeadline());
-        this.toggleDateTime(data.hasDeadline());
         if(data.hasDeadline()) {
             this.dueDateTimeHelper.setDateTime(data.getDateDue());
         } else {
             this.dueDateTimeHelper.setDefault();
         }
-
+        this.deadlineCheckbox.setChecked(data.hasDeadline());
         int priorityPos = this.taskPriorityAdapter.getItemPosition(data.getPriority());
         this.taskPriority.setSelection(priorityPos);
-
         int categoryPos = this.taskCategoryAdapter.getItemPosition(data.getCategory());
         this.taskCategory.setSelection(categoryPos);
-
         this.taskDetails.setText(data.getDetails());
         this.taskButton1.setVisibility(View.VISIBLE);
         this.taskButton2.setText(R.string.task_button_save);
@@ -154,14 +148,11 @@ public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetai
     @Override
     public void showTaskCreation() {
         this.setDetailMode(false);
-        this.toggleDateTime(false);
         this.taskName.setText("");
-        this.deadlineCheckbox.setChecked(false);
         this.dueDateTimeHelper.setDefault();
+        this.deadlineCheckbox.setChecked(false);
         this.taskPriority.setSelection(0);
-        //this.taskDetailsControl.setPriority(this.taskPriority.getSelectedItem().toString());
         this.taskCategory.setSelection(0);
-        //this.taskDetailsControl.setCategory(this.taskCategory.getSelectedItem().toString());
         this.taskDetails.setText("");
         this.taskButton1.setVisibility(View.GONE);
         this.taskButton2.setText(R.string.task_button_create);

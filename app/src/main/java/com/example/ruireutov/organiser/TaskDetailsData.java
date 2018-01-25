@@ -121,11 +121,12 @@ public class TaskDetailsData implements Serializable{
     }
 
     public String getDateDueString(String pattern) {
-        if(pattern.length() > 0){
+        if(this.dateDue == null) {
+          return "";
+        } else if(pattern.length() > 0){
             @SuppressLint("SimpleDateFormat")
             SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
             return dateFormat.format(this.dateDue);
-
         } else {
             return SimpleDateFormat.getDateTimeInstance().format(this.dateDue);
         }

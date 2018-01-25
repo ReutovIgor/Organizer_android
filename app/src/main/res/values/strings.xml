@@ -6,6 +6,7 @@
 
     <!--Task List strings-->
     <string name="task_list_due">Due:</string>
+    <string name="task_list_lasts">Task lasts:</string>
 
     <!--Task Details strings-->
     <string name="task_hint_name">Task name</string>

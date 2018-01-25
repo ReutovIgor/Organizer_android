@@ -31,7 +31,7 @@
         android:layout_alignParentEnd="true"
         android:textAlignment="center"/>
     <TextView
-        android:id="@+id/due_time_label"
+        android:id="@+id/task_time_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="3dp"
@@ -40,10 +40,10 @@
         android:text="@string/task_list_due"
         android:textColor="@color/colorTextHint"/>
     <TextView
-        android:id="@+id/due_time_text"
+        android:id="@+id/task_time_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/due_time_label"
+        android:layout_toEndOf="@id/task_time_label"
         android:layout_below="@id/task_category_icon"
         android:textColor="@color/colorTextHint"/>
 </RelativeLayout>
