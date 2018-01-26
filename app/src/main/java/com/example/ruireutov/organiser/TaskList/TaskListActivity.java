@@ -1,5 +1,6 @@
 package com.example.ruireutov.organiser.TaskList;
 
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -8,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -18,6 +20,11 @@ import com.example.ruireutov.organiser.R;
 import com.example.ruireutov.organiser.SideMenuBar;
 
 public class TaskListActivity extends AppCompatActivity implements ITaskListUiControl {
+    private static final String PREFS_NAME = "TASK_LIST_PREFS";
+    private static final String SHOW_COMPLETED = "TASK_LIST_COMPLETED";
+    private static final String SHOW_OVERDUE = "TASK_LIST_OVERDUE";
+    private static final String SORTING = "TASK_LIST_SORTING";
+    private static final String FILTER = "TASK_LIST_FILTER";
 
     private SideMenuBar sideMenuBar;
     private ListView listView;
@@ -29,13 +36,12 @@ public class TaskListActivity extends AppCompatActivity implements ITaskListUiCo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_list);
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.toDoListView_toolbar);
+        Toolbar myToolbar = findViewById(R.id.toDoListView_toolbar);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-//        getSupportActionBar().setIcon(R.drawable.menu);
 
-        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.toDoList_drawer);
-        ListView drawerList = (ListView) findViewById(R.id.navigation_list);
+        DrawerLayout drawerLayout = findViewById(R.id.toDoList_drawer);
+        ListView drawerList = findViewById(R.id.navigation_list);
         this.sideMenuBar = new SideMenuBar(this, drawerLayout, drawerList, android.R.layout.simple_list_item_1, "ToDoList");
 
         this.listView = findViewById(R.id.toDoListView_list);
@@ -51,13 +57,41 @@ public class TaskListActivity extends AppCompatActivity implements ITaskListUiCo
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.task_menu, menu);
 
+        SharedPreferences settings = getSharedPreferences(TaskListActivity.PREFS_NAME, 0);
+        menu.findItem(R.id.show_completed_button).setChecked(settings.getBoolean(TaskListActivity.SHOW_COMPLETED, false));
+        menu.findItem(R.id.show_failed_button).setChecked(settings.getBoolean(TaskListActivity.SHOW_OVERDUE, false));
+
         return super.onCreateOptionsMenu(menu);
-}
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        SharedPreferences settings = getSharedPreferences(TaskListActivity.PREFS_NAME, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        switch (item.getItemId()) {
+            case R.id.categories_button:
+                return true;
+            case R.id.sort_button:
+                return true;
+            case R.id.show_completed_button:
+                item.setChecked(!item.isChecked());
+                editor.putBoolean(TaskListActivity.SHOW_COMPLETED, !item.isChecked());
+                break;
+            case R.id.show_failed_button:
+                item.setChecked(!item.isChecked());
+                editor.putBoolean(TaskListActivity.SHOW_OVERDUE, !item.isChecked());
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        editor.apply();
+        return true;
+    }
 
     @Override
     protected void onResume() {
         super.onResume();
-        this.listControl.getTaskList();
+        this.listControl.getTaskList(getSharedPreferences(TaskListActivity.PREFS_NAME,0));
     }
 
     private void listItemClick(int id) {

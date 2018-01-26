@@ -15,7 +15,7 @@
             android:id="@+id/show_completed_button"
             android:title="@string/task_option_completed_tasks"/>
         <item
-            android:id="@+id/sort_failed_button"
+            android:id="@+id/show_failed_button"
             android:title="@string/task_option_failed_tasks"/>
     </group>
 </menu>

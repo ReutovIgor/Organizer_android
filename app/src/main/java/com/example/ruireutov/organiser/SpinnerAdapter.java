@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.ResourceCursorAdapter;
 import android.widget.TextView;
 
-import com.example.ruireutov.organiser.databaseWorkers.DatabaseDefines;
+import com.example.ruireutov.organiser.DatabaseWorkers.DatabaseDefines;
 
 import java.util.HashMap;
 
