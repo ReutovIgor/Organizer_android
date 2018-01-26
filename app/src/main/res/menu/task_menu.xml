@@ -7,10 +7,6 @@
         app:showAsAction="collapseActionView"
         android:title="@string/task_option_categories"/>
     <item
-        android:id="@+id/edit_button"
-        app:showAsAction="collapseActionView"
-        android:title="@string/task_option_edit_task"/>
-    <item
         android:id="@+id/sort_button"
         app:showAsAction="collapseActionView"
         android:title="@string/task_option_sort_tasks"/>
