@@ -1,8 +1,8 @@
-package com.example.ruireutov.organiser.TaskDetails;
+package com.example.ruireutov.organiser.task.taskDetails;
 
 import android.database.Cursor;
 
-import com.example.ruireutov.organiser.TaskDetailsData;
+import com.example.ruireutov.organiser.task.TaskDetailsData;
 
 /**
  * Created by ruireutov on 04-Dec-17.

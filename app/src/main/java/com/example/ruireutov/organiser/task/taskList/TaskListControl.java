@@ -1,19 +1,14 @@
-package com.example.ruireutov.organiser.TaskList;
+package com.example.ruireutov.organiser.task.taskList;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 
-import com.example.ruireutov.organiser.DatabaseWorkers.DatabaseControl;
-import com.example.ruireutov.organiser.TaskDetails.TaskDetailsActivity;
-import com.example.ruireutov.organiser.TaskDetailsData;
+import com.example.ruireutov.organiser.databaseWorkers.DatabaseControl;
+import com.example.ruireutov.organiser.task.TaskListFilter;
+import com.example.ruireutov.organiser.task.taskDetails.TaskDetailsActivity;
+import com.example.ruireutov.organiser.task.TaskDetailsData;
 
-import java.util.HashMap;
-
-/**
- * Created by ruireutov on 31-Oct-17.
- */
 
 public class TaskListControl implements ITaskListControl {
     private Context context;
@@ -52,10 +47,8 @@ public class TaskListControl implements ITaskListControl {
     }
 
     @Override
-    public void getTaskList(SharedPreferences prefs) {
-        HashMap<String, String[]> filter = new HashMap<>();
-        
-        this.listData = this.dbControl.getTasks();
+    public void getTaskList(TaskListFilter filter) {
+        this.listData = this.dbControl.getTasks(filter);
         this.uiControl.updateList(this.listData);
     }
 }

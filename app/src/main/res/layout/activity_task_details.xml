@@ -5,7 +5,7 @@
     android:id="@+id/task_detail_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.ruireutov.organiser.TaskDetails.TaskDetailsActivity">
+    tools:context=".task.taskDetails.TaskDetailsActivity">
     <LinearLayout
         android:id="@+id/main_container"
         android:layout_width="match_parent"

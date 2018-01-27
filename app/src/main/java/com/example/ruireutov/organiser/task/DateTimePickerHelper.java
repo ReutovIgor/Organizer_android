@@ -1,4 +1,4 @@
-package com.example.ruireutov.organiser;
+package com.example.ruireutov.organiser.task;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -8,15 +8,12 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import com.example.ruireutov.organiser.TaskDetails.ITaskDetailsUINotification;
-import com.example.ruireutov.organiser.TaskDetails.TaskDetailsControl;
+import com.example.ruireutov.organiser.task.taskDetails.ITaskDetailsUINotification;
 
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 public class DateTimePickerHelper {
     private Calendar calendar;

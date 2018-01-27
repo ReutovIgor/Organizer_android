@@ -1,17 +1,15 @@
-package com.example.ruireutov.organiser;
+package com.example.ruireutov.organiser.task;
 
 import android.annotation.SuppressLint;
 import android.database.Cursor;
 import android.util.Log;
 
-import com.example.ruireutov.organiser.DatabaseWorkers.DatabaseDefines;
+import com.example.ruireutov.organiser.databaseWorkers.DatabaseDefines;
 
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.regex.Pattern;
 
 /**
  * Created by ruireutov on 04-Dec-17.

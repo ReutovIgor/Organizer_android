@@ -1,4 +1,4 @@
-package com.example.ruireutov.organiser.TaskList;
+package com.example.ruireutov.organiser.task.taskList;
 
 import android.database.Cursor;
 

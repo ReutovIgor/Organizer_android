@@ -17,7 +17,7 @@
             <!--</intent-filter>-->
         </activity>
         <activity
-            android:name=".TaskList.TaskListActivity"
+            android:name=".task.taskList.TaskListActivity"
             android:label="@string/title_activity_to_do_list" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,9 +26,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".TaskDetails.TaskDetailsActivity"
+            android:name=".task.taskDetails.TaskDetailsActivity"
             android:label="@string/title_activity_task_details"
-            android:parentActivityName=".TaskList.TaskListActivity"></activity>
+            android:parentActivityName=".task.taskList.TaskListActivity"></activity>
     </application>
 
 </manifest>

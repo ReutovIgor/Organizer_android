@@ -1,4 +1,4 @@
-package com.example.ruireutov.organiser.TaskDetails;
+package com.example.ruireutov.organiser.task.taskDetails;
 
 import android.database.Cursor;
 import android.support.constraint.ConstraintLayout;
@@ -18,13 +18,12 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.example.ruireutov.organiser.DateTimePickerHelper;
+import com.example.ruireutov.organiser.task.DateTimePickerHelper;
 import com.example.ruireutov.organiser.R;
-import com.example.ruireutov.organiser.SpinnerAdapter;
-import com.example.ruireutov.organiser.TaskDetailsData;
+import com.example.ruireutov.organiser.task.SpinnerAdapter;
+import com.example.ruireutov.organiser.task.TaskDetailsData;
 
 //import java.text.DateFormat;
-import android.text.format.DateFormat;
 import java.util.Date;
 
 public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetailsUIControl, ITaskDetailsUINotification{

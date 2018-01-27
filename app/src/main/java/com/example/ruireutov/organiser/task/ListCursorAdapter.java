@@ -1,4 +1,4 @@
-package com.example.ruireutov.organiser;
+package com.example.ruireutov.organiser.task;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -12,7 +12,8 @@ import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.ruireutov.organiser.DatabaseWorkers.DatabaseDefines;
+import com.example.ruireutov.organiser.databaseWorkers.DatabaseDefines;
+import com.example.ruireutov.organiser.R;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

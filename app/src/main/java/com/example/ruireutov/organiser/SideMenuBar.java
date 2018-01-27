@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.ruireutov.organiser.MainView.MainActivity;
-import com.example.ruireutov.organiser.TaskList.TaskListActivity;
+import com.example.ruireutov.organiser.task.taskList.TaskListActivity;
 
 import java.util.HashMap;
 

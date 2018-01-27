@@ -1,4 +1,4 @@
-package com.example.ruireutov.organiser.DatabaseWorkers;
+package com.example.ruireutov.organiser.databaseWorkers;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -6,11 +6,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.example.ruireutov.organiser.TaskDetailsData;
+import com.example.ruireutov.organiser.task.TaskDetailsData;
+import com.example.ruireutov.organiser.task.TaskListFilter;
 
-/**
- * Created by ruireutov on 14-Nov-17.
- */
+import java.util.HashMap;
 
 public class DatabaseControl {
     //Database name
@@ -80,6 +79,7 @@ public class DatabaseControl {
     private static DatabaseControl instance;
     private DatabaseHelper dbHelper;
     private SQLiteDatabase db;
+    private HashMap<String, String> taskListFilterMapping;
     private int connectionCount;
 
     public static synchronized DatabaseControl getInstance(Context context) {
@@ -91,6 +91,14 @@ public class DatabaseControl {
     private DatabaseControl(Context context) {
         this.connectionCount = 0;
         this.dbHelper = new DatabaseHelper(context);
+
+        this.taskListFilterMapping = new HashMap<>();
+//        this.taskListFilterMapping.put(TaskListFilter.TASK_FILTER_OVERDUE, KEY_END);
+        this.taskListFilterMapping.put(TaskListFilter.TASK_FILTER_TIME_END, KEY_END);
+        this.taskListFilterMapping.put(TaskListFilter.TASK_FILTER_STATUS, KEY_STATUS);
+        this.taskListFilterMapping.put(TaskListFilter.TASK_FILTER_TIME_START, KEY_START);
+        this.taskListFilterMapping.put(TaskListFilter.TASK_FILTER_CATEGORY, TABLE_CATEGORIES + "." + KEY_NAME);
+        this.taskListFilterMapping.put(TaskListFilter.TASK_FILTER_PRIORITY, TABLE_PRIORITIES + "." + KEY_NAME);
     }
 
     public void open() {
@@ -108,7 +116,7 @@ public class DatabaseControl {
         }
     }
 
-    public Cursor getTasks() {
+    public Cursor getTasks(TaskListFilter filter) {
         String[] columns = {
                 TABLE_TASKS + "." + KEY_ID + " AS " + DatabaseDefines.TASK_LIST_ID,
                 TABLE_TASKS + "." + KEY_NAME + " AS " + DatabaseDefines.TASK_LIST_NAME,
@@ -125,6 +133,9 @@ public class DatabaseControl {
         };
         Cursor c;
         try {
+            filter.generateQueryParams(this.taskListFilterMapping);
+            String where = filter.getWhere();
+            String[] slection = filter.getSelection();
             c = this.db.query(GET_TO_DO_LIST_TABLE, columns, null, null, null, null, null);
         } catch(Exception e) {
             return null;
@@ -183,7 +194,7 @@ public class DatabaseControl {
 
     public void closeTask(long id) {
         ContentValues cv = new ContentValues();
-        cv.put(KEY_NAME, DatabaseDefines.TASK_STATUS_CLOSED);
+        cv.put(KEY_NAME, DatabaseDefines.TASK_STATUS_COMPLETED);
         db.update(TABLE_TASKS, cv, KEY_ID + " = ?", new String[] {Long.toString(id)});
     }
 

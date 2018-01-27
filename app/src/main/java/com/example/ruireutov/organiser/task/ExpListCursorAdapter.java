@@ -1,4 +1,4 @@
-package com.example.ruireutov.organiser;
+package com.example.ruireutov.organiser.task;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorTreeAdapter;
 import android.widget.TextView;
+
+import com.example.ruireutov.organiser.R;
 
 import java.util.HashMap;
 

@@ -1,10 +1,11 @@
-package com.example.ruireutov.organiser.DatabaseWorkers;
+package com.example.ruireutov.organiser.databaseWorkers;
 
 /**
  * Created by ruireutov on 04-Dec-17.
  */
 
 public class DatabaseDefines {
+    public static final String DB_DATE_TIME_FORMAT = "yyyy-MM-DD HH:mm";
     //task table names
     public static final String TASK_LIST_ID = "_id";
     public static final String TASK_LIST_NAME = "Name";
@@ -20,7 +21,7 @@ public class DatabaseDefines {
     public static final String TASK_LIST_PRIORITY_COLOR = "PriorityColor";
 
     public static final int TASK_STATUS_IN_PROGRESS = 0;
-    public static final int TASK_STATUS_CLOSED = 1;
+    public static final int TASK_STATUS_COMPLETED = 1;
 
     //Categories table names
     public static final String CATEGORIES_NAME = "Name";

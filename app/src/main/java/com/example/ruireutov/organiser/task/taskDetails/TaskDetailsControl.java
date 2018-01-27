@@ -1,15 +1,13 @@
-package com.example.ruireutov.organiser.TaskDetails;
+package com.example.ruireutov.organiser.task.taskDetails;
 
 import android.content.Context;
 import android.content.Intent;
 
-import com.example.ruireutov.organiser.DatabaseWorkers.DatabaseControl;
-import com.example.ruireutov.organiser.DatabaseWorkers.DatabaseDefines;
-import com.example.ruireutov.organiser.TaskDetailsData;
-import com.example.ruireutov.organiser.TaskList.TaskListActivity;
+import com.example.ruireutov.organiser.databaseWorkers.DatabaseControl;
+import com.example.ruireutov.organiser.databaseWorkers.DatabaseDefines;
+import com.example.ruireutov.organiser.task.TaskDetailsData;
+import com.example.ruireutov.organiser.task.taskList.TaskListActivity;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 

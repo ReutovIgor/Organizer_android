@@ -1,4 +1,4 @@
-package com.example.ruireutov.organiser;
+package com.example.ruireutov.organiser.task;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -12,13 +12,10 @@ import android.widget.ImageView;
 import android.widget.ResourceCursorAdapter;
 import android.widget.TextView;
 
-import com.example.ruireutov.organiser.DatabaseWorkers.DatabaseDefines;
+import com.example.ruireutov.organiser.R;
+import com.example.ruireutov.organiser.databaseWorkers.DatabaseDefines;
 
 import java.util.HashMap;
-
-/**
- * Created by ruireutov on 08-Dec-17.
- */
 
 public class SpinnerAdapter extends ResourceCursorAdapter {
         public static final String TYPE_CATEGORY = "Category";

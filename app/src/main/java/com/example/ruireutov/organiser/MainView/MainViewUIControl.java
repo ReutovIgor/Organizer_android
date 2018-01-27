@@ -1,16 +1,10 @@
 package com.example.ruireutov.organiser.MainView;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.widget.ExpandableListView;
 
-import com.example.ruireutov.organiser.DatabaseWorkers.DatabaseControl;
-import com.example.ruireutov.organiser.ExpListAdapter;
-import com.example.ruireutov.organiser.ExpListCursorAdapter;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import com.example.ruireutov.organiser.task.ExpListAdapter;
+import com.example.ruireutov.organiser.task.ExpListCursorAdapter;
 
 /**
  * Created by ruireutov on 31-Oct-17.

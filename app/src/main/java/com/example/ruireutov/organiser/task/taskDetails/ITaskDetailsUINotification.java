@@ -1,4 +1,4 @@
-package com.example.ruireutov.organiser.TaskDetails;
+package com.example.ruireutov.organiser.task.taskDetails;
 
 import java.util.Date;
 
