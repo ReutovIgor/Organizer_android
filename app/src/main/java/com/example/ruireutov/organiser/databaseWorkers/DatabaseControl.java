@@ -135,8 +135,8 @@ public class DatabaseControl {
         try {
             filter.generateQueryParams(this.taskListFilterMapping);
             String where = filter.getWhere();
-            String[] slection = filter.getSelection();
-            c = this.db.query(GET_TO_DO_LIST_TABLE, columns, null, null, null, null, null);
+            String[] selection = filter.getSelection();
+            c = this.db.query(GET_TO_DO_LIST_TABLE, columns, where, selection, null, null, null);
         } catch(Exception e) {
             return null;
         }
@@ -194,7 +194,7 @@ public class DatabaseControl {
 
     public void closeTask(long id) {
         ContentValues cv = new ContentValues();
-        cv.put(KEY_NAME, DatabaseDefines.TASK_STATUS_COMPLETED);
+        cv.put(KEY_STATUS, DatabaseDefines.TASK_STATUS_COMPLETED);
         db.update(TABLE_TASKS, cv, KEY_ID + " = ?", new String[] {Long.toString(id)});
     }
 

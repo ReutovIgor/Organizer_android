@@ -45,14 +45,14 @@ public class TaskListFilter {
 
     private void parseTimeEndFilters(String key) {
         String concatStr = "";
-        if(!this.overdue && this.timeEnd == "") {
+        if(this.overdue && this.timeEnd == "") {
             return;
         } else if(this.where.length() > 0 ) {
             concatStr = "AND";
         }
-        String timeSelection = " ( ";
-        if(this.overdue) {
-            timeSelection +=  key + " = ? ";
+        String timeSelection = "";
+        if(!this.overdue) {
+            timeSelection +=  key + " > ? ";
             Calendar calendar = Calendar.getInstance();
             @SuppressLint("SimpleDateFormat")
             SimpleDateFormat dateFormatter = new SimpleDateFormat(DatabaseDefines.DB_DATE_TIME_FORMAT);
@@ -63,7 +63,6 @@ public class TaskListFilter {
         if(this.timeEnd.length() > 0) {
 
         }
-        timeSelection += " ) ";
 
         //this.where += timeSelection.length() > 2 ? concatStr + timeSelection : "";
         this.where += concatStr + " ( " + timeSelection + " ) ";
@@ -71,13 +70,13 @@ public class TaskListFilter {
 
     private void parseCompletedFilters(String key) {
         String concatStr = "";
-        if(!this.completed) {
+        if(this.completed) {
             return;
         } else if(this.where.length() > 0 ) {
             concatStr = "AND";
         }
 
-        this.where += concatStr + " ( " + key + " = ? ) ";
+        this.where += concatStr + " ( " + key + " != ? ) ";
         this.selection.add(Integer.toString(DatabaseDefines.TASK_STATUS_COMPLETED));
     }
 

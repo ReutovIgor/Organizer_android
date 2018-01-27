@@ -70,21 +70,23 @@ public class TaskListActivity extends AppCompatActivity implements ITaskListUiCo
         switch (item.getItemId()) {
             case R.id.categories_button:
                 return true;
-            case R.id.sort_button:
+            case R.id.filter_button:
                 return true;
             case R.id.show_completed_button:
-                boolean checked = !item.isChecked();
+                editor.putBoolean(TaskListActivity.SHOW_COMPLETED, !item.isChecked());
+                editor.apply();
                 item.setChecked(!item.isChecked());
-                editor.putBoolean(TaskListActivity.SHOW_COMPLETED, checked);
+                this.listControl.getTaskList(getFilters());
                 break;
             case R.id.show_failed_button:
-                item.setChecked(!item.isChecked());
                 editor.putBoolean(TaskListActivity.SHOW_OVERDUE, !item.isChecked());
+                editor.apply();
+                item.setChecked(!item.isChecked());
+                this.listControl.getTaskList(getFilters());
                 break;
             default:
                 return super.onOptionsItemSelected(item);
         }
-        editor.apply();
         return true;
     }
 
@@ -110,6 +112,8 @@ public class TaskListActivity extends AppCompatActivity implements ITaskListUiCo
 
     private TaskListFilter getFilters() {
         SharedPreferences settings = getSharedPreferences(TaskListActivity.PREFS_NAME, 0);
+        boolean b1 = settings.getBoolean(TaskListActivity.SHOW_OVERDUE, false);
+        boolean b2 = settings.getBoolean(TaskListActivity.SHOW_COMPLETED, false);
         TaskListFilter filter = new TaskListFilter(
                 settings.getBoolean(TaskListActivity.SHOW_OVERDUE, false),
                 settings.getBoolean(TaskListActivity.SHOW_COMPLETED, false),

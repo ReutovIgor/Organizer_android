@@ -3,13 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/filter_button"
+        app:showAsAction="always"
+        android:icon="@drawable/filter_icon_white"
+        android:title=""/>
+    <item
         android:id="@+id/categories_button"
         app:showAsAction="collapseActionView"
         android:title="@string/task_option_categories"/>
-    <item
-        android:id="@+id/sort_button"
-        app:showAsAction="collapseActionView"
-        android:title="@string/task_option_sort_tasks"/>
+
     <group android:checkableBehavior="all">
         <item
             android:id="@+id/show_completed_button"

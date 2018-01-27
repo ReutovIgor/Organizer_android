@@ -23,7 +23,7 @@
 
     <!--Tasks Menu strings-->
     <string name="task_option_categories">Categories</string>
-    <string name="task_option_sort_tasks">Sort</string>
+    <string name="task_option_filter_tasks">Filter</string>
     <string name="task_option_completed_tasks">Show completed</string>
-    <string name="task_option_failed_tasks">Show failed</string>
+    <string name="task_option_failed_tasks">Show Overdue</string>
 </resources>
