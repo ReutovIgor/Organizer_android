@@ -1,14 +1,15 @@
 package com.example.ruireutov.organiser.task.taskDetails;
 
+
 import android.database.Cursor;
-import android.support.constraint.ConstraintLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+import android.support.constraint.ConstraintLayout;
+import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -18,15 +19,14 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.example.ruireutov.organiser.task.DateTimePickerHelper;
 import com.example.ruireutov.organiser.R;
+import com.example.ruireutov.organiser.task.DateTimePickerHelper;
 import com.example.ruireutov.organiser.task.SpinnerAdapter;
 import com.example.ruireutov.organiser.task.TaskDetailsData;
 
-//import java.text.DateFormat;
 import java.util.Date;
 
-public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetailsUIControl, ITaskDetailsUINotification{
+public class TaskDetailsFragment extends Fragment implements ITaskDetailsUIControl, ITaskDetailsUINotification, ITaskDetailsActivityControl{
 
     private TaskDetailsControl taskDetailsControl;
     private ConstraintLayout parentLayout;
@@ -46,25 +46,23 @@ public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetai
     private DateTimePickerHelper dueDateTimeHelper;
 
     private boolean editMode;
+    private TaskDetailsData receivedData;
+
+    public TaskDetailsFragment() {
+
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_task_details);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_task_details, container, false);
 
-        Toolbar myToolbar = findViewById(R.id.taskDetailsView_toolbar);
-        setSupportActionBar(myToolbar);
-
-        ActionBar ab = getSupportActionBar();
-        ab.setDisplayHomeAsUpEnabled(true);
-
-        this.parentLayout = findViewById(R.id.task_detail_root);
+        //this.parentLayout = view.findViewById(R.id.task_detail_root);
         this.setDetailMode(false);
 
-        this.taskName = findViewById(R.id.task_name);
-        this.taskName.addTextChangedListener(new ViewTextWatcher(this.taskName));
+        this.taskName = view.findViewById(R.id.task_name);
+        this.taskName.addTextChangedListener(new TaskDetailsFragment.ViewTextWatcher(this.taskName));
 
-        this.deadlineCheckbox =findViewById(R.id.task_scheduled_checkbox);
+        this.deadlineCheckbox = view.findViewById(R.id.task_scheduled_checkbox);
         this.deadlineCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -72,44 +70,47 @@ public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetai
             }
         });
 
-        this.taskDueDateTime = findViewById(R.id.to_date_time);
-        this.taskDueDate = findViewById(R.id.task_to_date);
-        this.taskDueTime = findViewById(R.id.task_to_time);
-        this.dueDateTimeHelper = new DateTimePickerHelper(this, this.taskDueDate, this.taskDueTime);
+        this.taskDueDateTime = view.findViewById(R.id.to_date_time);
+        this.taskDueDate = view.findViewById(R.id.task_to_date);
+        this.taskDueTime = view.findViewById(R.id.task_to_time);
+        this.dueDateTimeHelper = new DateTimePickerHelper(getActivity(), this, this.taskDueDate, this.taskDueTime);
 
-        this.taskPriority = findViewById(R.id.task_priority);
-        this.taskPriorityAdapter = new SpinnerAdapter(this,null, R.layout.task_details_drop_down_item,0, SpinnerAdapter.TYPE_PRIORITY);
+        this.taskPriority = view.findViewById(R.id.task_priority);
+        this.taskPriorityAdapter = new SpinnerAdapter(getActivity(),null, R.layout.task_details_drop_down_item,0, SpinnerAdapter.TYPE_PRIORITY);
         this.taskPriority.setAdapter(this.taskPriorityAdapter);
-        this.taskPriority.setOnItemSelectedListener(new SpinnerSelectionChangeListener());
+        this.taskPriority.setOnItemSelectedListener(new TaskDetailsFragment.SpinnerSelectionChangeListener());
 
-        this.taskCategory = findViewById(R.id.task_category);
-        this.taskCategoryAdapter = new SpinnerAdapter(this, null, R.layout.task_details_drop_down_item, 0, SpinnerAdapter.TYPE_CATEGORY);
+        this.taskCategory = view.findViewById(R.id.task_category);
+        this.taskCategoryAdapter = new SpinnerAdapter(getActivity(), null, R.layout.task_details_drop_down_item, 0, SpinnerAdapter.TYPE_CATEGORY);
         this.taskCategory.setAdapter(this.taskCategoryAdapter);
-        this.taskCategory.setOnItemSelectedListener(new SpinnerSelectionChangeListener());
+        this.taskCategory.setOnItemSelectedListener(new TaskDetailsFragment.SpinnerSelectionChangeListener());
 
-        this.taskDetails = findViewById(R.id.task_details);
-        this.taskDetails.addTextChangedListener(new ViewTextWatcher(this.taskDetails));
+        this.taskDetails = view.findViewById(R.id.task_details);
+        this.taskDetails.addTextChangedListener(new TaskDetailsFragment.ViewTextWatcher(this.taskDetails));
 
-        this.taskButton1 = findViewById(R.id.task_button_1);
-        this.taskButton1.setOnClickListener(new ElementClickListener());
+        this.taskButton1 = view.findViewById(R.id.task_button_1);
+        this.taskButton1.setOnClickListener(new TaskDetailsFragment.ElementClickListener());
 
-        this.taskButton2 = findViewById(R.id.task_button_2);
-        this.taskButton2.setOnClickListener(new ElementClickListener());
+        this.taskButton2 = view.findViewById(R.id.task_button_2);
+        this.taskButton2.setOnClickListener(new TaskDetailsFragment.ElementClickListener());
 
-        this.taskButton3 = findViewById(R.id.task_button_3);
-        this.taskButton3.setOnClickListener(new ElementClickListener());
+        this.taskButton3 = view.findViewById(R.id.task_button_3);
+        this.taskButton3.setOnClickListener(new TaskDetailsFragment.ElementClickListener());
 
-        this.taskDetailsControl = new TaskDetailsControl(this);
+        this.taskDetailsControl = new TaskDetailsControl(getActivity(), this);
+
+        return view;
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
-        this.taskDetailsControl.parseIntentData(getIntent());
+        this.taskDetailsControl.parseTaskData(this.receivedData);
+        this.receivedData = null;
     }
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
         this.taskDetailsControl.onDestroy();
     }
@@ -121,7 +122,12 @@ public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetai
 
     private void setDetailMode(boolean active) {
         this.editMode = active;
-        this.parentLayout.setFocusableInTouchMode(this.editMode);
+        //this.parentLayout.setFocusableInTouchMode(this.editMode);
+    }
+
+    @Override
+    public void applyTaskDetails(TaskDetailsData data) {
+        this.receivedData = data;
     }
 
     @Override
@@ -194,7 +200,7 @@ public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetai
         }
     }
 
-    private class ViewTextWatcher implements TextWatcher{
+    private class ViewTextWatcher implements TextWatcher {
         private View textView;
         public ViewTextWatcher(View textView) {
             this.textView = textView;
@@ -240,4 +246,5 @@ public class TaskDetailsActivity extends AppCompatActivity implements ITaskDetai
         @Override
         public void onNothingSelected(AdapterView<?> adapterView) { return;}
     }
+
 }

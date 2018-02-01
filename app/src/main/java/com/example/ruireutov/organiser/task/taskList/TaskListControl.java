@@ -1,12 +1,11 @@
 package com.example.ruireutov.organiser.task.taskList;
 
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 
 import com.example.ruireutov.organiser.databaseWorkers.DatabaseControl;
+import com.example.ruireutov.organiser.task.ITaskActivity;
 import com.example.ruireutov.organiser.task.TaskListFilter;
-import com.example.ruireutov.organiser.task.taskDetails.TaskDetailsActivity;
 import com.example.ruireutov.organiser.task.TaskDetailsData;
 
 
@@ -15,28 +14,27 @@ public class TaskListControl implements ITaskListControl {
     private ITaskListUiControl uiControl;
     private DatabaseControl dbControl;
     private Cursor listData;
+    private ITaskActivity taskActivity;
 
 
-    TaskListControl(Context context, ITaskListUiControl uiControl){
+    public TaskListControl(Context context, ITaskListUiControl uiControl, ITaskActivity taskActivity){
         this.context = context;
         this.uiControl = uiControl;
+        this.taskActivity = taskActivity;
         this.dbControl = DatabaseControl.getInstance(this.context);
         this.dbControl.open();
     }
 
     @Override
     public void newTask() {
-        Intent intent = new Intent(this.context, TaskDetailsActivity.class);
-        this.context.startActivity(intent);
+        this.taskActivity.showTaskCreation();
     }
 
     @Override
     public void showDetails(int position) {
-        Intent intent = new Intent(this.context, TaskDetailsActivity.class);
         if(this.listData.moveToPosition(position)) {
             TaskDetailsData data = new TaskDetailsData(this.listData);
-            intent.putExtra(TaskDetailsData.TASK_DETAILS_NAME, data);
-            this.context.startActivity(intent);
+            this.taskActivity.showDetails(data);
         }
     }
 

@@ -1,10 +1,11 @@
 package com.example.ruireutov.organiser.task.taskDetails;
 
-import android.content.Intent;
+import com.example.ruireutov.organiser.task.TaskDetailsData;
+
 import java.util.Date;
 
 public interface ITaskDetailsControl {
-    void parseIntentData(Intent intent);
+    void parseTaskData(TaskDetailsData data);
     void addTask();
     void updateTask();
     void closeTask();

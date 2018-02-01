@@ -6,7 +6,7 @@ import android.content.Intent;
 import com.example.ruireutov.organiser.databaseWorkers.DatabaseControl;
 import com.example.ruireutov.organiser.databaseWorkers.DatabaseDefines;
 import com.example.ruireutov.organiser.task.TaskDetailsData;
-import com.example.ruireutov.organiser.task.taskList.TaskListActivity;
+import com.example.ruireutov.organiser.task.TaskActivity;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -17,18 +17,19 @@ public class TaskDetailsControl implements ITaskDetailsControl{
     private DatabaseControl dbControl;
     private TaskDetailsData taskDetailsData;
 
-    public TaskDetailsControl(Context context) {
+    public TaskDetailsControl(Context context, ITaskDetailsUIControl uiControl) {
         this.context = context;
-        this.uiControl = (ITaskDetailsUIControl) context;
+        this.uiControl = uiControl;
         this.dbControl = DatabaseControl.getInstance(this.context);
         dbControl.open();
         this.uiControl.fillPriorities(this.dbControl.getPriorities());
         this.uiControl.fillCategories(this.dbControl.getCategories());
     }
 
-    public void parseIntentData(Intent intent) {
-        if(intent.hasExtra(TaskDetailsData.TASK_DETAILS_NAME)) {
-            this.taskDetailsData = (TaskDetailsData) intent.getSerializableExtra(TaskDetailsData.TASK_DETAILS_NAME);
+    @Override
+    public void parseTaskData(TaskDetailsData data) {
+        if(data != null) {
+            this.taskDetailsData = data;
             this.uiControl.showTaskDetails(this.taskDetailsData);
         } else {
             this.taskDetailsData = new TaskDetailsData();
@@ -40,25 +41,25 @@ public class TaskDetailsControl implements ITaskDetailsControl{
         this.taskDetailsData.setDateStart(Calendar.getInstance().getTime());
         this.taskDetailsData.setStatus(DatabaseDefines.TASK_STATUS_IN_PROGRESS);
         this.dbControl.addTask(this.taskDetailsData);
-        Intent intent = new Intent(this.context, TaskListActivity.class);
+        Intent intent = new Intent(this.context, TaskActivity.class);
         this.context.startActivity(intent);
     }
 
     public void updateTask() {
         this.dbControl.updateTask(this.taskDetailsData);
-        Intent intent = new Intent(this.context, TaskListActivity.class);
+        Intent intent = new Intent(this.context, TaskActivity.class);
         this.context.startActivity(intent);
     }
 
     public void closeTask() {
         this.dbControl.closeTask(this.taskDetailsData.getId());
-        Intent intent = new Intent(this.context, TaskListActivity.class);
+        Intent intent = new Intent(this.context, TaskActivity.class);
         this.context.startActivity(intent);
     }
 
     public void deleteTask() {
         this.dbControl.removeTask(this.taskDetailsData.getId());
-        Intent intent = new Intent(this.context, TaskListActivity.class);
+        Intent intent = new Intent(this.context, TaskActivity.class);
         this.context.startActivity(intent);
     }
 

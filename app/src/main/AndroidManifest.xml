@@ -17,7 +17,8 @@
             <!--</intent-filter>-->
         </activity>
         <activity
-            android:name=".task.taskList.TaskListActivity"
+            android:name=".task.TaskActivity"
+            android:configChanges="orientation|keyboardHidden"
             android:label="@string/title_activity_to_do_list" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,10 +26,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".task.taskDetails.TaskDetailsActivity"
-            android:label="@string/title_activity_task_details"
-            android:parentActivityName=".task.taskList.TaskListActivity"></activity>
     </application>
 
 </manifest>

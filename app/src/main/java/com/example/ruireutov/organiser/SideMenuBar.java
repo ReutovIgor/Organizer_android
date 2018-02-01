@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.ruireutov.organiser.MainView.MainActivity;
-import com.example.ruireutov.organiser.task.taskList.TaskListActivity;
+import com.example.ruireutov.organiser.task.TaskActivity;
 
 import java.util.HashMap;
 
@@ -35,7 +35,7 @@ public class SideMenuBar {
         this.context = context;
         this.components = new HashMap<>();
         this.components.put("MainView", MainActivity.class);
-        this.components.put("ToDoList", TaskListActivity.class);
+        this.components.put("ToDoList", TaskActivity.class);
 
         this.mAdapter = new ArrayAdapter<>(context, listItem, this.screens);
         sidebar.setAdapter(this.mAdapter);

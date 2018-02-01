@@ -23,8 +23,8 @@ public class DateTimePickerHelper {
     private TimePickerDialog timePickerDialog;
     private ITaskDetailsUINotification taskDetailsUINotification;
 
-    public DateTimePickerHelper(Context context, TextView dateView, TextView timeView) {
-        this.taskDetailsUINotification = (ITaskDetailsUINotification) context;
+    public DateTimePickerHelper(Context context, ITaskDetailsUINotification taskDetailsUINotification,  TextView dateView, TextView timeView) {
+        this.taskDetailsUINotification = taskDetailsUINotification;
         this.dateView = dateView;
         this.dateView.setOnClickListener(new TextViewClickHandlers());
         this.timeView = timeView;
