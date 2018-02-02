@@ -1,6 +1,7 @@
 package com.example.ruireutov.organiser.task.taskDetails;
 
 
+import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 import com.example.ruireutov.organiser.R;
 import com.example.ruireutov.organiser.task.DateTimePickerHelper;
 import com.example.ruireutov.organiser.task.SpinnerAdapter;
+import com.example.ruireutov.organiser.task.TaskActivity;
 import com.example.ruireutov.organiser.task.TaskDetailsData;
 
 import java.util.Date;
@@ -97,7 +99,8 @@ public class TaskDetailsFragment extends Fragment implements ITaskDetailsUIContr
         this.taskButton3 = view.findViewById(R.id.task_button_3);
         this.taskButton3.setOnClickListener(new TaskDetailsFragment.ElementClickListener());
 
-        this.taskDetailsControl = new TaskDetailsControl(getActivity(), this);
+        TaskActivity activity = (TaskActivity) getActivity();
+        this.taskDetailsControl = new TaskDetailsControl(activity, this, activity);
 
         return view;
     }
@@ -127,7 +130,12 @@ public class TaskDetailsFragment extends Fragment implements ITaskDetailsUIContr
 
     @Override
     public void applyTaskDetails(TaskDetailsData data) {
-        this.receivedData = data;
+
+        if(this.taskDetailsControl != null) {
+            this.taskDetailsControl.parseTaskData(data);
+        } else {
+            this.receivedData = data;
+        }
     }
 
     @Override

@@ -5,6 +5,7 @@ import android.content.Intent;
 
 import com.example.ruireutov.organiser.databaseWorkers.DatabaseControl;
 import com.example.ruireutov.organiser.databaseWorkers.DatabaseDefines;
+import com.example.ruireutov.organiser.task.ITaskActivity;
 import com.example.ruireutov.organiser.task.TaskDetailsData;
 import com.example.ruireutov.organiser.task.TaskActivity;
 
@@ -16,10 +17,12 @@ public class TaskDetailsControl implements ITaskDetailsControl{
     private ITaskDetailsUIControl uiControl;
     private DatabaseControl dbControl;
     private TaskDetailsData taskDetailsData;
+    private ITaskActivity taskActivity;
 
-    public TaskDetailsControl(Context context, ITaskDetailsUIControl uiControl) {
+    public TaskDetailsControl(Context context, ITaskDetailsUIControl uiControl, ITaskActivity taskActivity) {
         this.context = context;
         this.uiControl = uiControl;
+        this.taskActivity = taskActivity;
         this.dbControl = DatabaseControl.getInstance(this.context);
         dbControl.open();
         this.uiControl.fillPriorities(this.dbControl.getPriorities());
@@ -41,26 +44,22 @@ public class TaskDetailsControl implements ITaskDetailsControl{
         this.taskDetailsData.setDateStart(Calendar.getInstance().getTime());
         this.taskDetailsData.setStatus(DatabaseDefines.TASK_STATUS_IN_PROGRESS);
         this.dbControl.addTask(this.taskDetailsData);
-        Intent intent = new Intent(this.context, TaskActivity.class);
-        this.context.startActivity(intent);
+        this.taskActivity.showTaskList();
     }
 
     public void updateTask() {
         this.dbControl.updateTask(this.taskDetailsData);
-        Intent intent = new Intent(this.context, TaskActivity.class);
-        this.context.startActivity(intent);
+        this.taskActivity.showTaskList();
     }
 
     public void closeTask() {
         this.dbControl.closeTask(this.taskDetailsData.getId());
-        Intent intent = new Intent(this.context, TaskActivity.class);
-        this.context.startActivity(intent);
+        this.taskActivity.showTaskList();
     }
 
     public void deleteTask() {
         this.dbControl.removeTask(this.taskDetailsData.getId());
-        Intent intent = new Intent(this.context, TaskActivity.class);
-        this.context.startActivity(intent);
+        this.taskActivity.showTaskList();
     }
 
     @Override

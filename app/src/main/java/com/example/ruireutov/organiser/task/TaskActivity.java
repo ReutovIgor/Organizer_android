@@ -15,15 +15,13 @@ import com.example.ruireutov.organiser.R;
 import com.example.ruireutov.organiser.SideMenuBar;
 import com.example.ruireutov.organiser.task.taskDetails.ITaskDetailsActivityControl;
 import com.example.ruireutov.organiser.task.taskDetails.TaskDetailsFragment;
-import com.example.ruireutov.organiser.task.taskFilter.TaskListFilterFragment;
+import com.example.ruireutov.organiser.task.taskFilter.TaskFilterFragment;
 import com.example.ruireutov.organiser.task.taskList.TaskListFragment;
 
 public class TaskActivity extends AppCompatActivity implements ITaskActivity{
     private SideMenuBar sideMenuBar;
-    private Fragment taskFilterFragment;
-    private Fragment taskListFragment;
     private ITaskDetailsActivityControl taskDetailsFragment;
-    private FrameLayout frameLayout;
+    private TaskFragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,16 +31,15 @@ public class TaskActivity extends AppCompatActivity implements ITaskActivity{
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        this.frameLayout = findViewById(R.id.filter_frame);
-        this.taskListFragment = new TaskListFragment();
-        this.taskFilterFragment = new TaskListFilterFragment();
         this.taskDetailsFragment = new TaskDetailsFragment();
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.filter_frame, this.taskListFragment)
-                //.add(R.id.filter_frame, (Fragment) this.taskDetailsFragment)
-                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                .show(this.taskListFragment)
-                .commit();
+
+        this.fragmentManager = new TaskFragmentManager((FrameLayout) findViewById(R.id.filter_frame), getSupportFragmentManager());
+        this.fragmentManager.addFragment(TaskFragmentManager.TASK_LIST, new TaskListFragment());
+        this.fragmentManager.addFragment(TaskFragmentManager.TASK_DETAILS, (Fragment) this.taskDetailsFragment);
+        this.fragmentManager.addFragment(TaskFragmentManager.TASK_FILTER, new TaskFilterFragment());
+        //this.fragmentManager.addFragment(TaskFragmentManager.TASK_CATEGORIES, new TaskListFragment());
+
+        this.fragmentManager.showFragment(TaskFragmentManager.TASK_LIST);
 
         DrawerLayout drawerLayout = findViewById(R.id.toDoList_drawer);
         ListView drawerList = findViewById(R.id.navigation_list);
@@ -66,13 +63,10 @@ public class TaskActivity extends AppCompatActivity implements ITaskActivity{
         SharedPreferences.Editor editor = settings.edit();
         switch (item.getItemId()) {
             case R.id.categories_button:
+                this.showCategories();
                 return true;
             case R.id.filter_button:
-//                getSupportFragmentManager().beginTransaction()
-//                        .setCustomAnimations(android.R.anim.slide_out_right, android.R.anim.fade_out)
-//                        .show(this.taskFilterFragment)
-//                        .commit();
-
+                this.showFilters();
                 return true;
             case R.id.show_completed_button:
                 editor.putBoolean(TaskDefines.SHOW_COMPLETED, !item.isChecked());
@@ -109,23 +103,23 @@ public class TaskActivity extends AppCompatActivity implements ITaskActivity{
     public void showDetails(TaskDetailsData data) {
         this.taskDetailsFragment.applyTaskDetails(data);
         //show task details fragment
-        getSupportFragmentManager().beginTransaction()
-                //.add(R.id.filter_frame, this.taskListFragment)
-                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                .hide(this.taskListFragment)
-                .remove(this.taskListFragment)
-                .add(R.id.filter_frame, (Fragment) this.taskDetailsFragment)
-                .commit();
+        this.fragmentManager.showFragment(TaskFragmentManager.TASK_DETAILS);
     }
 
     @Override
     public void showTaskCreation() {
         this.taskDetailsFragment.applyTaskDetails(null);
+        this.fragmentManager.showFragment(TaskFragmentManager.TASK_DETAILS);
+    }
+
+    @Override
+    public void showTaskList() {
+        this.fragmentManager.showFragment(TaskFragmentManager.TASK_LIST);
     }
 
     @Override
     public void showFilters() {
-
+        this.fragmentManager.showFragment(TaskFragmentManager.TASK_FILTER);
     }
 
     @Override

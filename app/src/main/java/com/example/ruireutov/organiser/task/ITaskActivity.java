@@ -6,6 +6,7 @@ package com.example.ruireutov.organiser.task;
 
 public interface ITaskActivity {
     void showDetails(TaskDetailsData data);
+    void showTaskList();
     void showTaskCreation();
     void showFilters();
     void showCategories();

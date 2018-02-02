@@ -9,10 +9,10 @@ import android.view.ViewGroup;
 
 import com.example.ruireutov.organiser.R;
 
-public class TaskListFilterFragment extends Fragment {
+public class TaskFilterFragment extends Fragment {
 
 
-    public TaskListFilterFragment() {
+    public TaskFilterFragment() {
         // Required empty public constructor
     }
 
