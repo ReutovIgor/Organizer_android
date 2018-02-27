@@ -17,6 +17,7 @@ public class TaskDetailsControl implements ITaskDetailsControl{
     private ITaskActivity taskActivity;
 
     public TaskDetailsControl(Context context, ITaskDetailsUIControl uiControl, ITaskActivity taskActivity) {
+        this.taskDetailsData = new TaskDetailsData();
         this.uiControl = uiControl;
         this.taskActivity = taskActivity;
         this.dbControl = DatabaseControl.getInstance(context);

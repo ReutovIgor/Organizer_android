@@ -7,15 +7,6 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <Button
-            android:visibility="gone"
-            android:id="@+id/new_task_button1"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="10dp" />
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/new_task_button"
             android:clickable="true"
@@ -25,7 +16,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
-
             android:layout_margin="10dp"
             android:src="@drawable/add_task_icon"
             app:backgroundTint="@color/colorPrimary" />
@@ -36,8 +26,6 @@
             android:layout_below="@id/task_list_tool_bar"
             android:orientation="vertical">
             <include layout="@layout/task_list" />
-
-
         </LinearLayout>
     </RelativeLayout>
 </FrameLayout>

@@ -2,6 +2,7 @@ package com.example.ruireutov.organiser.task.main;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -36,14 +37,11 @@ public class TaskActivity extends AppCompatActivity implements ITaskActivity{
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        this.taskListFragment = new TaskListFragment();
-        this.taskDetailsFragment = new TaskDetailsFragment();
-
         this.fragmentManager = new TaskFragmentManager((FrameLayout) findViewById(R.id.filter_frame), getSupportFragmentManager());
-        this.fragmentManager.addFragment(TaskFragmentManager.TASK_LIST, (Fragment) this.taskListFragment);
-        this.fragmentManager.addFragment(TaskFragmentManager.TASK_DETAILS, (Fragment) this.taskDetailsFragment);
-        this.fragmentManager.addFragment(TaskFragmentManager.TASK_FILTER, new TaskFilterFragment());
-        //this.fragmentManager.addFragment(TaskFragmentManager.TASK_CATEGORIES, new TaskListFragment());
+        this.taskListFragment = (TaskListFragment) this.fragmentManager.addFragment(TaskFragmentManager.TASK_LIST);
+        this.taskDetailsFragment = (TaskDetailsFragment) this.fragmentManager.addFragment(TaskFragmentManager.TASK_DETAILS);
+        this.fragmentManager.addFragment(TaskFragmentManager.TASK_FILTER);
+        //this.fragmentManager.addFragment(TaskFragmentManager.TASK_CATEGORIES);
 
         this.fragmentManager.showInitialFragment();
 
@@ -90,24 +88,6 @@ public class TaskActivity extends AppCompatActivity implements ITaskActivity{
                 return super.onOptionsItemSelected(item);
         }
         return true;
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //this.listControl.getTaskList(getFilters());
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        //this.listControl.onDestroy();
-    }
-
-    @Override
-    public void onBackPressed() {
-
-        super.onBackPressed();
     }
 
     @Override

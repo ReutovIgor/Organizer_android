@@ -1,17 +1,22 @@
 package com.example.ruireutov.organiser.task;
 
 import java.util.HashMap;
+import java.util.List;
 
 import android.support.v4.app.FragmentTransaction;
 import android.widget.FrameLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
+import com.example.ruireutov.organiser.task.taskDetails.TaskDetailsFragment;
+import com.example.ruireutov.organiser.task.taskFilter.TaskFilterFragment;
+import com.example.ruireutov.organiser.task.taskList.TaskListFragment;
+
 public class TaskFragmentManager {
-    public static String TASK_LIST       = "list";
-    public static String TASK_FILTER     = "filter";
-    public static String TASK_DETAILS    = "details";
-    public static String TASK_CATEGORIES = "categories";
+    public final static String TASK_LIST       = "list";
+    public final static String TASK_FILTER     = "filter";
+    public final static String TASK_DETAILS    = "details";
+    public final static String TASK_CATEGORIES = "categories";
 
     private FrameLayout frame;
     private HashMap<String, Fragment> fragments;
@@ -22,6 +27,10 @@ public class TaskFragmentManager {
         this.fragments = new HashMap<>();
         this.frame = frame;
         this.manager = manager;
+
+        List<Fragment> a = this.manager.getFragments();
+        int count = a.size();
+        int backstack = this.manager.getBackStackEntryCount();
         this.manager.addOnBackStackChangedListener(
             new FragmentManager.OnBackStackChangedListener() {
                 public void onBackStackChanged() {
@@ -37,9 +46,27 @@ public class TaskFragmentManager {
         this.currentFragment = "";
     }
 
-    public void addFragment (String name, Fragment fragment) {
+    public Fragment addFragment (String name) {
+        Fragment fragment = this.manager.findFragmentByTag(name);
+        if(fragment == null) {
+            switch (name) {
+                case TASK_LIST:
+                    fragment = new TaskListFragment();
+                    break;
+                case TASK_DETAILS:
+                    fragment = new TaskDetailsFragment();
+                    break;
+                case TASK_FILTER:
+                    fragment = new TaskFilterFragment();
+                    break;
+                case TASK_CATEGORIES:
+                    //TODO implement later
+                    break;
+            }
+            this.manager.beginTransaction().add(this.frame.getId(), fragment, name).hide(fragment).commit();
+        }
         this.fragments.put(name, fragment);
-        this.manager.beginTransaction().add(this.frame.getId(), this.fragments.get(name)).hide(this.fragments.get(name)).commit();
+        return null;
     }
 
     public void showInitialFragment () {
