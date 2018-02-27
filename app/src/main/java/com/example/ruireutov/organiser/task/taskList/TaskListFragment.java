@@ -1,15 +1,14 @@
 package com.example.ruireutov.organiser.task.taskList;
 
-
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 
 import com.example.ruireutov.organiser.R;
@@ -23,7 +22,6 @@ public class TaskListFragment extends Fragment implements ITaskListUiControl, IT
     private ListView listView;
     private ListCursorAdapter cursorAdapter;
     private ITaskListControl listControl;
-    private Button newTaskButton;
 
 
     public TaskListFragment() {}
@@ -34,8 +32,8 @@ public class TaskListFragment extends Fragment implements ITaskListUiControl, IT
         this.listView = view.findViewById(R.id.toDoListView_list);
         this.listView.setOnItemClickListener(new ListViewEventListener());
 
-        this.newTaskButton = view.findViewById(R.id.new_task_button);
-        this.newTaskButton.setOnClickListener(new ElementClickListener());
+        FloatingActionButton newTaskButton = view.findViewById(R.id.new_task_button);
+        newTaskButton.setOnClickListener(new ElementClickListener());
 
         TaskActivity activity = (TaskActivity) getActivity();
         this.listControl = new TaskListControl(activity, this, activity);
