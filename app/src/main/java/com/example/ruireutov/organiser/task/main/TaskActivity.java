@@ -1,4 +1,4 @@
-package com.example.ruireutov.organiser.task;
+package com.example.ruireutov.organiser.task.main;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,13 +13,18 @@ import android.widget.ListView;
 
 import com.example.ruireutov.organiser.R;
 import com.example.ruireutov.organiser.SideMenuBar;
+import com.example.ruireutov.organiser.task.TaskDefines;
+import com.example.ruireutov.organiser.task.TaskDetailsData;
+import com.example.ruireutov.organiser.task.TaskFragmentManager;
 import com.example.ruireutov.organiser.task.taskDetails.ITaskDetailsActivityControl;
 import com.example.ruireutov.organiser.task.taskDetails.TaskDetailsFragment;
 import com.example.ruireutov.organiser.task.taskFilter.TaskFilterFragment;
+import com.example.ruireutov.organiser.task.taskList.ITaskListActivityControl;
 import com.example.ruireutov.organiser.task.taskList.TaskListFragment;
 
 public class TaskActivity extends AppCompatActivity implements ITaskActivity{
     private SideMenuBar sideMenuBar;
+    private ITaskListActivityControl taskListFragment;
     private ITaskDetailsActivityControl taskDetailsFragment;
     private TaskFragmentManager fragmentManager;
 
@@ -31,15 +36,16 @@ public class TaskActivity extends AppCompatActivity implements ITaskActivity{
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+        this.taskListFragment = new TaskListFragment();
         this.taskDetailsFragment = new TaskDetailsFragment();
 
         this.fragmentManager = new TaskFragmentManager((FrameLayout) findViewById(R.id.filter_frame), getSupportFragmentManager());
-        this.fragmentManager.addFragment(TaskFragmentManager.TASK_LIST, new TaskListFragment());
+        this.fragmentManager.addFragment(TaskFragmentManager.TASK_LIST, (Fragment) this.taskListFragment);
         this.fragmentManager.addFragment(TaskFragmentManager.TASK_DETAILS, (Fragment) this.taskDetailsFragment);
         this.fragmentManager.addFragment(TaskFragmentManager.TASK_FILTER, new TaskFilterFragment());
         //this.fragmentManager.addFragment(TaskFragmentManager.TASK_CATEGORIES, new TaskListFragment());
 
-        this.fragmentManager.showFragment(TaskFragmentManager.TASK_LIST);
+        this.fragmentManager.showInitialFragment();
 
         DrawerLayout drawerLayout = findViewById(R.id.toDoList_drawer);
         ListView drawerList = findViewById(R.id.navigation_list);
@@ -72,13 +78,13 @@ public class TaskActivity extends AppCompatActivity implements ITaskActivity{
                 editor.putBoolean(TaskDefines.SHOW_COMPLETED, !item.isChecked());
                 editor.apply();
                 item.setChecked(!item.isChecked());
-                //this.listControl.getTaskList(getFilters());
+                this.taskListFragment.updateTaskListData();
                 break;
             case R.id.show_failed_button:
                 editor.putBoolean(TaskDefines.SHOW_OVERDUE, !item.isChecked());
                 editor.apply();
                 item.setChecked(!item.isChecked());
-                //this.listControl.getTaskList(getFilters());
+                this.taskListFragment.updateTaskListData();
                 break;
             default:
                 return super.onOptionsItemSelected(item);
@@ -98,11 +104,20 @@ public class TaskActivity extends AppCompatActivity implements ITaskActivity{
         //this.listControl.onDestroy();
     }
 
+    @Override
+    public void onBackPressed() {
+
+        super.onBackPressed();
+    }
+
+    @Override
+    public void onTaskListUpdate() {
+        this.taskListFragment.updateTaskListData();
+    }
 
     @Override
     public void showDetails(TaskDetailsData data) {
         this.taskDetailsFragment.applyTaskDetails(data);
-        //show task details fragment
         this.fragmentManager.showFragment(TaskFragmentManager.TASK_DETAILS);
     }
 
@@ -114,7 +129,7 @@ public class TaskActivity extends AppCompatActivity implements ITaskActivity{
 
     @Override
     public void showTaskList() {
-        this.fragmentManager.showFragment(TaskFragmentManager.TASK_LIST);
+        this.fragmentManager.showInitialFragment();
     }
 
     @Override

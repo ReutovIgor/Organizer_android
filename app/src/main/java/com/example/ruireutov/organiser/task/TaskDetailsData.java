@@ -38,7 +38,10 @@ public class TaskDetailsData implements Serializable{
 
     private boolean timed;
 
-    public TaskDetailsData() {}
+    public TaskDetailsData() {
+        this.name = "";
+        this.details = "";
+    }
 
     public TaskDetailsData(Cursor cursor) {
         this.id             = cursor.getLong(cursor.getColumnIndex(DatabaseDefines.TASK_LIST_ID));

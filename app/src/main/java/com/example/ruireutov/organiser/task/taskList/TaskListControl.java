@@ -4,7 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.example.ruireutov.organiser.databaseWorkers.DatabaseControl;
-import com.example.ruireutov.organiser.task.ITaskActivity;
+import com.example.ruireutov.organiser.task.main.ITaskActivity;
 import com.example.ruireutov.organiser.task.TaskListFilter;
 import com.example.ruireutov.organiser.task.TaskDetailsData;
 

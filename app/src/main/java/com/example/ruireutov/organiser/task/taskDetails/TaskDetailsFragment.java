@@ -1,16 +1,15 @@
 package com.example.ruireutov.organiser.task.taskDetails;
 
-
-import android.app.Activity;
+import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -23,7 +22,7 @@ import android.widget.TextView;
 import com.example.ruireutov.organiser.R;
 import com.example.ruireutov.organiser.task.DateTimePickerHelper;
 import com.example.ruireutov.organiser.task.SpinnerAdapter;
-import com.example.ruireutov.organiser.task.TaskActivity;
+import com.example.ruireutov.organiser.task.main.TaskActivity;
 import com.example.ruireutov.organiser.task.TaskDetailsData;
 
 import java.util.Date;
@@ -31,12 +30,10 @@ import java.util.Date;
 public class TaskDetailsFragment extends Fragment implements ITaskDetailsUIControl, ITaskDetailsUINotification, ITaskDetailsActivityControl{
 
     private TaskDetailsControl taskDetailsControl;
-    private ConstraintLayout parentLayout;
+    private LinearLayout parentLayout;
     private EditText taskName;
     private CheckBox deadlineCheckbox;
     private LinearLayout taskDueDateTime;
-    private TextView taskDueDate;
-    private TextView taskDueTime;
     private Spinner taskPriority;
     private SpinnerAdapter taskPriorityAdapter;
     private Spinner taskCategory;
@@ -47,19 +44,13 @@ public class TaskDetailsFragment extends Fragment implements ITaskDetailsUIContr
     private Button taskButton3;
     private DateTimePickerHelper dueDateTimeHelper;
 
-    private boolean editMode;
-    private TaskDetailsData receivedData;
-
-    public TaskDetailsFragment() {
-
-    }
+    public TaskDetailsFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_task_details, container, false);
 
-        //this.parentLayout = view.findViewById(R.id.task_detail_root);
-        this.setDetailMode(false);
+        this.parentLayout = view.findViewById(R.id.task_detail_root);
 
         this.taskName = view.findViewById(R.id.task_name);
         this.taskName.addTextChangedListener(new TaskDetailsFragment.ViewTextWatcher(this.taskName));
@@ -73,9 +64,9 @@ public class TaskDetailsFragment extends Fragment implements ITaskDetailsUIContr
         });
 
         this.taskDueDateTime = view.findViewById(R.id.to_date_time);
-        this.taskDueDate = view.findViewById(R.id.task_to_date);
-        this.taskDueTime = view.findViewById(R.id.task_to_time);
-        this.dueDateTimeHelper = new DateTimePickerHelper(getActivity(), this, this.taskDueDate, this.taskDueTime);
+        this.dueDateTimeHelper = new DateTimePickerHelper(getActivity(), this,
+                (TextView) view.findViewById(R.id.task_to_date),
+                (TextView) view.findViewById(R.id.task_to_time));
 
         this.taskPriority = view.findViewById(R.id.task_priority);
         this.taskPriorityAdapter = new SpinnerAdapter(getActivity(),null, R.layout.task_details_drop_down_item,0, SpinnerAdapter.TYPE_PRIORITY);
@@ -106,13 +97,6 @@ public class TaskDetailsFragment extends Fragment implements ITaskDetailsUIContr
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        this.taskDetailsControl.parseTaskData(this.receivedData);
-        this.receivedData = null;
-    }
-
-    @Override
     public void onDestroy() {
         super.onDestroy();
         this.taskDetailsControl.onDestroy();
@@ -123,24 +107,29 @@ public class TaskDetailsFragment extends Fragment implements ITaskDetailsUIContr
         this.taskDetailsControl.setDueDate(show ? this.dueDateTimeHelper.getDateTime(): null);
     }
 
-    private void setDetailMode(boolean active) {
-        this.editMode = active;
-        //this.parentLayout.setFocusableInTouchMode(this.editMode);
-    }
-
-    @Override
-    public void applyTaskDetails(TaskDetailsData data) {
-
-        if(this.taskDetailsControl != null) {
-            this.taskDetailsControl.parseTaskData(data);
-        } else {
-            this.receivedData = data;
+    private void toggleKeyboard(boolean show) {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            if(show) {
+                this.taskName.requestFocus();
+                imm.showSoftInput(this.taskName, InputMethodManager.SHOW_IMPLICIT);
+            } else {
+                View view = getActivity().getCurrentFocus();
+                if (view != null) {
+                    view.clearFocus();
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
+            }
         }
     }
 
     @Override
+    public void applyTaskDetails(TaskDetailsData data) {
+        this.taskDetailsControl.parseTaskData(data);
+    }
+
+    @Override
     public void showTaskDetails(TaskDetailsData data) {
-        this.setDetailMode(true);
         this.taskName.setText(data.getName());
         if(data.hasDeadline()) {
             this.dueDateTimeHelper.setDateTime(data.getDateDue());
@@ -148,6 +137,7 @@ public class TaskDetailsFragment extends Fragment implements ITaskDetailsUIContr
             this.dueDateTimeHelper.setDefault();
         }
         this.deadlineCheckbox.setChecked(data.hasDeadline());
+        this.toggleDateTime(data.hasDeadline());
         int priorityPos = this.taskPriorityAdapter.getItemPosition(data.getPriority());
         this.taskPriority.setSelection(priorityPos);
         int categoryPos = this.taskCategoryAdapter.getItemPosition(data.getCategory());
@@ -155,21 +145,26 @@ public class TaskDetailsFragment extends Fragment implements ITaskDetailsUIContr
         this.taskDetails.setText(data.getDetails());
         this.taskButton1.setVisibility(View.VISIBLE);
         this.taskButton2.setText(R.string.task_button_save);
-        this.taskButton1.setVisibility(View.VISIBLE);
+        this.taskButton3.setVisibility(View.VISIBLE);
+
+        this.parentLayout.requestFocus();
     }
 
     @Override
     public void showTaskCreation() {
-        this.setDetailMode(false);
         this.taskName.setText("");
         this.dueDateTimeHelper.setDefault();
         this.deadlineCheckbox.setChecked(false);
+        this.toggleDateTime(false);
         this.taskPriority.setSelection(0);
+        this.taskDetailsControl.setPriority(this.taskPriority.getSelectedItem().toString());
         this.taskCategory.setSelection(0);
+        this.taskDetailsControl.setCategory(this.taskCategory.getSelectedItem().toString());
         this.taskDetails.setText("");
         this.taskButton1.setVisibility(View.GONE);
         this.taskButton2.setText(R.string.task_button_create);
         this.taskButton3.setVisibility(View.GONE);
+        this.toggleKeyboard(true);
     }
 
     @Override
@@ -193,12 +188,14 @@ public class TaskDetailsFragment extends Fragment implements ITaskDetailsUIContr
             switch(v.getId()) {
                 case R.id.task_button_1:
                     taskDetailsControl.closeTask();
+
                     break;
                 case R.id.task_button_2:
                     if(taskButton2.getText().toString() != getString(R.string.task_button_save)) {
                         taskDetailsControl.addTask();
                     } else {
                         taskDetailsControl.updateTask();
+                        toggleKeyboard(false);
                     }
                     break;
                 case R.id.task_button_3:
@@ -240,7 +237,6 @@ public class TaskDetailsFragment extends Fragment implements ITaskDetailsUIContr
     private class SpinnerSelectionChangeListener implements AdapterView.OnItemSelectedListener {
         @Override
         public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-            int isa = adapterView.getId();
             switch (adapterView.getId()) {
                 case R.id.task_priority:
                     taskDetailsControl.setPriority(taskPriority.getSelectedItem().toString());
@@ -254,5 +250,4 @@ public class TaskDetailsFragment extends Fragment implements ITaskDetailsUIContr
         @Override
         public void onNothingSelected(AdapterView<?> adapterView) { return;}
     }
-
 }

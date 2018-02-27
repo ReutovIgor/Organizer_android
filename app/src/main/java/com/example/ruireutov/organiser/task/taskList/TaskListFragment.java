@@ -14,7 +14,7 @@ import android.widget.ListView;
 
 import com.example.ruireutov.organiser.R;
 import com.example.ruireutov.organiser.task.ListCursorAdapter;
-import com.example.ruireutov.organiser.task.TaskActivity;
+import com.example.ruireutov.organiser.task.main.TaskActivity;
 import com.example.ruireutov.organiser.task.TaskDefines;
 import com.example.ruireutov.organiser.task.TaskListFilter;
 
@@ -26,9 +26,7 @@ public class TaskListFragment extends Fragment implements ITaskListUiControl, IT
     private Button newTaskButton;
 
 
-    public TaskListFragment() {
-        // Required empty public constructor
-    }
+    public TaskListFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -58,13 +56,18 @@ public class TaskListFragment extends Fragment implements ITaskListUiControl, IT
     @Override
     public void onResume() {
         super.onResume();
-        this.listControl.getTaskList(getFilters());
+        this.updateTaskListData();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         this.listControl.onDestroy();
+    }
+
+    @Override
+    public void updateTaskListData() {
+        this.listControl.getTaskList(getFilters());
     }
 
     private TaskListFilter getFilters() {

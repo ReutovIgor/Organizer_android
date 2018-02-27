@@ -58,7 +58,7 @@ public class ListCursorAdapter extends CursorAdapter {
 
     private String getDisplayTime(String startDate, String dueDate) {
         @SuppressLint("SimpleDateFormat")
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-DD HH:mm");
         Date date;
         try {
             if(dueDate.length() > 0) {
@@ -116,6 +116,6 @@ public class ListCursorAdapter extends CursorAdapter {
         } else {
             timeStr = "Hurry";
         }
-        return outputStr + "(" + timeStr + ")";
+        return outputStr + " (" + timeStr + ")";
     }
 }

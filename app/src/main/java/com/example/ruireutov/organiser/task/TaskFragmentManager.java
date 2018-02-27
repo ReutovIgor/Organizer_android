@@ -18,10 +18,22 @@ public class TaskFragmentManager {
     private String currentFragment;
     private FragmentManager manager;
 
-    public TaskFragmentManager (FrameLayout frame, FragmentManager manager){
+    public TaskFragmentManager (FrameLayout frame, final FragmentManager manager){
         this.fragments = new HashMap<>();
         this.frame = frame;
         this.manager = manager;
+        this.manager.addOnBackStackChangedListener(
+            new FragmentManager.OnBackStackChangedListener() {
+                public void onBackStackChanged() {
+                    int length = manager.getBackStackEntryCount();
+                    if( length == 0 ) {
+                        currentFragment = TASK_LIST;
+                    } else {
+                        String current = manager.getBackStackEntryAt(length - 1).getName();
+                        currentFragment = current;
+                    }
+                }
+            });
         this.currentFragment = "";
     }
 
@@ -30,16 +42,22 @@ public class TaskFragmentManager {
         this.manager.beginTransaction().add(this.frame.getId(), this.fragments.get(name)).hide(this.fragments.get(name)).commit();
     }
 
+    public void showInitialFragment () {
+        int length = this.manager.getBackStackEntryCount();
+        for(int i = 0; i < length; i++) {
+            this.manager.popBackStack();
+        }
+        FragmentTransaction tr = this.manager.beginTransaction();
+        tr.show(this.fragments.get(TASK_LIST));
+        tr.commit();
+        this.currentFragment = TASK_LIST;
+    }
+
     public void showFragment(String name) {
         FragmentTransaction tr = this.manager.beginTransaction();
-        if(this.currentFragment != "") {
-            tr.hide(this.fragments.get(this.currentFragment));
-        }
+        tr.hide(this.fragments.get(this.currentFragment));
         tr.show(this.fragments.get(name));
-        //if(this.currentFragment == "") {
-            tr.addToBackStack(null);
-        //}
+        tr.addToBackStack(name);
         tr.commit();
-        this.currentFragment = name;
     }
 }
