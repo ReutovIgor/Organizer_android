@@ -72,9 +72,17 @@ public class DatabaseControl {
             + " FOREIGN KEY ( " + KEY_PRIORITY_ID + " ) REFERENCES " + TABLE_PRIORITIES + " ( "+ KEY_ID + " ) "
             + " ); ";
 
-    private static final String GET_TO_DO_LIST_TABLE = TABLE_TASKS +
+    private static final String GET_TASK_LIST_TABLE = TABLE_TASKS +
             " LEFT JOIN " + TABLE_CATEGORIES + " on " + TABLE_TASKS + "." + KEY_CATEGORY_ID + "=" + TABLE_CATEGORIES + "." + KEY_ID +
             " LEFT JOIN " + TABLE_PRIORITIES + " on " + TABLE_TASKS + "." + KEY_PRIORITY_ID + "=" + TABLE_PRIORITIES + "." + KEY_ID;
+
+    private static final String GET_CATEGORIES_FILTERS_TABLE = TABLE_CATEGORIES +
+            " LEFT JOIN " + TABLE_TASKS + " on " + TABLE_TASKS + "." + KEY_CATEGORY_ID + "=" + TABLE_CATEGORIES + "." + KEY_ID +
+            " LEFT JOIN " + TABLE_PRIORITIES + " on " + TABLE_TASKS + "." + KEY_PRIORITY_ID + "=" + TABLE_PRIORITIES + "." + KEY_ID;
+
+    private static final String GET_PRIORITIES_FILTERS_TABLE = TABLE_TASKS +
+            " LEFT JOIN " + TABLE_TASKS + " on " + TABLE_TASKS + "." + KEY_PRIORITY_ID + "=" + TABLE_PRIORITIES + "." + KEY_ID +
+            " LEFT JOIN " + TABLE_CATEGORIES + " on " + TABLE_TASKS + "." + KEY_CATEGORY_ID + "=" + TABLE_CATEGORIES + "." + KEY_ID;
 
     private static DatabaseControl instance;
     private DatabaseHelper dbHelper;
@@ -93,7 +101,6 @@ public class DatabaseControl {
         this.dbHelper = new DatabaseHelper(context);
 
         this.taskListFilterMapping = new HashMap<>();
-//        this.taskListFilterMapping.put(TaskListFilter.TASK_FILTER_OVERDUE, KEY_END);
         this.taskListFilterMapping.put(TaskListFilter.TASK_FILTER_TIME_END, KEY_END);
         this.taskListFilterMapping.put(TaskListFilter.TASK_FILTER_STATUS, KEY_STATUS);
         this.taskListFilterMapping.put(TaskListFilter.TASK_FILTER_TIME_START, KEY_START);
@@ -136,7 +143,7 @@ public class DatabaseControl {
             filter.generateQueryParams(this.taskListFilterMapping);
             String where = filter.getWhere();
             String[] selection = filter.getSelection();
-            c = this.db.query(GET_TO_DO_LIST_TABLE, columns, where, selection, null, null, null);
+            c = this.db.query(GET_TASK_LIST_TABLE, columns, where, selection, null, null, null);
         } catch(Exception e) {
             return null;
         }
@@ -210,6 +217,46 @@ public class DatabaseControl {
                 KEY_ICON + " AS " + DatabaseDefines.CATEGORIES_ICON
         };
         Cursor c  = this.db.query(TABLE_CATEGORIES, columns, null, null, null, null, null);
+        return c;
+    }
+
+    public Cursor getCategoriesFilter(TaskListFilter filter) {
+        String[] columns = {
+                TABLE_CATEGORIES + "." + KEY_ID + " AS _id",
+                TABLE_CATEGORIES + "." + KEY_NAME + " AS " + DatabaseDefines.FILTER_NAME,
+                "COUNT(" + TABLE_CATEGORIES + "." + KEY_ID + ") AS " + DatabaseDefines.FILTER_COUNT
+        };
+        Cursor c;
+        try {
+            filter.generateQueryParams(this.taskListFilterMapping);
+            String where = filter.getWhere();
+            String[] selection = filter.getSelection();
+            String groupBy = TABLE_CATEGORIES + "." + KEY_NAME;
+            c = this.db.query(GET_CATEGORIES_FILTERS_TABLE, columns, where, selection, groupBy, null, null);
+        } catch(Exception e) {
+            return null;
+        }
+
+        return c;
+    }
+
+    public Cursor getPrioritiesFilter(TaskListFilter filter) {
+        String[] columns = {
+                TABLE_PRIORITIES + "." + KEY_ID + " AS _id",
+                TABLE_PRIORITIES + "." + KEY_NAME + " AS " + DatabaseDefines.FILTER_NAME,
+                "COUNT(" + TABLE_PRIORITIES + "." + KEY_ID + ") AS " + DatabaseDefines.FILTER_COUNT
+        };
+        Cursor c = null;
+        try {
+            filter.generateQueryParams(this.taskListFilterMapping);
+            String where = filter.getWhere();
+            String[] selection = filter.getSelection();
+            String groupBy = TABLE_PRIORITIES + "." + KEY_NAME;
+            c = this.db.query(GET_CATEGORIES_FILTERS_TABLE, columns, where, selection, groupBy , null, null);
+        } catch(Exception e) {
+            return null;
+        }
+
         return c;
     }
 

@@ -2,9 +2,7 @@ package com.example.ruireutov.organiser.task.main;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -109,7 +107,7 @@ public class TaskActivity extends AppCompatActivity implements ITaskActivity{
 
     @Override
     public void showTaskList() {
-        this.fragmentManager.showInitialFragment();
+        this.fragmentManager.showFragment(TaskFragmentManager.TASK_LIST);
     }
 
     @Override

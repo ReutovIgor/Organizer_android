@@ -1,7 +1,7 @@
 package com.example.ruireutov.organiser.task;
 
 import java.util.HashMap;
-import java.util.List;
+import java.util.Objects;
 
 import android.support.v4.app.FragmentTransaction;
 import android.widget.FrameLayout;
@@ -24,26 +24,25 @@ public class TaskFragmentManager {
     private FragmentManager manager;
 
     public TaskFragmentManager (FrameLayout frame, final FragmentManager manager){
+        this.currentFragment = "";
         this.fragments = new HashMap<>();
         this.frame = frame;
         this.manager = manager;
-
-        List<Fragment> a = this.manager.getFragments();
-        int count = a.size();
-        int backstack = this.manager.getBackStackEntryCount();
         this.manager.addOnBackStackChangedListener(
             new FragmentManager.OnBackStackChangedListener() {
                 public void onBackStackChanged() {
-                    int length = manager.getBackStackEntryCount();
-                    if( length == 0 ) {
-                        currentFragment = TASK_LIST;
-                    } else {
-                        String current = manager.getBackStackEntryAt(length - 1).getName();
-                        currentFragment = current;
-                    }
+                    getCurrentFromBackStack();
                 }
-            });
-        this.currentFragment = "";
+        });
+    }
+
+    private void getCurrentFromBackStack() {
+        int length = manager.getBackStackEntryCount();
+        if( length == 0 ) {
+            currentFragment = TASK_LIST;
+        } else {
+            currentFragment = manager.getBackStackEntryAt(length - 1).getName();
+        }
     }
 
     public Fragment addFragment (String name) {
@@ -66,25 +65,44 @@ public class TaskFragmentManager {
             this.manager.beginTransaction().add(this.frame.getId(), fragment, name).hide(fragment).commit();
         }
         this.fragments.put(name, fragment);
-        return null;
+        return fragment;
     }
 
     public void showInitialFragment () {
-        int length = this.manager.getBackStackEntryCount();
-        for(int i = 0; i < length; i++) {
-            this.manager.popBackStack();
-        }
+        getCurrentFromBackStack();
         FragmentTransaction tr = this.manager.beginTransaction();
-        tr.show(this.fragments.get(TASK_LIST));
+        tr.show(this.fragments.get(this.currentFragment));
         tr.commit();
-        this.currentFragment = TASK_LIST;
     }
 
     public void showFragment(String name) {
+        if(Objects.equals(name, this.currentFragment)) return;
+
+        boolean skipBackStack = false;
+        String key = name;
+        if(Objects.equals(name, TASK_LIST)) {
+            skipBackStack = true;
+            key = "";
+        }
+
+        int length = this.manager.getBackStackEntryCount();
+        int i = length - 1;
+        while(i > -1) {
+            String bKey = manager.getBackStackEntryAt(i).getName();
+            if(Objects.equals(bKey, key)) {
+                break;
+            }
+            this.manager.popBackStack();
+            i--;
+        }
+
         FragmentTransaction tr = this.manager.beginTransaction();
         tr.hide(this.fragments.get(this.currentFragment));
         tr.show(this.fragments.get(name));
-        tr.addToBackStack(name);
+        if(!skipBackStack) {
+            tr.addToBackStack(name);
+        }
         tr.commit();
+        this.currentFragment = name;
     }
 }

@@ -14,6 +14,12 @@
 
     <color name="checkBoxInnerColor">#a71717</color>
 
+    <!--Filter colors-->
+
+    <color name="filterItemBorder">#3F52B5</color>
+    <color name="filterItemSelected">#3F51B5</color>
+    <color name="filterItemBackground">#ACB2EA</color>
+
     <!--Category colors-->
     <color name="redCategory">#FF7373</color>
     <color name="yellowCategory">#F2FD3F</color>

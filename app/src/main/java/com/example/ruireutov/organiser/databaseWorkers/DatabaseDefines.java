@@ -32,4 +32,8 @@ public class DatabaseDefines {
     public static final String PRIORITIES_NAME = "Name";
     public static final String PRIORITIES_MARK = "PriorityMark";
     public static final String PRIORITIES_COLOR = "PriorityColor";
+
+    //Filters names
+    public  static final  String FILTER_NAME = "name";
+    public  static final  String FILTER_COUNT = "count";
 }
