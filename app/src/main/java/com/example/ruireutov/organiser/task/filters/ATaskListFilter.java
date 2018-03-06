@@ -1,4 +1,4 @@
-package com.example.ruireutov.organiser.task;
+package com.example.ruireutov.organiser.task.filters;
 
 import android.annotation.SuppressLint;
 import android.util.ArraySet;
@@ -8,26 +8,27 @@ import com.example.ruireutov.organiser.databaseWorkers.DatabaseDefines;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
+import java.util.Objects;
+import java.util.Set;
 
-public class TaskListFilter {
+public abstract class ATaskListFilter implements ITaskListFilter {
     public  static  final String TASK_FILTER_STATUS = "status";
-    public  static  final String TASK_FILTER_OVERDUE = "overdue";
+    //public  static  final String TASK_FILTER_OVERDUE = "overdue";
     public  static  final String TASK_FILTER_TIME_END = "timeEnd";
     public  static  final String TASK_FILTER_CATEGORY = "category";
     public  static  final String TASK_FILTER_PRIORITY = "priority";
     public  static  final String TASK_FILTER_TIME_START = "timeStart";
 
-    private String where;
-    private ArrayList<String> selection;
-    private boolean overdue;
-    private boolean completed;
-    private String timeStart;
-    private String timeEnd;
-    private ArraySet<String> categories;
-    private ArraySet<String> priorities;
+    protected String where;
+    protected ArrayList<String> selection;
+    protected boolean overdue;
+    protected boolean completed;
+    protected String timeStart;
+    protected String timeEnd;
+    protected Set<String> categories;
+    protected Set<String> priorities;
 
-    public TaskListFilter(boolean overdue, boolean completed, String timeStart, String timeEnd, ArraySet<String> categories, ArraySet<String> priorities) {
+    public ATaskListFilter(boolean overdue, boolean completed, String timeStart, String timeEnd, Set<String> categories, Set<String> priorities) {
         this.overdue = overdue;
         this.completed = completed;
         this.timeStart = timeStart;
@@ -36,16 +37,9 @@ public class TaskListFilter {
         this.priorities = priorities;
     }
 
-    public void generateQueryParams(HashMap<String, String> map) {
-        this.where = "";
-        this.selection = new ArrayList<>();
-        this.parseTimeEndFilters(map.get(TaskListFilter.TASK_FILTER_TIME_END));
-        this.parseCompletedFilters(map.get(TaskListFilter.TASK_FILTER_STATUS));
-    }
-
-    private void parseTimeEndFilters(String key) {
+    protected void parseTimeEndFilters(String key) {
         String concatStr = "";
-        if(this.overdue && this.timeEnd == "") {
+        if(this.overdue && Objects.equals(this.timeEnd, "")) {
             return;
         } else if(this.where.length() > 0 ) {
             concatStr = "AND";
@@ -64,11 +58,10 @@ public class TaskListFilter {
 
         }
 
-        //this.where += timeSelection.length() > 2 ? concatStr + timeSelection : "";
         this.where += concatStr + " ( " + timeSelection + " ) ";
     }
 
-    private void parseCompletedFilters(String key) {
+    protected void parseCompletedFilters(String key) {
         String concatStr = "";
         if(this.completed) {
             return;
@@ -80,10 +73,20 @@ public class TaskListFilter {
         this.selection.add(Integer.toString(DatabaseDefines.TASK_STATUS_COMPLETED));
     }
 
+    protected void parseCategoriesFilters(String key) {
+
+    }
+
+    protected void parsePrioritiesFilters(String key) {
+
+    }
+
+    @Override
     public String getWhere() {
         return this.where;
     }
 
+    @Override
     public String[] getSelection() {
         return this.selection.toArray(new String[this.selection.size()]);
     }

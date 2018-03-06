@@ -15,7 +15,7 @@ import com.example.ruireutov.organiser.R;
 import com.example.ruireutov.organiser.task.ListCursorAdapter;
 import com.example.ruireutov.organiser.task.main.TaskActivity;
 import com.example.ruireutov.organiser.task.TaskDefines;
-import com.example.ruireutov.organiser.task.TaskListFilter;
+import com.example.ruireutov.organiser.task.filters.TasksFilter;
 
 public class TaskListFragment extends Fragment implements ITaskListUiControl, ITaskListActivityControl{
 
@@ -68,12 +68,12 @@ public class TaskListFragment extends Fragment implements ITaskListUiControl, IT
         this.listControl.getTaskList(getFilters());
     }
 
-    private TaskListFilter getFilters() {
+    private TasksFilter getFilters() {
 
         SharedPreferences settings = this.getActivity().getSharedPreferences(TaskDefines.PREFS_NAME, 0);
         boolean b1 = settings.getBoolean(TaskDefines.SHOW_OVERDUE, false);
         boolean b2 = settings.getBoolean(TaskDefines.SHOW_COMPLETED, false);
-        TaskListFilter filter = new TaskListFilter(
+        TasksFilter filter = new TasksFilter(
                 settings.getBoolean(TaskDefines.SHOW_OVERDUE, false),
                 settings.getBoolean(TaskDefines.SHOW_COMPLETED, false),
                 "",

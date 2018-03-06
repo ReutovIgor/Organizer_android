@@ -5,7 +5,7 @@ import android.database.Cursor;
 
 import com.example.ruireutov.organiser.databaseWorkers.DatabaseControl;
 import com.example.ruireutov.organiser.task.main.ITaskActivity;
-import com.example.ruireutov.organiser.task.TaskListFilter;
+import com.example.ruireutov.organiser.task.filters.TasksFilter;
 import com.example.ruireutov.organiser.task.TaskDetailsData;
 
 
@@ -45,7 +45,7 @@ public class TaskListControl implements ITaskListControl {
     }
 
     @Override
-    public void getTaskList(TaskListFilter filter) {
+    public void getTaskList(TasksFilter filter) {
         this.listData = this.dbControl.getTasks(filter);
         this.uiControl.updateList(this.listData);
     }

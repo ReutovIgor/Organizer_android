@@ -27,6 +27,10 @@
     <string name="task_option_completed_tasks">Show completed</string>
     <string name="task_option_failed_tasks">Show Overdue</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!--Task Filter strings-->
+    <string name="task_filter_button_close">Close</string>
+    <string name="task_filter_button_apply">Apply</string>
+    <string name="task_filter_button_reset">Reset</string>
+    <string name="task_filter_container_priority">Priority: </string>
+    <string name="task_filter_container_category">Category: </string>
 </resources>

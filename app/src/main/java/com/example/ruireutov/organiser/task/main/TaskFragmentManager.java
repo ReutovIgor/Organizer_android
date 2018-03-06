@@ -1,4 +1,4 @@
-package com.example.ruireutov.organiser.task;
+package com.example.ruireutov.organiser.task.main;
 
 import java.util.HashMap;
 import java.util.Objects;

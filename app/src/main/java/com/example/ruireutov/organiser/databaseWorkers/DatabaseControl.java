@@ -7,7 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.ruireutov.organiser.task.TaskDetailsData;
-import com.example.ruireutov.organiser.task.TaskListFilter;
+import com.example.ruireutov.organiser.task.filters.ITaskListFilter;
+import com.example.ruireutov.organiser.task.filters.TasksFilter;
 
 import java.util.HashMap;
 
@@ -80,7 +81,7 @@ public class DatabaseControl {
             " LEFT JOIN " + TABLE_TASKS + " on " + TABLE_TASKS + "." + KEY_CATEGORY_ID + "=" + TABLE_CATEGORIES + "." + KEY_ID +
             " LEFT JOIN " + TABLE_PRIORITIES + " on " + TABLE_TASKS + "." + KEY_PRIORITY_ID + "=" + TABLE_PRIORITIES + "." + KEY_ID;
 
-    private static final String GET_PRIORITIES_FILTERS_TABLE = TABLE_TASKS +
+    private static final String GET_PRIORITIES_FILTERS_TABLE = TABLE_PRIORITIES +
             " LEFT JOIN " + TABLE_TASKS + " on " + TABLE_TASKS + "." + KEY_PRIORITY_ID + "=" + TABLE_PRIORITIES + "." + KEY_ID +
             " LEFT JOIN " + TABLE_CATEGORIES + " on " + TABLE_TASKS + "." + KEY_CATEGORY_ID + "=" + TABLE_CATEGORIES + "." + KEY_ID;
 
@@ -101,11 +102,11 @@ public class DatabaseControl {
         this.dbHelper = new DatabaseHelper(context);
 
         this.taskListFilterMapping = new HashMap<>();
-        this.taskListFilterMapping.put(TaskListFilter.TASK_FILTER_TIME_END, KEY_END);
-        this.taskListFilterMapping.put(TaskListFilter.TASK_FILTER_STATUS, KEY_STATUS);
-        this.taskListFilterMapping.put(TaskListFilter.TASK_FILTER_TIME_START, KEY_START);
-        this.taskListFilterMapping.put(TaskListFilter.TASK_FILTER_CATEGORY, TABLE_CATEGORIES + "." + KEY_NAME);
-        this.taskListFilterMapping.put(TaskListFilter.TASK_FILTER_PRIORITY, TABLE_PRIORITIES + "." + KEY_NAME);
+        this.taskListFilterMapping.put(TasksFilter.TASK_FILTER_TIME_END, KEY_END);
+        this.taskListFilterMapping.put(TasksFilter.TASK_FILTER_STATUS, KEY_STATUS);
+        this.taskListFilterMapping.put(TasksFilter.TASK_FILTER_TIME_START, KEY_START);
+        this.taskListFilterMapping.put(TasksFilter.TASK_FILTER_CATEGORY, TABLE_CATEGORIES + "." + KEY_NAME);
+        this.taskListFilterMapping.put(TasksFilter.TASK_FILTER_PRIORITY, TABLE_PRIORITIES + "." + KEY_NAME);
     }
 
     public void open() {
@@ -123,7 +124,7 @@ public class DatabaseControl {
         }
     }
 
-    public Cursor getTasks(TaskListFilter filter) {
+    public Cursor getTasks(ITaskListFilter filter) {
         String[] columns = {
                 TABLE_TASKS + "." + KEY_ID + " AS " + DatabaseDefines.TASK_LIST_ID,
                 TABLE_TASKS + "." + KEY_NAME + " AS " + DatabaseDefines.TASK_LIST_NAME,
@@ -220,7 +221,7 @@ public class DatabaseControl {
         return c;
     }
 
-    public Cursor getCategoriesFilter(TaskListFilter filter) {
+    public Cursor getCategoriesFilter(ITaskListFilter filter) {
         String[] columns = {
                 TABLE_CATEGORIES + "." + KEY_ID + " AS _id",
                 TABLE_CATEGORIES + "." + KEY_NAME + " AS " + DatabaseDefines.FILTER_NAME,
@@ -240,26 +241,6 @@ public class DatabaseControl {
         return c;
     }
 
-    public Cursor getPrioritiesFilter(TaskListFilter filter) {
-        String[] columns = {
-                TABLE_PRIORITIES + "." + KEY_ID + " AS _id",
-                TABLE_PRIORITIES + "." + KEY_NAME + " AS " + DatabaseDefines.FILTER_NAME,
-                "COUNT(" + TABLE_PRIORITIES + "." + KEY_ID + ") AS " + DatabaseDefines.FILTER_COUNT
-        };
-        Cursor c = null;
-        try {
-            filter.generateQueryParams(this.taskListFilterMapping);
-            String where = filter.getWhere();
-            String[] selection = filter.getSelection();
-            String groupBy = TABLE_PRIORITIES + "." + KEY_NAME;
-            c = this.db.query(GET_CATEGORIES_FILTERS_TABLE, columns, where, selection, groupBy , null, null);
-        } catch(Exception e) {
-            return null;
-        }
-
-        return c;
-    }
-
     public Cursor getPriorities() {
         String[] columns = {
                 KEY_ID + " AS _id",
@@ -268,6 +249,26 @@ public class DatabaseControl {
                 KEY_COLOR + " AS " + DatabaseDefines.PRIORITIES_COLOR
         };
         Cursor c  = this.db.query(TABLE_PRIORITIES, columns, null, null, null, null, null);
+        return c;
+    }
+
+    public Cursor getPrioritiesFilter(ITaskListFilter filter) {
+        String[] columns = {
+                TABLE_PRIORITIES + "." + KEY_ID + " AS _id",
+                TABLE_PRIORITIES + "." + KEY_NAME + " AS " + DatabaseDefines.FILTER_NAME,
+                "COUNT(" + TABLE_PRIORITIES + "." + KEY_ID + ") AS " + DatabaseDefines.FILTER_COUNT
+        };
+        Cursor c;
+        try {
+            filter.generateQueryParams(this.taskListFilterMapping);
+            String where = filter.getWhere();
+            String[] selection = filter.getSelection();
+            String groupBy = TABLE_PRIORITIES + "." + KEY_NAME;
+            c = this.db.query(GET_PRIORITIES_FILTERS_TABLE, columns, where, selection, groupBy , null, null);
+        } catch(Exception e) {
+            return null;
+        }
+
         return c;
     }
 

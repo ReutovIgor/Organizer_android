@@ -14,14 +14,12 @@ import com.example.ruireutov.organiser.R;
 import com.example.ruireutov.organiser.SideMenuBar;
 import com.example.ruireutov.organiser.task.TaskDefines;
 import com.example.ruireutov.organiser.task.TaskDetailsData;
-import com.example.ruireutov.organiser.task.TaskFragmentManager;
 import com.example.ruireutov.organiser.task.taskDetails.ITaskDetailsActivityControl;
 import com.example.ruireutov.organiser.task.taskDetails.TaskDetailsFragment;
-import com.example.ruireutov.organiser.task.taskFilter.TaskFilterFragment;
 import com.example.ruireutov.organiser.task.taskList.ITaskListActivityControl;
 import com.example.ruireutov.organiser.task.taskList.TaskListFragment;
 
-public class TaskActivity extends AppCompatActivity implements ITaskActivity{
+public class TaskActivity extends AppCompatActivity implements ITaskActivity, ITaskActivityTaskFilterControl{
     private SideMenuBar sideMenuBar;
     private ITaskListActivityControl taskListFragment;
     private ITaskDetailsActivityControl taskDetailsFragment;
@@ -117,6 +115,5 @@ public class TaskActivity extends AppCompatActivity implements ITaskActivity{
 
     @Override
     public void showCategories() {
-
     }
 }

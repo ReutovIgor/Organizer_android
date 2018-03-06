@@ -15,7 +15,6 @@ import com.google.android.flexbox.FlexboxLayout;
 import java.util.ArrayList;
 
 public class TaskFilterList {
-    private Context context;
     private LayoutInflater inflater;
     private FlexboxLayout root;
     private Drawable itemBackground;
@@ -25,13 +24,11 @@ public class TaskFilterList {
 
 
     public TaskFilterList(Context context, FlexboxLayout flexboxLayout, LayoutInflater inflater) {
-        this.context = context;
         this.root = flexboxLayout;
         this.inflater = inflater;
 
-
-        this.itemBackground = this.context.getDrawable(R.drawable.filter_item_background_drawable);
-        this.itemBackgroundSelected = this.context.getDrawable(R.drawable.filter_item_background_slected_drawable);
+        this.itemBackground = context.getDrawable(R.drawable.filter_item_background_drawable);
+        this.itemBackgroundSelected = context.getDrawable(R.drawable.filter_item_background_slected_drawable);
 
         this.listItemId = R.layout.task_filter_list_elements;
 
@@ -55,7 +52,9 @@ public class TaskFilterList {
         } catch (Exception e) {
             Log.e("TaskFilterList", e.toString());
         } finally {
-            cursor.close();
+            if(cursor != null) {
+                cursor.close();
+            }
         }
     }
 

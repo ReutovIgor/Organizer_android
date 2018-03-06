@@ -8,79 +8,90 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp">
-        <android.support.design.widget.FloatingActionButton
-            android:visibility="gone"
+
+        <Button
             android:id="@+id/close_filters_button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <android.support.design.widget.FloatingActionButton
-            android:visibility="gone"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            android:text="@string/task_filter_button_close"/>
+        <Button
             android:id="@+id/apply_filters_button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <android.support.design.widget.FloatingActionButton
-            android:visibility="gone"
+            android:layout_height="wrap_content"
+            app:layout_constraintRight_toLeftOf="@id/reset_filters_button"
+            android:text="@string/task_filter_button_apply"/>
+        <Button
             android:id="@+id/reset_filters_button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            app:layout_constraintRight_toRightOf="parent"
+            android:text="@string/task_filter_button_reset"/>
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/close_filters_button"
+            app:layout_constraintLeft_toLeftOf="parent"
+            tools:layout_editor_absoluteX="16dp">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
                 <RelativeLayout
-                    android:orientation="vertical"
+                    android:id="@+id/priority_filter_root"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:orientation="vertical">
                     <com.google.android.flexbox.FlexboxLayout
                         android:id="@+id/priority_filters_list"
-                        app:flexWrap="wrap"
-                        app:alignItems="stretch"
-                        app:justifyContent="center"
-                        android:padding="5dp"
-                        android:layout_alignParentTop="true"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
                         android:layout_marginTop="10dp"
-                        android:background="@drawable/filter_border_drawable"/>
+                        android:background="@drawable/filter_border_drawable"
+                        android:padding="5dp"
+                        app:alignItems="stretch"
+                        app:flexWrap="wrap"
+                        app:justifyContent="center" />
                     <TextView
                         android:id="@+id/priority_filters_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
                         android:layout_marginStart="15dp"
-                        android:paddingStart="3dp"
-                        android:paddingEnd="3dp"
                         android:background="@android:color/white"
-                        android:text="Priority:"/>
+                        android:paddingEnd="3dp"
+                        android:paddingStart="3dp"
+                        android:text="@string/task_filter_container_priority" />
                 </RelativeLayout>
                 <RelativeLayout
-                    android:orientation="vertical"
+                    android:id="@+id/priority_category_root"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:orientation="vertical">
                     <com.google.android.flexbox.FlexboxLayout
                         android:id="@+id/category_filters_list"
-                        app:flexWrap="wrap"
-                        app:alignItems="stretch"
-                        app:justifyContent="center"
-                        android:padding="5dp"
-                        android:layout_alignParentTop="true"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
                         android:layout_marginTop="10dp"
-                        android:background="@drawable/filter_border_drawable"/>
+                        android:background="@drawable/filter_border_drawable"
+                        android:padding="5dp"
+                        app:alignItems="stretch"
+                        app:flexWrap="wrap"
+                        app:justifyContent="center" />
                     <TextView
                         android:id="@+id/category_filters_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
                         android:layout_marginStart="15dp"
-                        android:paddingStart="3dp"
-                        android:paddingEnd="3dp"
                         android:background="@android:color/white"
-                        android:text="Category:"/>
+                        android:paddingEnd="3dp"
+                        android:paddingStart="3dp"
+                        android:text="@string/task_filter_container_category" />
                 </RelativeLayout>
             </LinearLayout>
         </ScrollView>
