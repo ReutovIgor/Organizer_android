@@ -63,7 +63,7 @@ public class TaskFilterControl implements ITaskFilterControl {
     }
 
     @Override
-    public void applyNewFilters() {
+    public void saveNewFilters() {
         SharedPreferences preferences = this.uiControl.getSharedPreferences();
         Set<String> selectedPriorities = this.uiControl.getSelectedPriorities();
         Set<String> selectedCategories = this.uiControl.getSelectedCategories();
@@ -73,6 +73,11 @@ public class TaskFilterControl implements ITaskFilterControl {
         editor.putStringSet(TaskDefines.SELECTED_CATEGORIES, selectedCategories);
         editor.apply();
 
-        //go to task list page
+        this.taskActivityControl.onTaskListUpdate();
+    }
+
+    @Override
+    public void hideFilters() {
+        this.taskActivityControl.showTaskList();
     }
 }

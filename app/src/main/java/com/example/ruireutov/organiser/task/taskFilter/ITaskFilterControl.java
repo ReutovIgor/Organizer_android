@@ -6,5 +6,6 @@ import android.content.SharedPreferences;
 public interface ITaskFilterControl {
     void getPriorityFilters(SharedPreferences settings);
     void getCategoryFilters(SharedPreferences settings);
-    void applyNewFilters();
+    void saveNewFilters();
+    void hideFilters();
 }

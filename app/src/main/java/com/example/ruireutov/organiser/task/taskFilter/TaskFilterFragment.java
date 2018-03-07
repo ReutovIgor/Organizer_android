@@ -28,7 +28,6 @@ public class TaskFilterFragment extends Fragment implements  ITaskFilterUIContro
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_task_filter, container, false);
 
-
         Button b1 = view.findViewById(R.id.close_filters_button);
         Button b2 = view.findViewById(R.id.apply_filters_button);
         Button b3 = view.findViewById(R.id.reset_filters_button);
@@ -71,12 +70,12 @@ public class TaskFilterFragment extends Fragment implements  ITaskFilterUIContro
 
     @Override
     public Set<String> getSelectedPriorities() {
-        return null;
+        return this.priorityFilter.getSelectedItems();
     }
 
     @Override
     public Set<String> getSelectedCategories() {
-        return null;
+        return this.categoryFilter.getSelectedItems();
     }
 
     @Override
@@ -94,13 +93,16 @@ public class TaskFilterFragment extends Fragment implements  ITaskFilterUIContro
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.close_filters_button:
-                    //close filters
+                    filterControl.hideFilters();
                 break;
                 case R.id.apply_filters_button:
-                    //apply new filters
+                    filterControl.saveNewFilters();
+                    filterControl.hideFilters();
                 break;
                 case R.id.reset_filters_button:
-                    //remove all used filters
+                    priorityFilter.removeSelections();
+                    categoryFilter.removeSelections();
+                    filterControl.saveNewFilters();
                 break;
             }
         }
