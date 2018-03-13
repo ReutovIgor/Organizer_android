@@ -12,26 +12,29 @@ import com.example.ruireutov.organiser.task.taskDetails.TaskDetailsFragment;
 import com.example.ruireutov.organiser.task.taskFilter.TaskFilterFragment;
 import com.example.ruireutov.organiser.task.taskList.TaskListFragment;
 
-public class TaskFragmentManager {
-    public final static String TASK_LIST       = "list";
-    public final static String TASK_FILTER     = "filter";
-    public final static String TASK_DETAILS    = "details";
-    public final static String TASK_CATEGORIES = "categories";
+class TaskFragmentManager {
+    final static String TASK_LIST       = "list";
+    final static String TASK_FILTER     = "filter";
+    final static String TASK_DETAILS    = "details";
+    final static String TASK_CATEGORIES = "categories";
 
     private FrameLayout frame;
     private HashMap<String, Fragment> fragments;
     private String currentFragment;
     private FragmentManager manager;
+    private IFragmentNotifier fragmentNotifier;
 
-    public TaskFragmentManager (FrameLayout frame, final FragmentManager manager){
+    TaskFragmentManager(final IFragmentNotifier fragmentNotifier, FrameLayout frame, final FragmentManager manager){
         this.currentFragment = "";
         this.fragments = new HashMap<>();
+        this.fragmentNotifier = fragmentNotifier;
         this.frame = frame;
         this.manager = manager;
         this.manager.addOnBackStackChangedListener(
             new FragmentManager.OnBackStackChangedListener() {
                 public void onBackStackChanged() {
                     getCurrentFromBackStack();
+                    fragmentNotifier.onFragmentChange(currentFragment);
                 }
         });
     }
@@ -45,7 +48,7 @@ public class TaskFragmentManager {
         }
     }
 
-    public Fragment addFragment (String name) {
+    Fragment addFragment(String name) {
         Fragment fragment = this.manager.findFragmentByTag(name);
         if(fragment == null) {
             switch (name) {
@@ -68,14 +71,14 @@ public class TaskFragmentManager {
         return fragment;
     }
 
-    public void showInitialFragment () {
+    void showInitialFragment() {
         getCurrentFromBackStack();
         FragmentTransaction tr = this.manager.beginTransaction();
         tr.show(this.fragments.get(this.currentFragment));
         tr.commit();
     }
 
-    public void showFragment(String name) {
+    void showFragment(String name) {
         if(Objects.equals(name, this.currentFragment)) return;
 
         boolean skipBackStack = false;
@@ -104,5 +107,10 @@ public class TaskFragmentManager {
         }
         tr.commit();
         this.currentFragment = name;
+        this.fragmentNotifier.onFragmentChange(this.currentFragment);
+    }
+
+    String getCurrentFragment() {
+        return this.currentFragment;
     }
 }

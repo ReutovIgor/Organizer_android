@@ -1,23 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
+    <item
+        android:id="@+id/apply_filter_button"
+        android:visible="false"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/apply_filters"
+        android:title=""/>
+    <item
+        android:id="@+id/reset_filter_button"
+        android:visible="false"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/reset_filters"
+        android:title=""/>
+    <item
+        android:id="@+id/cancel_filter_button"
+        android:visible="false"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/cancel_filters"
+        android:title=""/>
     <item
         android:id="@+id/filter_button"
-        app:showAsAction="always"
+        android:visible="false"
+        app:showAsAction="ifRoom"
         android:icon="@drawable/filter_icon_white"
         android:title=""/>
     <item
         android:id="@+id/categories_button"
+        android:visible="false"
         app:showAsAction="collapseActionView"
         android:title="@string/task_option_categories"/>
 
     <group android:checkableBehavior="all">
         <item
             android:id="@+id/show_completed_button"
+            android:visible="false"
             android:title="@string/task_option_completed_tasks"/>
         <item
             android:id="@+id/show_failed_button"
+            android:visible="false"
             android:title="@string/task_option_failed_tasks"/>
     </group>
 </menu>

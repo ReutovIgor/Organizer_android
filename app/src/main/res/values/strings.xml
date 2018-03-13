@@ -1,8 +1,10 @@
 <resources>
     <!--App headers strings-->
     <string name="app_name">Organiser</string>
-    <string name="title_activity_to_do_list">Task list</string>
+    <string name="title_activity_task_list">Task list</string>
     <string name="title_activity_task_details">Task details</string>
+    <string name="title_activity_task_filters">Task filter</string>
+    <string name="title_activity_task_categories">Task categories</string>
 
     <!--Task List strings-->
     <string name="task_list_due">Due:</string>
@@ -28,9 +30,9 @@
     <string name="task_option_failed_tasks">Show Overdue</string>
 
     <!--Task Filter strings-->
-    <string name="task_filter_button_close">Close</string>
-    <string name="task_filter_button_apply">Apply</string>
-    <string name="task_filter_button_reset">Reset</string>
+    <string name="task_filter_show_completed">Show completed</string>
+    <string name="task_filter_show_overdue">Show overdue</string>
+    <string name="task_filter_end_by">End by:</string>
     <string name="task_filter_container_priority">Priority: </string>
     <string name="task_filter_container_category">Category: </string>
 </resources>

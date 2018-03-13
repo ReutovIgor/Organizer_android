@@ -19,7 +19,7 @@
         <activity
             android:name=".task.main.TaskActivity"
             android:configChanges="orientation|keyboardHidden"
-            android:label="@string/title_activity_to_do_list" >
+            android:label="@string/title_activity_task_list" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -28,13 +28,13 @@ public class TaskFilterFragment extends Fragment implements  ITaskFilterUIContro
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_task_filter, container, false);
 
-        Button b1 = view.findViewById(R.id.close_filters_button);
-        Button b2 = view.findViewById(R.id.apply_filters_button);
-        Button b3 = view.findViewById(R.id.reset_filters_button);
-
-        b1.setOnClickListener(new ButtonClickListener());
-        b2.setOnClickListener(new ButtonClickListener());
-        b3.setOnClickListener(new ButtonClickListener());
+//        Button b1 = view.findViewById(R.id.close_filters_button);
+//        Button b2 = view.findViewById(R.id.apply_filters_button);
+//        Button b3 = view.findViewById(R.id.reset_filters_button);
+//
+//        b1.setOnClickListener(new ButtonClickListener());
+//        b2.setOnClickListener(new ButtonClickListener());
+//        b3.setOnClickListener(new ButtonClickListener());
 
         this.requiresUpdate = true;
         this.priorityFilter = new TaskFilterList(
@@ -88,23 +88,23 @@ public class TaskFilterFragment extends Fragment implements  ITaskFilterUIContro
         this.categoryFilter.updateList(c);
     }
 
-    private class ButtonClickListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.close_filters_button:
-                    filterControl.hideFilters();
-                break;
-                case R.id.apply_filters_button:
-                    filterControl.saveNewFilters();
-                    filterControl.hideFilters();
-                break;
-                case R.id.reset_filters_button:
-                    priorityFilter.removeSelections();
-                    categoryFilter.removeSelections();
-                    filterControl.saveNewFilters();
-                break;
-            }
-        }
-    }
+//    private class ButtonClickListener implements View.OnClickListener {
+//        @Override
+//        public void onClick(View v) {
+//            switch (v.getId()) {
+//                case R.id.close_filters_button:
+//                    filterControl.hideFilters();
+//                break;
+//                case R.id.apply_filters_button:
+//                    filterControl.saveNewFilters();
+//                    filterControl.hideFilters();
+//                break;
+//                case R.id.reset_filters_button:
+//                    priorityFilter.removeSelections();
+//                    categoryFilter.removeSelections();
+//                    filterControl.saveNewFilters();
+//                break;
+//            }
+//        }
+//    }
 }
