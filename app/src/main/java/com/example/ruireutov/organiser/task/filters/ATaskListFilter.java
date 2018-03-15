@@ -1,7 +1,6 @@
 package com.example.ruireutov.organiser.task.filters;
 
 import android.annotation.SuppressLint;
-import android.util.ArraySet;
 
 import com.example.ruireutov.organiser.databaseWorkers.DatabaseDefines;
 
@@ -19,16 +18,17 @@ public abstract class ATaskListFilter implements ITaskListFilter {
     public  static  final String TASK_FILTER_PRIORITY = "priority";
     public  static  final String TASK_FILTER_TIME_START = "timeStart";
 
-    protected String where;
-    protected ArrayList<String> selection;
-    protected boolean overdue;
-    protected boolean completed;
-    protected String timeStart;
-    protected String timeEnd;
-    protected Set<String> categories;
-    protected Set<String> priorities;
+    StringBuilder where;
+    ArrayList<String> selection;
+    private boolean overdue;
+    private boolean completed;
+    private String timeStart;
+    private String timeEnd;
+    private Set<String> categories;
+    private Set<String> priorities;
 
-    public ATaskListFilter(boolean overdue, boolean completed, String timeStart, String timeEnd, Set<String> categories, Set<String> priorities) {
+    ATaskListFilter(boolean overdue, boolean completed, String timeStart, String timeEnd, Set<String> categories, Set<String> priorities) {
+        this.where = new StringBuilder();
         this.overdue = overdue;
         this.completed = completed;
         this.timeStart = timeStart;
@@ -37,7 +37,7 @@ public abstract class ATaskListFilter implements ITaskListFilter {
         this.priorities = priorities;
     }
 
-    protected void parseTimeEndFilters(String key) {
+    void parseTimeEndFilters(String key) {
         String concatStr = "";
         if(this.overdue && Objects.equals(this.timeEnd, "")) {
             return;
@@ -58,10 +58,10 @@ public abstract class ATaskListFilter implements ITaskListFilter {
 
         }
 
-        this.where += concatStr + " ( " + timeSelection + " ) ";
+        this.where.append(concatStr).append(" ( ").append(timeSelection).append(" ) ");
     }
 
-    protected void parseCompletedFilters(String key) {
+    void parseCompletedFilters(String key) {
         String concatStr = "";
         if(this.completed) {
             return;
@@ -69,21 +69,51 @@ public abstract class ATaskListFilter implements ITaskListFilter {
             concatStr = "AND";
         }
 
-        this.where += concatStr + " ( " + key + " != ? ) ";
+        this.where.append(concatStr).append(" ( ").append(key).append(" != ? ) ");
         this.selection.add(Integer.toString(DatabaseDefines.TASK_STATUS_COMPLETED));
     }
 
-    protected void parseCategoriesFilters(String key) {
+    void parseCategoriesFilters(String key) {
+        String concatStr = "";
+        if(this.categories.size() == 0) {
+            return;
+        } else if(this.where.length() > 0 ) {
+            concatStr = "AND";
+        }
 
+        String concat = "";
+        StringBuilder categorySelection = new StringBuilder();
+        for (String item : this.categories) {
+            categorySelection.append(concat).append(key).append(" = ? ");
+            concat = "OR ";
+            this.selection.add(item);
+        }
+
+        this.where.append(concatStr).append(" ( ").append(categorySelection.toString()).append(" ) ");
     }
 
-    protected void parsePrioritiesFilters(String key) {
+    void parsePrioritiesFilters(String key) {
+        String concatStr = "";
+        if(this.priorities.size() == 0) {
+            return;
+        } else if(this.where.length() > 0 ) {
+            concatStr = "AND";
+        }
 
+        String concat = "";
+        StringBuilder prioritySelection = new StringBuilder();
+        for (String item : this.priorities) {
+            prioritySelection.append(concat).append(key).append(" = ? ");
+            concat = "OR ";
+            this.selection.add(item);
+        }
+
+        this.where.append(concatStr).append(" ( ").append(prioritySelection.toString()).append(" ) ");
     }
 
     @Override
     public String getWhere() {
-        return this.where;
+        return this.where.toString();
     }
 
     @Override

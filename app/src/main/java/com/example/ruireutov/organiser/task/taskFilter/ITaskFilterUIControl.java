@@ -10,8 +10,10 @@ import java.util.Set;
  */
 
 public interface ITaskFilterUIControl {
-    void updatePriorityFilters(Cursor c);
+    void updateShowOverdue(boolean state);
+    void updateShowCompleted(boolean state);
     void updateCategoryFilters(Cursor c);
+    void updatePriorityFilters(Cursor c);
     SharedPreferences getSharedPreferences();
     Set<String> getSelectedPriorities();
     Set<String> getSelectedCategories();

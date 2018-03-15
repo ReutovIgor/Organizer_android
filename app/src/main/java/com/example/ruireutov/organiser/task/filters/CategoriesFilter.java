@@ -14,7 +14,7 @@ public class CategoriesFilter extends ATaskListFilter{
     }
     @Override
     public void generateQueryParams(HashMap<String, String> map) {
-        this.where = "";
+        this.where.setLength(0);
         this.selection = new ArrayList<>();
         this.parseTimeEndFilters(map.get(TasksFilter.TASK_FILTER_TIME_END));
         this.parseCompletedFilters(map.get(TasksFilter.TASK_FILTER_STATUS));

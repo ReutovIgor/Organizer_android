@@ -34,7 +34,7 @@ public class TaskActivity extends AppCompatActivity implements IFragmentNotifier
         setContentView(R.layout.activity_task);
 
         setSupportActionBar((Toolbar) findViewById(R.id.task_list_tool_bar));
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        //getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         this.fragmentManager = new TaskFragmentManager(this, (FrameLayout) findViewById(R.id.filter_frame), getSupportFragmentManager());
         this.taskListFragment = (TaskListFragment) this.fragmentManager.addFragment(TaskFragmentManager.TASK_LIST);

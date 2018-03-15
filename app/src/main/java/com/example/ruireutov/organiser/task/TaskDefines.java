@@ -1,9 +1,5 @@
 package com.example.ruireutov.organiser.task;
 
-/**
- * Created by ruireutov on 01-Feb-18.
- */
-
 public class TaskDefines {
     public static final String PREFS_NAME = "TASK_LIST_PREFS";
     public static final String SHOW_COMPLETED = "TASK_LIST_COMPLETED";

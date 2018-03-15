@@ -9,7 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
 import com.example.ruireutov.organiser.task.taskDetails.TaskDetailsFragment;
-import com.example.ruireutov.organiser.task.taskFilter.TaskFilterFragment;
+import com.example.ruireutov.organiser.task.taskFilter.TaskFilterFragmentList;
 import com.example.ruireutov.organiser.task.taskList.TaskListFragment;
 
 class TaskFragmentManager {
@@ -59,7 +59,7 @@ class TaskFragmentManager {
                     fragment = new TaskDetailsFragment();
                     break;
                 case TASK_FILTER:
-                    fragment = new TaskFilterFragment();
+                    fragment = new TaskFilterFragmentList();
                     break;
                 case TASK_CATEGORIES:
                     //TODO implement later

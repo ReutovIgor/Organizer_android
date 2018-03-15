@@ -19,24 +19,26 @@ public class TaskFilterControl implements ITaskFilterControl {
     private ITaskFilterUIControl uiControl;
     private ITaskActivityTaskFilterControl taskActivityControl;
     private DatabaseControl dbControl;
+    private FilterData filterData;
 
-    public TaskFilterControl(Context context, ITaskFilterUIControl uiControl, ITaskActivityTaskFilterControl taskActivityControl) {
+    TaskFilterControl(Context context, ITaskFilterUIControl uiControl, ITaskActivityTaskFilterControl taskActivityControl) {
         this.uiControl = uiControl;
         this.taskActivityControl = taskActivityControl;
 
         this.dbControl = DatabaseControl.getInstance(context);
         this.dbControl.open();
+
+        this.getTaskFilters();
     }
 
-    @Override
-    public void getPriorityFilters(SharedPreferences preferences) {
+    private void getPriorityFilters() {
         ITaskListFilter filter = new PrioritiesFilter(
-            preferences.getBoolean(TaskDefines.SHOW_OVERDUE, false),
-            preferences.getBoolean(TaskDefines.SHOW_COMPLETED, false),
-            preferences.getString(TaskDefines.TASK_STARTS, ""),
-            preferences.getString(TaskDefines.TASK_ENDS, ""),
-            preferences.getStringSet(TaskDefines.SELECTED_CATEGORIES, new HashSet<String>()),
-            preferences.getStringSet(TaskDefines.SELECTED_PRIORITIES, new HashSet<String>())
+                this.filterData.showOverdueTasks(),
+                this.filterData.showCompletedTasks(),
+                this.filterData.getTaskStartDate(),
+                this.filterData.getTaskEndDate(),
+                this.filterData.getCategories(),
+                this.filterData.getPriorities()
         );
 
         Cursor c = dbControl.getPrioritiesFilter(filter);
@@ -45,21 +47,68 @@ public class TaskFilterControl implements ITaskFilterControl {
         }
     }
 
-    @Override
-    public void getCategoryFilters(SharedPreferences preferences) {
+    private void getCategoryFilters() {
         ITaskListFilter filter = new CategoriesFilter(
-            preferences.getBoolean(TaskDefines.SHOW_OVERDUE, false),
-            preferences.getBoolean(TaskDefines.SHOW_COMPLETED, false),
-            preferences.getString(TaskDefines.TASK_STARTS, ""),
-            preferences.getString(TaskDefines.TASK_ENDS, ""),
-            preferences.getStringSet(TaskDefines.SELECTED_CATEGORIES, new HashSet<String>()),
-            preferences.getStringSet(TaskDefines.SELECTED_PRIORITIES, new HashSet<String>())
+                this.filterData.showOverdueTasks(),
+                this.filterData.showCompletedTasks(),
+                this.filterData.getTaskStartDate(),
+                this.filterData.getTaskEndDate(),
+                this.filterData.getCategories(),
+                this.filterData.getPriorities()
         );
 
         Cursor c = dbControl.getCategoriesFilter(filter);
         if(c != null) {
             this.uiControl.updateCategoryFilters(c);
         }
+    }
+
+    @Override
+    public void getTaskFilters() {
+        this.filterData = new FilterData(this.uiControl.getSharedPreferences());
+        this.uiControl.updateShowOverdue(this.filterData.showOverdueTasks());
+        this.uiControl.updateShowCompleted(this.filterData.showCompletedTasks());
+        this.getCategoryFilters();
+        this.getPriorityFilters();
+    }
+
+    @Override
+    public void setShowOverdue(boolean state) {
+        this.filterData.setShowOverdue(state);
+    }
+
+    @Override
+    public void setShowCompleted(boolean state) {
+        this.filterData.setShowCompleted(state);
+    }
+
+    @Override
+    public void setEndByDate(String date) {
+        this.filterData.setTaskEndDate(date);
+    }
+
+    @Override
+    public void addCategory(String name) {
+        this.filterData.addCategory(name);
+        this.getPriorityFilters();
+    }
+
+    @Override
+    public void removeCategory(String name) {
+        this.filterData.removeCategory(name);
+        this.getPriorityFilters();
+    }
+
+    @Override
+    public void addPriority(String name) {
+        this.filterData.addPriority(name);
+        this.getCategoryFilters();
+    }
+
+    @Override
+    public void removePriority(String name) {
+        this.filterData.removePriority(name);
+        this.getCategoryFilters();
     }
 
     @Override
@@ -79,5 +128,79 @@ public class TaskFilterControl implements ITaskFilterControl {
     @Override
     public void hideFilters() {
         this.taskActivityControl.showTaskList();
+    }
+
+    private class FilterData {
+        boolean showOverdue;
+        boolean showCompleted;
+        String taskStartDate;
+        String taskEndDate;
+        Set<String> selectedCategories;
+        Set<String> selectedPriorities;
+
+        FilterData(SharedPreferences preferences) {
+            this.showOverdue = preferences.getBoolean(TaskDefines.SHOW_OVERDUE, false);
+            this.showCompleted = preferences.getBoolean(TaskDefines.SHOW_COMPLETED, false);
+            this.taskStartDate = preferences.getString(TaskDefines.TASK_STARTS, "");
+            this.taskEndDate = preferences.getString(TaskDefines.TASK_ENDS, "");
+            this.selectedCategories = preferences.getStringSet(TaskDefines.SELECTED_CATEGORIES, new HashSet<String>());
+            this.selectedPriorities = preferences.getStringSet(TaskDefines.SELECTED_PRIORITIES, new HashSet<String>());
+        }
+
+        boolean showOverdueTasks() {
+            return this.showOverdue;
+        }
+
+        void setShowOverdue(boolean state) {
+            this.showOverdue = state;
+        }
+
+        boolean showCompletedTasks() {
+            return this.showCompleted;
+        }
+
+        void setShowCompleted(boolean state) {
+            this.showCompleted = state;
+        }
+
+        String getTaskStartDate() {
+            return taskStartDate;
+        }
+
+        void setTaskStartDate(String taskStartDate) {
+            this.taskStartDate = taskStartDate;
+        }
+
+        String getTaskEndDate() {
+            return taskEndDate;
+        }
+
+        void setTaskEndDate(String taskEndDate) {
+            this.taskEndDate = taskEndDate;
+        }
+
+        Set<String> getCategories() {
+            return selectedCategories;
+        }
+
+        void addCategory(String name) {
+            this.selectedCategories.add(name);
+        }
+
+        void removeCategory(String name) {
+            this.selectedCategories.remove(name);
+        }
+
+        Set<String> getPriorities() {
+            return selectedPriorities;
+        }
+
+        void addPriority(String name) {
+            this.selectedPriorities.add(name);
+        }
+
+        void removePriority(String name) {
+            this.selectedPriorities.remove(name);
+        }
     }
 }

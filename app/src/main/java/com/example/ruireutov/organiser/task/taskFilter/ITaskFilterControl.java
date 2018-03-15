@@ -1,11 +1,14 @@
 package com.example.ruireutov.organiser.task.taskFilter;
 
-import android.content.SharedPreferences;
-
-
 public interface ITaskFilterControl {
-    void getPriorityFilters(SharedPreferences settings);
-    void getCategoryFilters(SharedPreferences settings);
+    void getTaskFilters();
+    void setShowOverdue(boolean state);
+    void setShowCompleted(boolean state);
+    void setEndByDate(String date);
+    void addCategory(String name);
+    void removeCategory(String name);
+    void addPriority(String name);
+    void removePriority(String name);
     void saveNewFilters();
     void hideFilters();
 }

@@ -7,7 +7,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.TextView;
 
 import com.example.ruireutov.organiser.R;
 import com.example.ruireutov.organiser.task.TaskDefines;
@@ -16,52 +17,50 @@ import com.google.android.flexbox.FlexboxLayout;
 
 import java.util.Set;
 
-public class TaskFilterFragment extends Fragment implements  ITaskFilterUIControl {
+public class TaskFilterFragmentList extends Fragment implements  ITaskFilterUIControl, ITaskFilterListNotification {
     ITaskFilterControl filterControl;
+    CheckBox showOverdue;
+    CheckBox showCompleted;
+    TextView endBy;
     TaskFilterList priorityFilter;
     TaskFilterList categoryFilter;
     boolean requiresUpdate;
 
-    public TaskFilterFragment() {}
+    public TaskFilterFragmentList() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_task_filter, container, false);
 
-//        Button b1 = view.findViewById(R.id.close_filters_button);
-//        Button b2 = view.findViewById(R.id.apply_filters_button);
-//        Button b3 = view.findViewById(R.id.reset_filters_button);
-//
-//        b1.setOnClickListener(new ButtonClickListener());
-//        b2.setOnClickListener(new ButtonClickListener());
-//        b3.setOnClickListener(new ButtonClickListener());
-
-        this.requiresUpdate = true;
+        this.showOverdue = view.findViewById(R.id.show_overdue_filter);
+        this.showCompleted = view.findViewById(R.id.show_completed_filter);
+        this.endBy = view.findViewById(R.id.end_by_filter);
         this.priorityFilter = new TaskFilterList(
                 getContext(),
                 (FlexboxLayout) view.findViewById(R.id.priority_filters_list),
-                getActivity().getLayoutInflater());
+                getActivity().getLayoutInflater(),
+                this,
+                TaskDefines.SELECTED_PRIORITIES);
 
         this.categoryFilter = new TaskFilterList(
                 getContext(),
                 (FlexboxLayout) view.findViewById(R.id.category_filters_list),
-                getActivity().getLayoutInflater());
+                getActivity().getLayoutInflater(),
+                this,
+                TaskDefines.SELECTED_CATEGORIES);
 
         TaskActivity activity = (TaskActivity) getActivity();
         this.filterControl = new TaskFilterControl(activity, this, activity);
-        this.updateFilters();
 
         return view;
     }
 
-    public void updateFilters() {
-        if(this.requiresUpdate) {
-            this.requiresUpdate = false;
-            SharedPreferences settings = this.getSharedPreferences();
-            this.filterControl.getPriorityFilters(settings);
-            this.filterControl.getCategoryFilters(settings);
-        }
-    }
+//    public void onFiltersUpdate() {
+//        if(this.requiresUpdate) {
+//            this.requiresUpdate = false;
+//            this.filterControl.getTaskFilters();
+//        }
+//    }
 
     @Override
     public SharedPreferences getSharedPreferences() {
@@ -79,6 +78,16 @@ public class TaskFilterFragment extends Fragment implements  ITaskFilterUIContro
     }
 
     @Override
+    public void updateShowOverdue(boolean state) {
+        this.showOverdue.setChecked(state);
+    }
+
+    @Override
+    public void updateShowCompleted(boolean state) {
+        this.showCompleted.setChecked(state);
+    }
+
+    @Override
     public  void updatePriorityFilters(Cursor c) {
         this.priorityFilter.updateList(c);
     }
@@ -88,23 +97,27 @@ public class TaskFilterFragment extends Fragment implements  ITaskFilterUIContro
         this.categoryFilter.updateList(c);
     }
 
-//    private class ButtonClickListener implements View.OnClickListener {
-//        @Override
-//        public void onClick(View v) {
-//            switch (v.getId()) {
-//                case R.id.close_filters_button:
-//                    filterControl.hideFilters();
-//                break;
-//                case R.id.apply_filters_button:
-//                    filterControl.saveNewFilters();
-//                    filterControl.hideFilters();
-//                break;
-//                case R.id.reset_filters_button:
-//                    priorityFilter.removeSelections();
-//                    categoryFilter.removeSelections();
-//                    filterControl.saveNewFilters();
-//                break;
-//            }
-//        }
-//    }
+    @Override
+    public void onGroupItemSelect(String key, String name) {
+        switch(key) {
+            case TaskDefines.SELECTED_CATEGORIES:
+                this.filterControl.addCategory(name);
+                break;
+            case TaskDefines.SELECTED_PRIORITIES:
+                this.filterControl.addPriority(name);
+                break;
+        }
+    }
+
+    @Override
+    public void onGroupItemDeselect(String key, String name) {
+        switch(key) {
+            case TaskDefines.SELECTED_CATEGORIES:
+                this.filterControl.removeCategory(name);
+                break;
+            case TaskDefines.SELECTED_PRIORITIES:
+                this.filterControl.removePriority(name);
+                break;
+        }
+    }
 }

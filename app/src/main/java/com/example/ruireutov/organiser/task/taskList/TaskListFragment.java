@@ -17,6 +17,8 @@ import com.example.ruireutov.organiser.task.main.TaskActivity;
 import com.example.ruireutov.organiser.task.TaskDefines;
 import com.example.ruireutov.organiser.task.filters.TasksFilter;
 
+import java.util.HashSet;
+
 public class TaskListFragment extends Fragment implements ITaskListUiControl, ITaskListActivityControl{
 
     private ListView listView;
@@ -71,18 +73,14 @@ public class TaskListFragment extends Fragment implements ITaskListUiControl, IT
     private TasksFilter getFilters() {
 
         SharedPreferences settings = this.getActivity().getSharedPreferences(TaskDefines.PREFS_NAME, 0);
-        boolean b1 = settings.getBoolean(TaskDefines.SHOW_OVERDUE, false);
-        boolean b2 = settings.getBoolean(TaskDefines.SHOW_COMPLETED, false);
-        TasksFilter filter = new TasksFilter(
+        return new TasksFilter(
                 settings.getBoolean(TaskDefines.SHOW_OVERDUE, false),
                 settings.getBoolean(TaskDefines.SHOW_COMPLETED, false),
-                "",
-                "",
-                null,
-                null
+                settings.getString(TaskDefines.TASK_STARTS, ""),
+                settings.getString(TaskDefines.TASK_ENDS, ""),
+                settings.getStringSet(TaskDefines.SELECTED_CATEGORIES, new HashSet<String>()),
+                settings.getStringSet(TaskDefines.SELECTED_PRIORITIES, new HashSet<String>())
         );
-
-        return filter;
     }
 
     private void listItemClick(int id) {
