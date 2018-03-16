@@ -225,7 +225,7 @@ public class DatabaseControl {
         String[] columns = {
                 TABLE_CATEGORIES + "." + KEY_ID + " AS _id",
                 TABLE_CATEGORIES + "." + KEY_NAME + " AS " + DatabaseDefines.FILTER_NAME,
-                "COUNT(" + TABLE_CATEGORIES + "." + KEY_ID + ") AS " + DatabaseDefines.FILTER_COUNT
+                "COUNT(" + TABLE_TASKS + "." + KEY_ID + ") AS " + DatabaseDefines.FILTER_COUNT
         };
         Cursor c;
         try {
@@ -256,7 +256,7 @@ public class DatabaseControl {
         String[] columns = {
                 TABLE_PRIORITIES + "." + KEY_ID + " AS _id",
                 TABLE_PRIORITIES + "." + KEY_NAME + " AS " + DatabaseDefines.FILTER_NAME,
-                "COUNT(" + TABLE_PRIORITIES + "." + KEY_ID + ") AS " + DatabaseDefines.FILTER_COUNT
+                "COUNT(" + TABLE_TASKS + "." + KEY_ID + ") AS " + DatabaseDefines.FILTER_COUNT
         };
         Cursor c;
         try {

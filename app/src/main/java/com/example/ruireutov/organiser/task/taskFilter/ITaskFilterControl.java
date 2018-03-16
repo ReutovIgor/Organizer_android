@@ -10,5 +10,6 @@ public interface ITaskFilterControl {
     void addPriority(String name);
     void removePriority(String name);
     void saveNewFilters();
-    void hideFilters();
+    void removeNewFilters();
+    void resetFilters();
 }

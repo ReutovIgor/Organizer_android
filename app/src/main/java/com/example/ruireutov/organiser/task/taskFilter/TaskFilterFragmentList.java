@@ -17,7 +17,7 @@ import com.google.android.flexbox.FlexboxLayout;
 
 import java.util.Set;
 
-public class TaskFilterFragmentList extends Fragment implements  ITaskFilterUIControl, ITaskFilterListNotification {
+public class TaskFilterFragmentList extends Fragment implements  ITaskFilterUIControl, ITaskFilterListNotification, ITaskFilterActivityControl {
     ITaskFilterControl filterControl;
     CheckBox showOverdue;
     CheckBox showCompleted;
@@ -68,16 +68,6 @@ public class TaskFilterFragmentList extends Fragment implements  ITaskFilterUICo
     }
 
     @Override
-    public Set<String> getSelectedPriorities() {
-        return this.priorityFilter.getSelectedItems();
-    }
-
-    @Override
-    public Set<String> getSelectedCategories() {
-        return this.categoryFilter.getSelectedItems();
-    }
-
-    @Override
     public void updateShowOverdue(boolean state) {
         this.showOverdue.setChecked(state);
     }
@@ -88,13 +78,23 @@ public class TaskFilterFragmentList extends Fragment implements  ITaskFilterUICo
     }
 
     @Override
-    public  void updatePriorityFilters(Cursor c) {
-        this.priorityFilter.updateList(c);
+    public void fillCategories(Cursor c, Set<String> selectedItems) {
+        this.categoryFilter.fillList(c, selectedItems);
     }
 
     @Override
     public  void updateCategoryFilters(Cursor c) {
-        this.categoryFilter.updateList(c);
+        this.categoryFilter.updateItemCount(c);
+    }
+
+    @Override
+    public void fillPriorities(Cursor c, Set<String> selectedItems) {
+        this.priorityFilter.fillList(c, selectedItems);
+    }
+
+    @Override
+    public  void updatePriorityFilters(Cursor c) {
+        this.priorityFilter.updateItemCount(c);
     }
 
     @Override
@@ -119,5 +119,44 @@ public class TaskFilterFragmentList extends Fragment implements  ITaskFilterUICo
                 this.filterControl.removePriority(name);
                 break;
         }
+    }
+
+    @Override
+    public void onShow() {
+        if(this.requiresUpdate) {
+            this.requiresUpdate = false;
+            //method required
+            this.filterControl.getTaskFilters();
+        }
+    }
+
+    @Override
+    public void onFilterUpdate() {
+        this.requiresUpdate = true;
+    }
+
+    @Override
+    public void onShowOverdueChange(boolean state) {
+        this.filterControl.setShowOverdue(state);
+    }
+
+    @Override
+    public void onShowCompletedChange(boolean state) {
+        this.filterControl.setShowCompleted(state);
+    }
+
+    @Override
+    public void applyNewFilters() {
+        this.filterControl.saveNewFilters();
+    }
+
+    @Override
+    public void cancelNewFilters() {
+        this.filterControl.removeNewFilters();
+    }
+
+    @Override
+    public void resetFilters() {
+        this.filterControl.resetFilters();
     }
 }

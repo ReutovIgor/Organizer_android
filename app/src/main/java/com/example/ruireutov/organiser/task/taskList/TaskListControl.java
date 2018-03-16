@@ -17,7 +17,7 @@ public class TaskListControl implements ITaskListControl {
     private ITaskActivity taskActivity;
 
 
-    public TaskListControl(Context context, ITaskListUiControl uiControl, ITaskActivity taskActivity){
+    TaskListControl(Context context, ITaskListUiControl uiControl, ITaskActivity taskActivity){
         this.context = context;
         this.uiControl = uiControl;
         this.taskActivity = taskActivity;

@@ -28,7 +28,15 @@ public class TaskFilterControl implements ITaskFilterControl {
         this.dbControl = DatabaseControl.getInstance(context);
         this.dbControl.open();
 
+        this.filterData = new FilterData(this.uiControl.getSharedPreferences());
         this.getTaskFilters();
+    }
+
+    private void getPriorities() {
+        Cursor c = dbControl.getPriorities();
+        if(c != null) {
+            this.uiControl.fillPriorities(c, this.filterData.getPriorities());
+        }
     }
 
     private void getPriorityFilters() {
@@ -44,6 +52,13 @@ public class TaskFilterControl implements ITaskFilterControl {
         Cursor c = dbControl.getPrioritiesFilter(filter);
         if(c != null) {
             this.uiControl.updatePriorityFilters(c);
+        }
+    }
+
+    private void getCategories() {
+        Cursor c = dbControl.getCategories();
+        if(c != null) {
+            this.uiControl.fillCategories(c, this.filterData.getCategories());
         }
     }
 
@@ -65,21 +80,24 @@ public class TaskFilterControl implements ITaskFilterControl {
 
     @Override
     public void getTaskFilters() {
-        this.filterData = new FilterData(this.uiControl.getSharedPreferences());
         this.uiControl.updateShowOverdue(this.filterData.showOverdueTasks());
         this.uiControl.updateShowCompleted(this.filterData.showCompletedTasks());
+        this.getCategories();
         this.getCategoryFilters();
+        this.getPriorities();
         this.getPriorityFilters();
     }
 
     @Override
     public void setShowOverdue(boolean state) {
         this.filterData.setShowOverdue(state);
+        this.uiControl.updateShowOverdue(this.filterData.showOverdueTasks());
     }
 
     @Override
     public void setShowCompleted(boolean state) {
         this.filterData.setShowCompleted(state);
+        this.uiControl.updateShowCompleted(this.filterData.showCompletedTasks());
     }
 
     @Override
@@ -114,20 +132,39 @@ public class TaskFilterControl implements ITaskFilterControl {
     @Override
     public void saveNewFilters() {
         SharedPreferences preferences = this.uiControl.getSharedPreferences();
-        Set<String> selectedPriorities = this.uiControl.getSelectedPriorities();
-        Set<String> selectedCategories = this.uiControl.getSelectedCategories();
-
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putStringSet(TaskDefines.SELECTED_PRIORITIES, selectedPriorities);
-        editor.putStringSet(TaskDefines.SELECTED_CATEGORIES, selectedCategories);
+        editor.putBoolean(TaskDefines.SHOW_OVERDUE, this.filterData.showOverdueTasks());
+        editor.putBoolean(TaskDefines.SHOW_COMPLETED, this.filterData.showCompletedTasks());
+        editor.putString(TaskDefines.TASK_STARTS, this.filterData.getTaskStartDate());
+        editor.putString(TaskDefines.TASK_ENDS, this.filterData.getTaskEndDate());
+        editor.putStringSet(TaskDefines.SELECTED_PRIORITIES, this.filterData.getPriorities());
+        editor.putStringSet(TaskDefines.SELECTED_CATEGORIES, this.filterData.getCategories());
         editor.apply();
 
         this.taskActivityControl.onTaskListUpdate();
+        this.taskActivityControl.showTaskList();
     }
 
     @Override
-    public void hideFilters() {
+    public void removeNewFilters() {
+        SharedPreferences preferences = this.uiControl.getSharedPreferences();
+        this.filterData.showOverdue = preferences.getBoolean(TaskDefines.SHOW_OVERDUE, false);
+        this.filterData.showCompleted = preferences.getBoolean(TaskDefines.SHOW_COMPLETED, false);
+        this.filterData.taskStartDate = preferences.getString(TaskDefines.TASK_STARTS, "");
+        this.filterData.taskEndDate = preferences.getString(TaskDefines.TASK_ENDS, "");
+        this.filterData.selectedCategories = preferences.getStringSet(TaskDefines.SELECTED_CATEGORIES, new HashSet<String>());
+        this.filterData.selectedPriorities = preferences.getStringSet(TaskDefines.SELECTED_PRIORITIES, new HashSet<String>());
         this.taskActivityControl.showTaskList();
+    }
+
+    @Override
+    public void resetFilters() {
+        this.filterData.showOverdue = false;
+        this.filterData.showCompleted = false;
+        this.filterData.taskStartDate = "";
+        this.filterData.taskEndDate = "";
+        this.filterData.selectedCategories.clear();
+        this.filterData.selectedPriorities.clear();
     }
 
     private class FilterData {
@@ -184,7 +221,9 @@ public class TaskFilterControl implements ITaskFilterControl {
         }
 
         void addCategory(String name) {
-            this.selectedCategories.add(name);
+            if(!this.selectedCategories.contains(name)) {
+                this.selectedCategories.add(name);
+            }
         }
 
         void removeCategory(String name) {
@@ -196,7 +235,9 @@ public class TaskFilterControl implements ITaskFilterControl {
         }
 
         void addPriority(String name) {
-            this.selectedPriorities.add(name);
+            if(!this.selectedPriorities.contains(name)) {
+                this.selectedPriorities.add(name);
+            }
         }
 
         void removePriority(String name) {

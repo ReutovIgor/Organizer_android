@@ -1,3 +1,5 @@
+https://sqliteonline.com/#fiddle-5aabb1c06ac2be6jetw5mth
+
 create table categories_table (
   id integer primary key autoincrement,
   name text not null,
@@ -47,11 +49,14 @@ INSERT INTO tasks_table (name, details, startTime, endTime, status, category_id,
 VALUES ("Task3", "", "timeStart", "timeEnd", 0, 1, 3);
 
 SELECT 
-	priorities_table.id AS _id,
-    priorities_table.name AS name_,
+	priorities_table.id AS priority_id,
+    priorities_table.name AS priority_name,
     categories_table.id AS category_id,
-    COUNT(priorities_table.id) AS count_
+    tasks_table.id as task_id,
+    COUNT(priorities_table.id) AS count_,
+    COUNT(tasks_table.id) AS count_tasks
 FROM priorities_table
 LEFT JOIN tasks_table ON priorities_table.id = tasks_table.priority_id
-LEFT JOIN categories_table
-GROUP BY (name_);
+LEFT JOIN categories_table ON tasks_table.category_id = categories_table.id
+GROUP BY (priority_name);
+

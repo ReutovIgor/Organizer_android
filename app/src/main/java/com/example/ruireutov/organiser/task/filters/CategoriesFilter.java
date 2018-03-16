@@ -4,10 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
-/**
- * Created by ruireutov on 05-Mar-18.
- */
-
 public class CategoriesFilter extends ATaskListFilter{
     public CategoriesFilter(boolean overdue, boolean completed, String timeStart, String timeEnd, Set<String> categories, Set<String> priorities) {
         super(overdue, completed, timeStart, timeEnd, categories, priorities);

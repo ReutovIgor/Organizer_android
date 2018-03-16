@@ -10,10 +10,10 @@ import android.widget.TextView;
 
 import com.example.ruireutov.organiser.R;
 import com.example.ruireutov.organiser.databaseWorkers.DatabaseDefines;
+import com.example.ruireutov.organiser.task.TaskDefines;
 import com.google.android.flexbox.FlexboxLayout;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -38,54 +38,55 @@ class TaskFilterList {
         this.items = new ArrayList<>();
     }
 
-    Set<String> getSelectedItems() {
-        HashSet<String> set = new HashSet<>();
-
-        for(ListItem item : this.items) {
-            if(item.isSelected()) {
-                set.add(item.getName());
+    void fillList(Cursor cursor, Set<String> selectedItems) {
+        try {
+            while (cursor.moveToNext()) {
+                String name;
+                if(Objects.equals(this.filterKey, TaskDefines.SELECTED_CATEGORIES)) {
+                    name = cursor.getString(cursor.getColumnIndex(DatabaseDefines.CATEGORIES_NAME));
+                } else {
+                    name = cursor.getString(cursor.getColumnIndex(DatabaseDefines.PRIORITIES_NAME));
+                }
+                ListItem item = new ListItem(this.root, name);
+                this.items.add(item);
+                if(selectedItems.contains(name)) {
+                    item.select();
+                }
+            }
+        } catch (Exception e) {
+            Log.e("TaskFilterList", e.toString());
+        } finally {
+            if(cursor != null) {
+                cursor.close();
             }
         }
-        return set;
     }
 
-    void updateList(Cursor cursor) {
+    void updateItemCount(Cursor cursor) {
         try {
             int lastIndex = this.items.size() - 1;
             ArrayList<Integer> updatedItems = new ArrayList<>();
             while (cursor.moveToNext()) {
                 int count = cursor.getInt(cursor.getColumnIndex(DatabaseDefines.FILTER_COUNT));
                 if( count > 0) {
-                    int pos = -1;
                     String name = cursor.getString(cursor.getColumnIndex(DatabaseDefines.FILTER_NAME));
                     for( ListItem i : this.items) {
                         if(Objects.equals(i.getName(), name)) {
-                            pos = this.items.indexOf(i);
+                            i.setName(name);
+                            i.setCount(count);
+                            updatedItems.add(this.items.indexOf(i));
                             break;
                         }
                     }
-
-                    if (pos != -1) {
-                        ListItem item = this.items.get(pos);
-                        item.setName(name);
-                        item.setCount(count);
-                        updatedItems.add(pos);
-                    } else {
-                        ListItem item = new ListItem(this.root, name, count);
-                        this.items.add(item);
-                    }
                 }
             }
+
             for(int i = lastIndex; i > -1; i--) {
                 int updated = updatedItems.indexOf(i);
                 if(updated == -1) {
-                    this.items.get(i).remove();
-                    this.items.remove(i);
+                    this.items.get(i).setCount(0);
                 }
             }
-
-            //i.remove();
-            //this.items.remove(pos);
         } catch (Exception e) {
             Log.e("TaskFilterList", e.toString());
         } finally {
@@ -100,17 +101,13 @@ class TaskFilterList {
         private boolean selected;
         private View view;
 
-        ListItem(FlexboxLayout root, String title, int count) {
+        ListItem(FlexboxLayout root, String title) {
             this.name = title;
             this.selected = false;
 
             this.view = inflater.inflate(R.layout.task_filter_list_elements, root, false);
             TextView titleView = this.view.findViewById(R.id.filter_list_element_text);
-            TextView countView = this.view.findViewById(R.id.filter_list_element_count);
             titleView.setText(title);
-            countView.setText(String.valueOf(count));
-            FlexboxLayout.LayoutParams params = (FlexboxLayout.LayoutParams) view.getLayoutParams();
-            params.setFlexGrow(1);
 
             this.view.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -125,7 +122,7 @@ class TaskFilterList {
                     }
                 }
             });
-            root.addView(this.view, params);
+            root.addView(this.view);
         }
 
         void select() {
@@ -151,8 +148,6 @@ class TaskFilterList {
         void remove() {
             root.removeView(this.view);
         }
-
-        boolean isSelected() { return this.selected; }
 
         String getName() { return this.name; }
 

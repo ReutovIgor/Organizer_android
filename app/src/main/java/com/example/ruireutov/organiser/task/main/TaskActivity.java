@@ -16,6 +16,7 @@ import com.example.ruireutov.organiser.task.TaskDefines;
 import com.example.ruireutov.organiser.task.TaskDetailsData;
 import com.example.ruireutov.organiser.task.taskDetails.ITaskDetailsActivityControl;
 import com.example.ruireutov.organiser.task.taskDetails.TaskDetailsFragment;
+import com.example.ruireutov.organiser.task.taskFilter.ITaskFilterActivityControl;
 import com.example.ruireutov.organiser.task.taskList.ITaskListActivityControl;
 import com.example.ruireutov.organiser.task.taskList.TaskListFragment;
 
@@ -26,6 +27,7 @@ public class TaskActivity extends AppCompatActivity implements IFragmentNotifier
     private SideMenuBar sideMenuBar;
     private ITaskListActivityControl taskListFragment;
     private ITaskDetailsActivityControl taskDetailsFragment;
+    private ITaskFilterActivityControl taskFilterFragment;
     private TaskFragmentManager fragmentManager;
 
     @Override
@@ -37,9 +39,9 @@ public class TaskActivity extends AppCompatActivity implements IFragmentNotifier
         //getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         this.fragmentManager = new TaskFragmentManager(this, (FrameLayout) findViewById(R.id.filter_frame), getSupportFragmentManager());
-        this.taskListFragment = (TaskListFragment) this.fragmentManager.addFragment(TaskFragmentManager.TASK_LIST);
-        this.taskDetailsFragment = (TaskDetailsFragment) this.fragmentManager.addFragment(TaskFragmentManager.TASK_DETAILS);
-        this.fragmentManager.addFragment(TaskFragmentManager.TASK_FILTER);
+        this.taskListFragment = (ITaskListActivityControl) this.fragmentManager.addFragment(TaskFragmentManager.TASK_LIST);
+        this.taskDetailsFragment = (ITaskDetailsActivityControl) this.fragmentManager.addFragment(TaskFragmentManager.TASK_DETAILS);
+        this.taskFilterFragment = (ITaskFilterActivityControl) this.fragmentManager.addFragment(TaskFragmentManager.TASK_FILTER);
         //this.fragmentManager.addFragment(TaskFragmentManager.TASK_CATEGORIES);
 
         this.fragmentManager.showInitialFragment();
@@ -47,6 +49,11 @@ public class TaskActivity extends AppCompatActivity implements IFragmentNotifier
         DrawerLayout drawerLayout = findViewById(R.id.toDoList_drawer);
         ListView drawerList = findViewById(R.id.navigation_list);
         this.sideMenuBar = new SideMenuBar(this, drawerLayout, drawerList, android.R.layout.simple_list_item_1, "ToDoList");
+
+//        SharedPreferences settings = getSharedPreferences(TaskDefines.PREFS_NAME, 0);
+//        SharedPreferences.Editor editor = settings.edit();
+//        editor.putStringSet(TaskDefines.SELECTED_PRIORITIES, null);
+//        editor.apply();
     }
 
     @Override
@@ -78,13 +85,13 @@ public class TaskActivity extends AppCompatActivity implements IFragmentNotifier
         SharedPreferences.Editor editor = settings.edit();
         switch (item.getItemId()) {
             case R.id.apply_filter_button:
-
+                this.taskFilterFragment.applyNewFilters();
                 break;
             case R.id.cancel_filter_button:
-
+                this.taskFilterFragment.cancelNewFilters();
                 break;
             case R.id.reset_filter_button:
-
+                this.taskFilterFragment.resetFilters();
                 break;
             case R.id.categories_button:
                 this.showCategories();
@@ -95,12 +102,14 @@ public class TaskActivity extends AppCompatActivity implements IFragmentNotifier
             case R.id.show_completed_button:
                 editor.putBoolean(TaskDefines.SHOW_COMPLETED, !item.isChecked());
                 editor.apply();
+                this.taskFilterFragment.onShowCompletedChange(!item.isChecked());
                 this.toolBarControl.changeCheckState(ToolBarControl.MENU_SHOW_COMPLETED, !item.isChecked());
                 this.taskListFragment.updateTaskListData();
                 break;
             case R.id.show_failed_button:
                 editor.putBoolean(TaskDefines.SHOW_OVERDUE, !item.isChecked());
                 editor.apply();
+                this.taskFilterFragment.onShowOverdueChange(!item.isChecked());
                 this.toolBarControl.changeCheckState(ToolBarControl.MENU_SHOW_OVERDUE, !item.isChecked());
                 this.taskListFragment.updateTaskListData();
                 break;

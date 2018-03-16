@@ -2,10 +2,10 @@
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:layout_flexGrow="1"
     android:layout_margin="5dp"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="5dp"
     android:background="@drawable/filter_item_background_drawable">
     <TextView
         android:id="@+id/filter_list_element_text"
@@ -13,6 +13,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="3dp"
+        android:layout_marginEnd="3dp"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
         android:textSize="20sp"
         android:textAlignment="center" />
     <TextView
@@ -21,5 +27,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:layout_marginStart="4dp"
         android:textSize="12sp"/>
 </android.support.constraint.ConstraintLayout>
