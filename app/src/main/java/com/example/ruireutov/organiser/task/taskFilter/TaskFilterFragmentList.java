@@ -78,8 +78,8 @@ public class TaskFilterFragmentList extends Fragment implements  ITaskFilterUICo
     }
 
     @Override
-    public void fillCategories(Cursor c, Set<String> selectedItems) {
-        this.categoryFilter.fillList(c, selectedItems);
+    public void fillCategories(Cursor c) {
+        this.categoryFilter.fillList(c);
     }
 
     @Override
@@ -88,13 +88,23 @@ public class TaskFilterFragmentList extends Fragment implements  ITaskFilterUICo
     }
 
     @Override
-    public void fillPriorities(Cursor c, Set<String> selectedItems) {
-        this.priorityFilter.fillList(c, selectedItems);
+    public void updateCategorySelection(Set<String> selectedItems) {
+        this.categoryFilter.updateItemSelection(selectedItems);
+    }
+
+    @Override
+    public void fillPriorities(Cursor c) {
+        this.priorityFilter.fillList(c);
     }
 
     @Override
     public  void updatePriorityFilters(Cursor c) {
         this.priorityFilter.updateItemCount(c);
+    }
+
+    @Override
+    public void updatePrioritySelection(Set<String> selectedItems) {
+        this.priorityFilter.updateItemSelection(selectedItems);
     }
 
     @Override
@@ -125,7 +135,7 @@ public class TaskFilterFragmentList extends Fragment implements  ITaskFilterUICo
     public void onShow() {
         if(this.requiresUpdate) {
             this.requiresUpdate = false;
-            //method required
+            this.filterControl.getNewCategories();
             this.filterControl.getTaskFilters();
         }
     }

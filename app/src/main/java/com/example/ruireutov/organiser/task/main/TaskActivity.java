@@ -121,6 +121,7 @@ public class TaskActivity extends AppCompatActivity implements IFragmentNotifier
 
     @Override
     public void onTaskListUpdate() {
+        this.taskFilterFragment.onFilterUpdate();
         this.taskListFragment.updateTaskListData();
     }
 
@@ -143,6 +144,7 @@ public class TaskActivity extends AppCompatActivity implements IFragmentNotifier
 
     @Override
     public void showFilters() {
+        this.taskFilterFragment.onShow();
         this.fragmentManager.showFragment(TaskFragmentManager.TASK_FILTER);
     }
 

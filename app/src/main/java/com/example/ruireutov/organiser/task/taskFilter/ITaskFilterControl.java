@@ -2,6 +2,7 @@ package com.example.ruireutov.organiser.task.taskFilter;
 
 public interface ITaskFilterControl {
     void getTaskFilters();
+    void getNewCategories();
     void setShowOverdue(boolean state);
     void setShowCompleted(boolean state);
     void setEndByDate(String date);

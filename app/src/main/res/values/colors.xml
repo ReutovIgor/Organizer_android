@@ -12,12 +12,14 @@
 
     <color name="colorTaskDetailsSpinner">#ececec</color>
 
-    <color name="checkBoxInnerColor">#a71717</color>
+    <!--<color name="checkBoxInnerColor">#a71717</color>-->
+    <color name="checkBoxInnerColor">#3F51B5</color>
 
     <!--Filter colors-->
-
-    <color name="filterItemBorder">#3F52B5</color>
-    <color name="filterItemSelected">#3F51B5</color>
+    <color name="filterTextEnabled">#000000</color>
+    <color name="filterTextDisabled">#808080</color>
+    <color name="filterItemBorder">#808080</color>
+    <color name="filterItemBorderSelected">#3F51B5</color>
     <color name="filterItemBackground">#ACB2EA</color>
 
     <!--Category colors-->

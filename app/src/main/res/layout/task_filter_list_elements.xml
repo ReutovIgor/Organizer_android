@@ -6,7 +6,7 @@
     android:layout_margin="5dp"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/filter_item_background_drawable">
+    android:background="@drawable/filter_item_background">
     <TextView
         android:id="@+id/filter_list_element_text"
         app:layout_constraintLeft_toLeftOf="parent"
