@@ -5,6 +5,7 @@ package com.example.ruireutov.organiser.task.main;
  */
 
 public interface ITaskActivityTaskFilterControl {
+    void showFiltersApplied(boolean filtersApplied);
     void onTaskListUpdate();
     void showTaskList();
 }

@@ -33,6 +33,7 @@
     <string name="task_filter_show_completed">Show completed</string>
     <string name="task_filter_show_overdue">Show overdue</string>
     <string name="task_filter_end_by">End by:</string>
+    <string name="task_filter_end_by_hint">Select date</string>
     <string name="task_filter_container_priority">Priority: </string>
     <string name="task_filter_container_category">Category: </string>
 </resources>

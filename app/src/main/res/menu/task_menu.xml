@@ -23,7 +23,7 @@
         android:id="@+id/filter_button"
         android:visible="false"
         app:showAsAction="ifRoom"
-        android:icon="@drawable/filter_icon_white"
+        android:icon="@drawable/filter_applied_icon"
         android:title=""/>
     <item
         android:id="@+id/categories_button"

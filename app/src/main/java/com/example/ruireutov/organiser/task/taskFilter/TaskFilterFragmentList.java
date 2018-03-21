@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.example.ruireutov.organiser.R;
@@ -52,15 +53,21 @@ public class TaskFilterFragmentList extends Fragment implements  ITaskFilterUICo
         TaskActivity activity = (TaskActivity) getActivity();
         this.filterControl = new TaskFilterControl(activity, this, activity);
 
+        this.showOverdue.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                filterControl.setShowOverdue(isChecked);
+            }
+        });
+        this.showCompleted.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                filterControl.setShowCompleted(isChecked);
+            }
+        });
+
         return view;
     }
-
-//    public void onFiltersUpdate() {
-//        if(this.requiresUpdate) {
-//            this.requiresUpdate = false;
-//            this.filterControl.getTaskFilters();
-//        }
-//    }
 
     @Override
     public SharedPreferences getSharedPreferences() {
@@ -147,12 +154,14 @@ public class TaskFilterFragmentList extends Fragment implements  ITaskFilterUICo
 
     @Override
     public void onShowOverdueChange(boolean state) {
-        this.filterControl.setShowOverdue(state);
+        this.showOverdue.setChecked(state);
+        //this.filterControl.setShowOverdue(state);
     }
 
     @Override
     public void onShowCompletedChange(boolean state) {
-        this.filterControl.setShowCompleted(state);
+        this.showCompleted.setChecked(state);
+        //this.filterControl.setShowCompleted(state);
     }
 
     @Override

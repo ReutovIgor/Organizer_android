@@ -99,7 +99,7 @@ public class TaskFilterControl implements ITaskFilterControl {
     @Override
     public void setShowOverdue(boolean state) {
         this.filterData.setShowOverdue(state);
-        this.uiControl.updateShowOverdue(this.filterData.showOverdueTasks());
+        //this.uiControl.updateShowOverdue(this.filterData.showOverdueTasks());
         this.getPriorityFilters();
         this.getCategoryFilters();
     }
@@ -107,7 +107,7 @@ public class TaskFilterControl implements ITaskFilterControl {
     @Override
     public void setShowCompleted(boolean state) {
         this.filterData.setShowCompleted(state);
-        this.uiControl.updateShowCompleted(this.filterData.showCompletedTasks());
+        //this.uiControl.updateShowCompleted(this.filterData.showCompletedTasks());
         this.getPriorityFilters();
         this.getCategoryFilters();
     }
@@ -155,6 +155,7 @@ public class TaskFilterControl implements ITaskFilterControl {
         editor.putStringSet(TaskDefines.SELECTED_CATEGORIES, this.filterData.getCategories());
         editor.apply();
 
+        this.taskActivityControl.showFiltersApplied(this.filterData.filterApplied());
         this.taskActivityControl.onTaskListUpdate();
         this.taskActivityControl.showTaskList();
     }
@@ -258,6 +259,15 @@ public class TaskFilterControl implements ITaskFilterControl {
 
         void removePriority(String name) {
             this.selectedPriorities.remove(name);
+        }
+
+        boolean filterApplied() {
+            return !(!this.showOverdue &&
+                    !this.showCompleted &&
+                    this.taskStartDate.length() == 0 &&
+                    this.taskEndDate.length() == 0 &&
+                    this.selectedPriorities.size() == 0 &&
+                    this.selectedCategories.size() == 0);
         }
     }
 }

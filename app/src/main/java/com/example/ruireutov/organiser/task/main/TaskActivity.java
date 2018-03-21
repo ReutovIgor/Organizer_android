@@ -126,6 +126,11 @@ public class TaskActivity extends AppCompatActivity implements IFragmentNotifier
     }
 
     @Override
+    public void showFiltersApplied(boolean filtersApplied) {
+        this.toolBarControl.changeFilterState(filtersApplied);
+    }
+
+    @Override
     public void showDetails(TaskDetailsData data) {
         this.taskDetailsFragment.applyTaskDetails(data);
         this.fragmentManager.showFragment(TaskFragmentManager.TASK_DETAILS);
@@ -196,6 +201,15 @@ public class TaskActivity extends AppCompatActivity implements IFragmentNotifier
 
         void changeCheckState(String name, boolean state) {
             this.menuItems.get(name).setChecked(state);
+        }
+
+        void changeFilterState(boolean applied) {
+            MenuItem filterIcon = this.menuItems.get(MENU_FILTER);
+            if(applied) {
+                filterIcon.setIcon(getDrawable(R.drawable.filter_applied_icon));
+            } else {
+                filterIcon.setIcon(getDrawable(R.drawable.filter_icon));
+            }
         }
 
         void showTaskListBar() {

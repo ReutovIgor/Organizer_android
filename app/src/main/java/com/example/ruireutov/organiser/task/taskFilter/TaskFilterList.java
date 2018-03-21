@@ -64,6 +64,7 @@ class TaskFilterList {
     }
 
     void updateItemCount(Cursor cursor) {
+        Log.i("TaskFilterList", "updateItemCount called for " + this.filterKey);
         try {
             int lastIndex = this.items.size() - 1;
             ArrayList<Integer> updatedItems = new ArrayList<>();
@@ -101,6 +102,7 @@ class TaskFilterList {
             Log.e("TaskFilterList", e.toString());
         } finally {
             if(cursor != null) {
+                Log.i("TaskFilterList", "closing cursor!");
                 cursor.close();
             }
         }
@@ -140,7 +142,7 @@ class TaskFilterList {
                 }
             }
         } else {
-            item.deselect();
+            item.setDeselected();
         }
     }
 
@@ -169,11 +171,15 @@ class TaskFilterList {
                     if(count == 0) return;
                     selected = !selected;
                     if(selected) {
+                        Log.i("TaskFilterList", "On item selected " + name + " start");
                         select();
                         taskFilterListNotification.onGroupItemSelect(filterKey, name);
+                        Log.i("TaskFilterList", "On item selected " + name + " end");
                     } else {
+                        Log.i("TaskFilterList", "On item deselected " + name + " start");
                         deselect();
                         taskFilterListNotification.onGroupItemDeselect(filterKey, name);
+                        Log.i("TaskFilterList", "On item deselected " + name + " end");
                     }
                 }
             });
