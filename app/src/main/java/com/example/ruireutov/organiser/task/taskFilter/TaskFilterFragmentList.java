@@ -14,15 +14,18 @@ import android.widget.TextView;
 import com.example.ruireutov.organiser.R;
 import com.example.ruireutov.organiser.task.TaskDefines;
 import com.example.ruireutov.organiser.task.main.TaskActivity;
+import com.example.ruireutov.organiser.task.taskHelpers.DatePickerHelper;
+import com.example.ruireutov.organiser.task.taskHelpers.IDatePickerNotification;
 import com.google.android.flexbox.FlexboxLayout;
 
+import java.util.Date;
 import java.util.Set;
 
-public class TaskFilterFragmentList extends Fragment implements  ITaskFilterUIControl, ITaskFilterListNotification, ITaskFilterActivityControl {
+public class TaskFilterFragmentList extends Fragment implements  ITaskFilterUIControl, ITaskFilterListNotification, ITaskFilterActivityControl, IDatePickerNotification {
     ITaskFilterControl filterControl;
     CheckBox showOverdue;
     CheckBox showCompleted;
-    TextView endBy;
+    DatePickerHelper endByPicker;
     TaskFilterList priorityFilter;
     TaskFilterList categoryFilter;
     boolean requiresUpdate;
@@ -35,14 +38,13 @@ public class TaskFilterFragmentList extends Fragment implements  ITaskFilterUICo
 
         this.showOverdue = view.findViewById(R.id.show_overdue_filter);
         this.showCompleted = view.findViewById(R.id.show_completed_filter);
-        this.endBy = view.findViewById(R.id.end_by_filter);
+        this.endByPicker = new DatePickerHelper(getContext(), (TextView) view.findViewById(R.id.end_by_filter), this);
         this.priorityFilter = new TaskFilterList(
                 getContext(),
                 (FlexboxLayout) view.findViewById(R.id.priority_filters_list),
                 getActivity().getLayoutInflater(),
                 this,
                 TaskDefines.SELECTED_PRIORITIES);
-
         this.categoryFilter = new TaskFilterList(
                 getContext(),
                 (FlexboxLayout) view.findViewById(R.id.category_filters_list),
@@ -50,8 +52,7 @@ public class TaskFilterFragmentList extends Fragment implements  ITaskFilterUICo
                 this,
                 TaskDefines.SELECTED_CATEGORIES);
 
-        TaskActivity activity = (TaskActivity) getActivity();
-        this.filterControl = new TaskFilterControl(activity, this, activity);
+        this.filterControl = new TaskFilterControl(getContext(), this, (TaskActivity) getActivity());
 
         this.showOverdue.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -87,6 +88,11 @@ public class TaskFilterFragmentList extends Fragment implements  ITaskFilterUICo
     @Override
     public void fillCategories(Cursor c) {
         this.categoryFilter.fillList(c);
+    }
+
+    @Override
+    public void updateEndByDate(Date date) {
+        this.endByPicker.setDate(date);
     }
 
     @Override
@@ -155,13 +161,11 @@ public class TaskFilterFragmentList extends Fragment implements  ITaskFilterUICo
     @Override
     public void onShowOverdueChange(boolean state) {
         this.showOverdue.setChecked(state);
-        //this.filterControl.setShowOverdue(state);
     }
 
     @Override
     public void onShowCompletedChange(boolean state) {
         this.showCompleted.setChecked(state);
-        //this.filterControl.setShowCompleted(state);
     }
 
     @Override
@@ -177,5 +181,10 @@ public class TaskFilterFragmentList extends Fragment implements  ITaskFilterUICo
     @Override
     public void resetFilters() {
         this.filterControl.resetFilters();
+    }
+
+    @Override
+    public void onDateChange(Date date) {
+        this.filterControl.setEndByDate(date);
     }
 }

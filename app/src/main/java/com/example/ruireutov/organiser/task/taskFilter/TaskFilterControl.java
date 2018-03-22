@@ -4,10 +4,15 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 import com.example.ruireutov.organiser.databaseWorkers.DatabaseControl;
+import com.example.ruireutov.organiser.databaseWorkers.DatabaseDefines;
 import com.example.ruireutov.organiser.task.TaskDefines;
 import com.example.ruireutov.organiser.task.filters.CategoriesFilter;
 import com.example.ruireutov.organiser.task.filters.ITaskListFilter;
@@ -48,8 +53,8 @@ public class TaskFilterControl implements ITaskFilterControl {
         ITaskListFilter filter = new PrioritiesFilter(
                 this.filterData.showOverdueTasks(),
                 this.filterData.showCompletedTasks(),
-                this.filterData.getTaskStartDate(),
-                this.filterData.getTaskEndDate(),
+                this.filterData.getTaskStartDateStr(),
+                this.filterData.getTaskEndDateStr(),
                 this.filterData.getCategories(),
                 this.filterData.getPriorities()
         );
@@ -71,8 +76,8 @@ public class TaskFilterControl implements ITaskFilterControl {
         ITaskListFilter filter = new CategoriesFilter(
                 this.filterData.showOverdueTasks(),
                 this.filterData.showCompletedTasks(),
-                this.filterData.getTaskStartDate(),
-                this.filterData.getTaskEndDate(),
+                this.filterData.getTaskStartDateStr(),
+                this.filterData.getTaskEndDateStr(),
                 this.filterData.getCategories(),
                 this.filterData.getPriorities()
         );
@@ -85,6 +90,7 @@ public class TaskFilterControl implements ITaskFilterControl {
 
     @Override
     public void getTaskFilters() {
+        this.uiControl.updateEndByDate(this.filterData.getTaskEndDate());
         this.uiControl.updateShowOverdue(this.filterData.showOverdueTasks());
         this.uiControl.updateShowCompleted(this.filterData.showCompletedTasks());
         this.getCategoryFilters();
@@ -113,7 +119,7 @@ public class TaskFilterControl implements ITaskFilterControl {
     }
 
     @Override
-    public void setEndByDate(String date) {
+    public void setEndByDate(Date date) {
         this.filterData.setTaskEndDate(date);
         this.getPriorityFilters();
         this.getCategoryFilters();
@@ -145,16 +151,7 @@ public class TaskFilterControl implements ITaskFilterControl {
 
     @Override
     public void saveNewFilters() {
-        SharedPreferences preferences = this.uiControl.getSharedPreferences();
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putBoolean(TaskDefines.SHOW_OVERDUE, this.filterData.showOverdueTasks());
-        editor.putBoolean(TaskDefines.SHOW_COMPLETED, this.filterData.showCompletedTasks());
-        editor.putString(TaskDefines.TASK_STARTS, this.filterData.getTaskStartDate());
-        editor.putString(TaskDefines.TASK_ENDS, this.filterData.getTaskEndDate());
-        editor.putStringSet(TaskDefines.SELECTED_PRIORITIES, this.filterData.getPriorities());
-        editor.putStringSet(TaskDefines.SELECTED_CATEGORIES, this.filterData.getCategories());
-        editor.apply();
-
+        this.filterData.saveFilters(this.uiControl.getSharedPreferences());
         this.taskActivityControl.showFiltersApplied(this.filterData.filterApplied());
         this.taskActivityControl.onTaskListUpdate();
         this.taskActivityControl.showTaskList();
@@ -162,25 +159,14 @@ public class TaskFilterControl implements ITaskFilterControl {
 
     @Override
     public void removeNewFilters() {
-        SharedPreferences preferences = this.uiControl.getSharedPreferences();
-        this.filterData.showOverdue = preferences.getBoolean(TaskDefines.SHOW_OVERDUE, false);
-        this.filterData.showCompleted = preferences.getBoolean(TaskDefines.SHOW_COMPLETED, false);
-        this.filterData.taskStartDate = preferences.getString(TaskDefines.TASK_STARTS, "");
-        this.filterData.taskEndDate = preferences.getString(TaskDefines.TASK_ENDS, "");
-        this.filterData.selectedCategories = preferences.getStringSet(TaskDefines.SELECTED_CATEGORIES, new HashSet<String>());
-        this.filterData.selectedPriorities = preferences.getStringSet(TaskDefines.SELECTED_PRIORITIES, new HashSet<String>());
+        this.filterData.getFilters(this.uiControl.getSharedPreferences());
         this.getTaskFilters();
         this.taskActivityControl.showTaskList();
     }
 
     @Override
     public void resetFilters() {
-        this.filterData.showOverdue = false;
-        this.filterData.showCompleted = false;
-        this.filterData.taskStartDate = "";
-        this.filterData.taskEndDate = "";
-        this.filterData.selectedCategories.clear();
-        this.filterData.selectedPriorities.clear();
+        this.filterData.resetFilters();
         this.getTaskFilters();
     }
 
@@ -191,14 +177,40 @@ public class TaskFilterControl implements ITaskFilterControl {
         String taskEndDate;
         Set<String> selectedCategories;
         Set<String> selectedPriorities;
+        SimpleDateFormat dateFormat;
 
         FilterData(SharedPreferences preferences) {
+            this.dateFormat = new SimpleDateFormat(DatabaseDefines.DB_DATE_TIME_FORMAT);
+            this.getFilters(preferences);
+        }
+
+        void getFilters(SharedPreferences preferences) {
             this.showOverdue = preferences.getBoolean(TaskDefines.SHOW_OVERDUE, false);
             this.showCompleted = preferences.getBoolean(TaskDefines.SHOW_COMPLETED, false);
             this.taskStartDate = preferences.getString(TaskDefines.TASK_STARTS, "");
             this.taskEndDate = preferences.getString(TaskDefines.TASK_ENDS, "");
             this.selectedCategories = preferences.getStringSet(TaskDefines.SELECTED_CATEGORIES, new HashSet<String>());
             this.selectedPriorities = preferences.getStringSet(TaskDefines.SELECTED_PRIORITIES, new HashSet<String>());
+        }
+
+        void resetFilters() {
+            this.showOverdue = false;
+            this.showCompleted = false;
+            this.taskStartDate = "";
+            this.taskEndDate = "";
+            this.selectedCategories.clear();
+            this.selectedPriorities.clear();
+        }
+
+        void saveFilters(SharedPreferences preferences) {
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putBoolean(TaskDefines.SHOW_OVERDUE, this.showOverdue);
+            editor.putBoolean(TaskDefines.SHOW_COMPLETED, this.showCompleted);
+            editor.putString(TaskDefines.TASK_STARTS, this.taskStartDate);
+            editor.putString(TaskDefines.TASK_ENDS, this.taskEndDate);
+            editor.putStringSet(TaskDefines.SELECTED_PRIORITIES, this.selectedPriorities);
+            editor.putStringSet(TaskDefines.SELECTED_CATEGORIES, this.selectedCategories);
+            editor.apply();
         }
 
         boolean showOverdueTasks() {
@@ -217,20 +229,41 @@ public class TaskFilterControl implements ITaskFilterControl {
             this.showCompleted = state;
         }
 
-        String getTaskStartDate() {
-            return taskStartDate;
+        Date getTaskStartDate() {
+            try {
+                return this.dateFormat.parse(this.taskStartDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+        String getTaskStartDateStr() {
+            return this.taskStartDate;
         }
 
-        void setTaskStartDate(String taskStartDate) {
-            this.taskStartDate = taskStartDate;
+        void setTaskStartDate(Date taskStartDate) {
+            this.taskStartDate = this.dateFormat.format(taskStartDate);
         }
 
-        String getTaskEndDate() {
-            return taskEndDate;
+        Date getTaskEndDate() {
+            try {
+                return this.dateFormat.parse(this.taskEndDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                return null;
+            }
         }
 
-        void setTaskEndDate(String taskEndDate) {
-            this.taskEndDate = taskEndDate;
+        String getTaskEndDateStr() {
+            return this.taskEndDate;
+        }
+
+        void setTaskEndDate(Date taskEndDate) {
+            Calendar c = Calendar.getInstance();
+            c.setTime(taskEndDate);
+            c.set(Calendar.HOUR, 23);
+            c.set(Calendar.MINUTE, 59);
+            this.taskEndDate = this.dateFormat.format(c.getTime());
         }
 
         Set<String> getCategories() {
