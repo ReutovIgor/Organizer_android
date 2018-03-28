@@ -17,7 +17,7 @@ public class DatabaseControl {
     private static final String DATABASE_NAME = "organiser_db";
 
     //Database version
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 5;
 
     //Database tables
     private static final String TABLE_CATEGORIES = "categories_table";
@@ -293,19 +293,19 @@ public class DatabaseControl {
             ContentValues cv = new ContentValues();
             cv.put(KEY_NAME, "High");
             cv.put(KEY_MARK, "!!!");
-            cv.put(KEY_COLOR, "#FF3500");
+            cv.put(KEY_COLOR, "#FF0000");
             db.insert(TABLE_PRIORITIES, null, cv);
             cv.clear();
 
             cv.put(KEY_NAME, "Normal");
             cv.put(KEY_MARK, "!!");
-            cv.put(KEY_COLOR, "#FF9900");
+            cv.put(KEY_COLOR, "#FFFF00");
             db.insert(TABLE_PRIORITIES, null, cv);
             cv.clear();
 
             cv.put(KEY_NAME, "Low");
             cv.put(KEY_MARK, "!");
-            cv.put(KEY_COLOR, "#FFD600");
+            cv.put(KEY_COLOR, "#008000");
             db.insert(TABLE_PRIORITIES, null, cv);
             cv.clear();
 
@@ -317,7 +317,7 @@ public class DatabaseControl {
             cv.clear();
 
             cv.put(KEY_NAME, "Favourite");
-            cv.put(KEY_COLOR, "#F2FD3F");
+            cv.put(KEY_COLOR, "#F8FE95");
             cv.put(KEY_ICON, "favourite_task_category");
             db.insert(TABLE_CATEGORIES, null, cv);
             cv.clear();

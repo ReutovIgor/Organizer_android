@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryBackground">#E5EBFF</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorOptionsMenu">#ececec</color>
     <color name="colorText">#000000</color>
@@ -24,10 +25,15 @@
 
     <!--Category colors-->
     <color name="redCategory">#FF7373</color>
-    <color name="yellowCategory">#F2FD3F</color>
+    <color name="yellowCategory">#F8FE95</color>
     <color name="orangeCategory">#FFB873</color>
     <color name="blueCategory">#4F4FD9</color>
     <color name="purpleCategory">#7373D9</color>
     <color name="aquaCategory">#61B4CF</color>
     <color name="greenCategory">#A9F16C</color>
+
+    <!---->
+    <color name="highPriority">#FF0000</color>
+    <color name="normalPriority">#FFFF00</color>
+    <color name="lowPriority">#008000</color>
 </resources>

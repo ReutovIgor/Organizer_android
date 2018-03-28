@@ -37,7 +37,7 @@ public class ListCursorAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         ImageView categoryImage = view.findViewById(R.id.task_category_icon);
         TextView taskTitle = view.findViewById(R.id.task_title_text);
-        TextView priority = view.findViewById(R.id.task_priority_icon);
+        ImageView priority = view.findViewById(R.id.task_priority_icon);
         TextView taskTimeLabel = view.findViewById(R.id.task_time_label);
         TextView taskTime = view.findViewById(R.id.task_time_text);
 
@@ -46,8 +46,7 @@ public class ListCursorAdapter extends CursorAdapter {
         categoryImage.setImageDrawable(resources.getDrawable(resources.getIdentifier(iconName, "drawable", context.getPackageName())));
         categoryImage.setBackgroundColor(Color.parseColor(cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_CATEGORY_COLOR))));
         taskTitle.setText(cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_NAME)));
-        priority.setText(cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_PRIORITY_MARK)));
-        priority.setTextColor(Color.parseColor(cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_PRIORITY_COLOR))));
+        priority.setBackgroundColor(Color.parseColor(cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_PRIORITY_COLOR))));
         String startDateStr = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_START));
         String dueDateStr = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_END));
         if(dueDateStr.length() <= 0 ) {

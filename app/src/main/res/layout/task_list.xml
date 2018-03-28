@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="10dp"
+    android:background="@color/colorPrimaryBackground"
     android:orientation="vertical">
 
     <ListView
         android:id="@+id/toDoListView_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:dividerHeight="1dp"
-        android:divider="@android:color/darker_gray"/>
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:dividerHeight="0dp"
+        android:divider="@null"/>
 </LinearLayout>

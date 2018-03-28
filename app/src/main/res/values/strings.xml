@@ -9,6 +9,8 @@
     <!--Task List strings-->
     <string name="task_list_due">Due:</string>
     <string name="task_list_lasts">Task lasts:</string>
+    <string name="task_list_priority_description">TaskPriority</string>
+    <string name="task_list_category_description">TaskCategory</string>
 
     <!--Task Details strings-->
     <string name="task_hint_name">Task name</string>
