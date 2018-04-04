@@ -12,7 +12,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.ruireutov.organiser.R;
-import com.example.ruireutov.organiser.task.ListCursorAdapter;
 import com.example.ruireutov.organiser.task.main.TaskActivity;
 import com.example.ruireutov.organiser.task.TaskDefines;
 import com.example.ruireutov.organiser.task.filters.TasksFilter;
@@ -22,7 +21,7 @@ import java.util.HashSet;
 public class TaskListFragment extends Fragment implements ITaskListUiControl, ITaskListActivityControl{
 
     private ListView listView;
-    private ListCursorAdapter cursorAdapter;
+    private TaskListAdapter cursorAdapter;
     private ITaskListControl listControl;
 
 
@@ -32,7 +31,6 @@ public class TaskListFragment extends Fragment implements ITaskListUiControl, IT
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_task_list, container, false);
         this.listView = view.findViewById(R.id.toDoListView_list);
-        this.listView.setOnItemClickListener(new ListViewEventListener());
 
         FloatingActionButton newTaskButton = view.findViewById(R.id.new_task_button);
         newTaskButton.setOnClickListener(new ElementClickListener());
@@ -46,7 +44,7 @@ public class TaskListFragment extends Fragment implements ITaskListUiControl, IT
     @Override
     public void updateList(Cursor cursor) {
         if (this.cursorAdapter == null) {
-            this.cursorAdapter = new ListCursorAdapter(getActivity(), cursor, 0);
+            this.cursorAdapter = new TaskListAdapter(getActivity(), cursor, 0);
             this.listView.setAdapter(this.cursorAdapter);
         } else {
             this.cursorAdapter.swapCursor(cursor);
@@ -91,15 +89,7 @@ public class TaskListFragment extends Fragment implements ITaskListUiControl, IT
         this.listControl.newTask();
     }
 
-    private class ListViewEventListener implements AdapterView.OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            listItemClick(position);
-        }
-    }
-
     private class ElementClickListener implements View.OnClickListener {
-
         @Override
         public void onClick(View v) {
             switch(v.getId()) {

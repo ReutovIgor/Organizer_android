@@ -32,8 +32,14 @@
     <color name="aquaCategory">#61B4CF</color>
     <color name="greenCategory">#A9F16C</color>
 
-    <!---->
+    <!--Priority colors-->
     <color name="highPriority">#FF0000</color>
-    <color name="normalPriority">#FFFF00</color>
+    <color name="normalPriority">#FFA500</color>
     <color name="lowPriority">#008000</color>
+    <color name="priorityBackgroundColor">#FFFFFF</color>
+
+    <!--Deadline colors-->
+    <color name="deadlineStatusNormal">#FFFFFF</color>
+    <color name="deadlineStatusWarning">#FAD797</color>
+    <color name="deadlineStatusCritical">#F99999</color>
 </resources>
