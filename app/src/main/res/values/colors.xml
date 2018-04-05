@@ -42,4 +42,8 @@
     <color name="deadlineStatusNormal">#FFFFFF</color>
     <color name="deadlineStatusWarning">#FAD797</color>
     <color name="deadlineStatusCritical">#F99999</color>
+
+    <!--Task list control highlights-->
+    <color name="deleteTaskHighlight">#FFAFAF</color>
+    <color name="completeTaskHighlight">#30C030</color>
 </resources>

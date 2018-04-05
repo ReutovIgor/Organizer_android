@@ -90,6 +90,8 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:layout_height="0dp"
+            android:background="@color/deleteTaskHighlight"
+            android:alpha="0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"

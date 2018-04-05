@@ -74,14 +74,9 @@ public abstract class ATaskView {
         } else {
             dx = dx < this.maxRight ? dx : this.maxRight;
         }
-        Log.d("Task List element", "Touch move DX applied " + dx);
-        Log.d("Task List element", "deleteTaskTab TranslateX: " + this.deleteTaskTab.getTranslationX());
-        Log.d("Task List element", "Touch move DX applied to deleteTaskTab: " + this.deleteTaskTab.getTranslationX() + dx);
-        float deleteTaskDx = this.deleteTaskTab.getTranslationX() + dx;
-        float completeTaskDx = this.completeTaskTab.getTranslationX() + dx;
-        this.deleteTaskTab.setTranslationX(deleteTaskDx > 0 ? 0 : deleteTaskDx);
+        this.deleteTaskTab.setTranslationX(this.maxLeft + dx);
         this.taskLayout.setTranslationX(dx);
-        this.completeTaskTab.setTranslationX(completeTaskDx < 0 ? 0 : completeTaskDx);
+        this.completeTaskTab.setTranslationX(this.maxRight + dx);
 
         return true;
     }

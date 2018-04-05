@@ -43,8 +43,8 @@ public class TaskListAdapter extends CursorAdapter {
         View view = this.layoutInflater.inflate(R.layout.task_list_child_view, parent, false);
 
         view.setOnTouchListener(new TaskViewTouchListeners(parent.getChildCount()));
-        //view.setOnClickListener(new TaskViewClickListeners(parent.getChildCount()));
-        //view.setOnLongClickListener(new TaskViewLongClickListeners(parent.getChildCount()));
+        view.setOnClickListener(new TaskViewClickListeners(parent.getChildCount()));
+        view.setOnLongClickListener(new TaskViewLongClickListeners(parent.getChildCount()));
 
         return view;
     }
@@ -258,7 +258,7 @@ public class TaskListAdapter extends CursorAdapter {
             case MotionEvent.ACTION_MOVE:
                 float newX = event.getX();
                 float dx = newX - this.startX;
-                if(Math.abs(dx) > 0) {
+                if(Math.abs(dx) > 10) {
                     v.getParent().requestDisallowInterceptTouchEvent(true);
                 }
                 return taskViews.get(this.pos).onTouchMove(dx);
