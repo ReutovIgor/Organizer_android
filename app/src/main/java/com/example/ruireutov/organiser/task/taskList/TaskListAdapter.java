@@ -28,15 +28,15 @@ import java.util.Date;
 
 public class TaskListAdapter extends CursorAdapter {
     private LayoutInflater layoutInflater;
-    private int viewCount;
     private ArrayList<ATaskView> taskViews;
+    private int lastActive;
 
 
     TaskListAdapter(Context context, Cursor cursor, int flags) {
         super(context, cursor, flags);
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.taskViews = new ArrayList<>();
-        this.viewCount = 0;
+        this.lastActive = -1;
     }
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
@@ -52,110 +52,21 @@ public class TaskListAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         this.taskViews.add(new ScheduledTaskView(view, context, cursor));
-//        ImageView priorityIndication = view.findViewById(R.id.task_priority_indication);
-//        ImageView categoryImage = view.findViewById(R.id.task_category_icon);
-//        TextView taskTitle = view.findViewById(R.id.task_title_text);
-//        TextView taskTimeLabel = view.findViewById(R.id.task_time_label);
-//        TextView taskTime = view.findViewById(R.id.task_time_text);
-//
-//        Resources resources = context.getResources();
-//        String iconName = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_CATEGORY_ICON) );
-//        categoryImage.setImageDrawable(resources.getDrawable(resources.getIdentifier(iconName, "drawable", context.getPackageName())));
-//        categoryImage.setBackgroundColor(Color.parseColor(cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_CATEGORY_COLOR))));
-//        taskTitle.setText(cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_NAME)));
-//        String priorityStr = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_PRIORITY) );
-//
-//        switch (priorityStr) {
-//            case "High":
-//                priorityIndication.setBackgroundColor(context.getResources().getColor(R.color.highPriority));
-//                //priorityIndication.setBackground(context.getDrawable(R.drawable.high_priority_item_background));
-//                break;
-//            case "Normal":
-//                priorityIndication.setBackgroundColor(context.getResources().getColor(R.color.normalPriority));
-//                //priorityIndication.setBackground(context.getDrawable(R.drawable.normal_priority_item_background));
-//                break;
-//            case "Low":
-//                priorityIndication.setBackgroundColor(context.getResources().getColor(R.color.lowPriority));
-//                //priorityIndication.setBackground(context.getDrawable(R.drawable.low_priority_item_background));
-//                break;
-//        }
-//        String startDateStr = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_START));
-//        String dueDateStr = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_END));
-//        if(dueDateStr.length() <= 0 ) {
-//            taskTimeLabel.setText(context.getResources().getString(R.string.task_list_lasts));
-//        }
-//        taskTime.setText(this.getDisplayTime(startDateStr, dueDateStr));
-//
-//        view.setOnTouchListener(new View.OnTouchListener() {
-//            private boolean moved;
-//            private float startX;
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                Log.d("Task List element", "Touch event received" + event.getAction());
-//                float x;
-//
-//                //DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-//                //Math.round(width / (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT))
-//                View taskView = v.findViewById(R.id.task_layout);
-//                View deleteTaskView = v.findViewById(R.id.delete_task_tab);
-//                float width = deleteTaskView.getWidth();
-//                float max = width;
-//                float norm = 0;
-//                float min = -1 * width;
-//
-//
-//
-//                switch ( event.getAction() ) {
-//                    case MotionEvent.ACTION_DOWN:
-//                        //this.startX = event.getX();
-//                        this.moved = false;
-//                        return false;
-//                    case MotionEvent.ACTION_MOVE:
-//                        this.moved = true;
-////                        x = event.getX();
-////                        float translationX = taskView.getTranslationX() + (x - this.startX);
-////                        if(translationX <= 0) {
-////                            translationX = 0;
-////                        } else if(translationX >= 40) {
-////                            translationX = 40;
-////                        }
-////                        taskView.setTranslationX(max);
-////                        deleteTaskView.setTranslationX(norm);
-//                        return true;
-//                    case MotionEvent.ACTION_UP:
-////                        taskView.setTranslationX(norm);
-////                        deleteTaskView.setTranslationX(min);
-//                        return this.moved;
-//                    case MotionEvent.ACTION_CANCEL:
-////                        taskView.setTranslationX(norm);
-////                        deleteTaskView.setTranslationX(min);
-//                        return this.moved;
-//                }
-//                return false;
-//            }
-//        });
-//
-//        view.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                String a = "";
-//                Log.d("Task List element", "Click received");
-//            }
-//        });
-//
-//        view.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View v) {
-//                Log.d("Task List element", "LongClick received");
-//                return true;
-//            }
-//        });
+
     }
 
     @Override
     public Cursor swapCursor(Cursor newCursor) {
         this.taskViews.clear();
+        this.lastActive = -1;
         return super.swapCursor(newCursor);
+    }
+
+    private void collapseLastActive(int pos) {
+        if(this.lastActive != -1 && this.lastActive != pos) {
+            this.taskViews.get(this.lastActive).hideDetails();
+        }
+        this.lastActive = pos;
     }
 
     private String getDisplayTime(String startDate, String dueDate) {
@@ -231,7 +142,7 @@ public class TaskListAdapter extends CursorAdapter {
         @Override
         public void onClick(View v) {
             if(taskViews.size() > this.pos) {
-
+                taskViews.get(this.pos).onCLick();
             }
         }
     }
@@ -247,25 +158,35 @@ public class TaskListAdapter extends CursorAdapter {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             Log.d("Task List element", "Touch event received" + event.getAction());
-            ViewParent parent = v.getParent();
             if(taskViews.size() < this.pos) {
                 return false;
             }
             switch ( event.getAction() ) {
             case MotionEvent.ACTION_DOWN:
-                this.startX = event.getX();
+                collapseLastActive(this.pos);
+                this.startX = event.getRawX();
                 return true;
             case MotionEvent.ACTION_MOVE:
-                float newX = event.getX();
+
+                float newX = event.getRawX();
                 float dx = newX - this.startX;
-                if(Math.abs(dx) > 10) {
+                if(Math.abs(dx) > 20) {
                     v.getParent().requestDisallowInterceptTouchEvent(true);
                 }
+                Log.d("Task List element", "Touch event StartX: " + this.startX);
+                Log.d("Task List element", "Touch event NewX" + newX);
                 return taskViews.get(this.pos).onTouchMove(dx);
             case MotionEvent.ACTION_UP:
-                taskViews.get(this.pos).onTouchEnd();
-                v.getParent().requestDisallowInterceptTouchEvent(false);
-                return taskViews.get(this.pos).onTouchEnd();
+                if(!taskViews.get(this.pos).onTouchEnd()) {
+                    if(event.getEventTime() - event.getDownTime() > 1000) {
+                        v.performLongClick();
+                    } else {
+                        v.performClick();
+                    }
+                } else {
+                    v.getParent().requestDisallowInterceptTouchEvent(false);
+                }
+                return true;
             case MotionEvent.ACTION_CANCEL:
                 taskViews.get(this.pos).onTouchEnd();
                 v.getParent().requestDisallowInterceptTouchEvent(false);
@@ -285,7 +206,10 @@ public class TaskListAdapter extends CursorAdapter {
 
         @Override
         public boolean onLongClick(View v) {
-            return taskViews.size() > this.pos && taskViews.get(this.pos).onLongClick();
+            if(taskViews.size() > this.pos) {
+                taskViews.get(this.pos).onLongClick();
+            }
+            return true;
         }
     }
 }
