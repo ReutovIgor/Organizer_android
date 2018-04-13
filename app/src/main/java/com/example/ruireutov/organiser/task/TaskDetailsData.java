@@ -26,9 +26,10 @@ public class TaskDetailsData implements Serializable{
     private Date dateStart;
     private Date dateDue;
 
+    private int type;
+    private String repeat;
+
     private String priority;
-    private String priorityMark;
-    private String priorityColor;
 
     private String category;
     private String categoryIcon;
@@ -47,9 +48,9 @@ public class TaskDetailsData implements Serializable{
         this.id             = cursor.getLong(cursor.getColumnIndex(DatabaseDefines.TASK_LIST_ID));
         this.name           = cursor.getString(cursor.getColumnIndex(DatabaseDefines.TASK_LIST_NAME));
         this.status         = cursor.getInt(cursor.getColumnIndex(DatabaseDefines.TASK_LIST_STATUS));
+        this.type           = cursor.getInt(cursor.getColumnIndex(DatabaseDefines.TASK_LIST_TYPE));
+        this.repeat         = cursor.getString(cursor.getColumnIndex(DatabaseDefines.TASK_LIST_REPEAT));
         this.priority       = cursor.getString(cursor.getColumnIndex(DatabaseDefines.TASK_LIST_PRIORITY));
-        this.priorityMark   = cursor.getString(cursor.getColumnIndex(DatabaseDefines.TASK_LIST_PRIORITY_MARK));
-        this.priorityColor  = cursor.getString(cursor.getColumnIndex(DatabaseDefines.TASK_LIST_PRIORITY_COLOR));
         this.category       = cursor.getString(cursor.getColumnIndex(DatabaseDefines.TASK_LIST_CATEGORY));
         this.categoryIcon   = cursor.getString(cursor.getColumnIndex(DatabaseDefines.TASK_LIST_CATEGORY_ICON));
         this.categoryColor  = cursor.getString(cursor.getColumnIndex(DatabaseDefines.TASK_LIST_CATEGORY_COLOR));
@@ -98,6 +99,22 @@ public class TaskDetailsData implements Serializable{
         this.status = status;
     }
 
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public String getRepeat() {
+        return repeat;
+    }
+
+    public void setRepeat(String repeat) {
+        this.repeat = repeat;
+    }
+
     public Date getDateStart() {
         return dateStart;
     }
@@ -144,22 +161,6 @@ public class TaskDetailsData implements Serializable{
 
     public void setPriority(String priority) {
         this.priority = priority;
-    }
-
-    public String getPriorityMark() {
-        return priorityMark;
-    }
-
-    public void setPriorityMark(String priorityMark) {
-        this.priorityMark = priorityMark;
-    }
-
-    public String getPriorityColor() {
-        return priorityColor;
-    }
-
-    public void setPriorityColor(String priorityColor) {
-        this.priorityColor = priorityColor;
     }
 
     public String getCategory() {

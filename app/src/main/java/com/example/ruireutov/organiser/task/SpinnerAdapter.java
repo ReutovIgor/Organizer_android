@@ -70,7 +70,7 @@ public class SpinnerAdapter extends ResourceCursorAdapter {
                 case TYPE_PRIORITY:
                     imageView.setVisibility(View.GONE);
                     titleView.setText(cursor.getString( cursor.getColumnIndex(DatabaseDefines.PRIORITIES_NAME) ));
-                    textView.setText(cursor.getString( cursor.getColumnIndex(DatabaseDefines.PRIORITIES_MARK) ));
+                    textView.setText("!");
                     textView.setTextColor(Color.parseColor(cursor.getString( cursor.getColumnIndex(DatabaseDefines.PRIORITIES_COLOR) )));
                     break;
             }

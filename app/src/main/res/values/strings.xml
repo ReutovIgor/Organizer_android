@@ -7,8 +7,13 @@
     <string name="title_activity_task_categories">Task categories</string>
 
     <!--Task List strings-->
-    <string name="task_list_due">Due:</string>
-    <string name="task_list_lasts">Task lasts:</string>
+    <string name="task_list_due">Due: </string>
+    <string name="task_list_left">Left: </string>
+    <string name="task_list_overdue">Overdue</string>
+    <string name="task_list_expiring">Expiring</string>
+    <string name="task_list_created">Due: </string>
+    <string name="task_list_lasts">Task lasts: </string>
+    <string name="task_list_less_hour">less than an hour</string>
     <string name="task_list_priority_description">TaskPriority</string>
     <string name="task_list_category_description">TaskCategory</string>
 

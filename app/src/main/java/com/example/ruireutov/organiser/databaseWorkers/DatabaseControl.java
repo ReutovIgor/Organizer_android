@@ -29,9 +29,6 @@ public class DatabaseControl {
     private static final String KEY_NAME = "name";
     private static final String KEY_COLOR = "color";
 
-    //Database Priority table column names
-    private  static final String KEY_MARK = "mark";
-
     //Database Category table column names
     private static final String KEY_ICON = "icon";
 
@@ -42,6 +39,8 @@ public class DatabaseControl {
     private static final String KEY_CATEGORY_ID = "category_id";
     private static final String KEY_PRIORITY_ID = "priority_id";
     private static final String KEY_DETAILS = "details";
+    private static final String KEY_TYPE = "type";
+    private static final String KEY_REPEATS = "repeats";
 
 
     //Database Create tables queries
@@ -56,7 +55,6 @@ public class DatabaseControl {
             + TABLE_PRIORITIES + " ("
             + KEY_ID + " integer primary key autoincrement, "
             + KEY_NAME + " text not null,"
-            + KEY_MARK + " text not null,"
             + KEY_COLOR + " text not null);";
 
     private static final String TABLE_TASKS_CREATE = "create table "
@@ -69,7 +67,9 @@ public class DatabaseControl {
             + KEY_STATUS + " integer not null, "
             + KEY_CATEGORY_ID + " integer not null, "
             + KEY_PRIORITY_ID + " integer not null, "
-            + " FOREIGN KEY ( " + KEY_CATEGORY_ID + " ) REFERENCES " + TABLE_CATEGORIES + " ( "+ KEY_ID + " ) "
+            + KEY_TYPE + " integer not null, "
+            + KEY_REPEATS + " text , "
+            + " FOREIGN KEY ( " + KEY_CATEGORY_ID + " ) REFERENCES " + TABLE_CATEGORIES + " ( "+ KEY_ID + " ), "
             + " FOREIGN KEY ( " + KEY_PRIORITY_ID + " ) REFERENCES " + TABLE_PRIORITIES + " ( "+ KEY_ID + " ) "
             + " ); ";
 
@@ -132,12 +132,12 @@ public class DatabaseControl {
                 TABLE_TASKS + "." + KEY_START + " AS " + DatabaseDefines.TASK_LIST_START,
                 TABLE_TASKS + "." + KEY_END + " AS " + DatabaseDefines.TASK_LIST_END,
                 TABLE_TASKS + "." + KEY_STATUS + " AS " + DatabaseDefines.TASK_LIST_STATUS,
+                TABLE_TASKS + "." + KEY_TYPE + " AS " + DatabaseDefines.TASK_LIST_TYPE,
+                TABLE_TASKS + "." + KEY_REPEATS + " AS " + DatabaseDefines.TASK_LIST_REPEAT,
                 TABLE_CATEGORIES + "." + KEY_NAME + " AS " + DatabaseDefines.TASK_LIST_CATEGORY,
                 TABLE_CATEGORIES + "." + KEY_COLOR + " AS " + DatabaseDefines.TASK_LIST_CATEGORY_COLOR,
                 TABLE_CATEGORIES + "." + KEY_ICON + " AS " + DatabaseDefines.TASK_LIST_CATEGORY_ICON,
-                TABLE_PRIORITIES + "." + KEY_NAME + " AS " + DatabaseDefines.TASK_LIST_PRIORITY,
-                TABLE_PRIORITIES + "." + KEY_MARK + " AS " + DatabaseDefines.TASK_LIST_PRIORITY_MARK,
-                TABLE_PRIORITIES + "." + KEY_COLOR + " AS " + DatabaseDefines.TASK_LIST_PRIORITY_COLOR,
+                TABLE_PRIORITIES + "." + KEY_NAME + " AS " + DatabaseDefines.TASK_LIST_PRIORITY
         };
         Cursor c;
         try {
@@ -157,11 +157,13 @@ public class DatabaseControl {
         Cursor cId = this.db.query(TABLE_CATEGORIES, null, KEY_NAME + " = ?", new String[] {taskData.getCategory()}, null, null, null);
         cId.moveToFirst();
         String categoryId = cId.getString(cId.getColumnIndex(KEY_ID));
+        cId.close();
 
         //get Priority ID
         Cursor pId = this.db.query(TABLE_PRIORITIES, null, KEY_NAME + " = ?", new String[] {taskData.getPriority()}, null, null, null);
         pId.moveToFirst();
         String priorityId = pId.getString(pId.getColumnIndex(KEY_ID));
+        pId.close();
 
         //insert new task
         ContentValues cv = new ContentValues();
@@ -172,6 +174,8 @@ public class DatabaseControl {
         cv.put(KEY_CATEGORY_ID, categoryId);
         cv.put(KEY_PRIORITY_ID, priorityId);
         cv.put(KEY_DETAILS, taskData.getDetails());
+        cv.put(KEY_TYPE, taskData.getType());
+        cv.put(KEY_REPEATS, taskData.getRepeat());
 
         db.insert(TABLE_TASKS, null, cv);
     }
@@ -181,11 +185,13 @@ public class DatabaseControl {
         Cursor cId = this.db.query(TABLE_CATEGORIES, null, KEY_NAME + " = ?", new String[] {taskData.getCategory()}, null, null, null);
         cId.moveToFirst();
         String categoryId = cId.getString(cId.getColumnIndex(KEY_ID));
+        cId.close();
 
         //get Priority ID
         Cursor pId = this.db.query(TABLE_PRIORITIES, null, KEY_NAME + " = ?", new String[] {taskData.getPriority()}, null, null, null);
         pId.moveToFirst();
         String priorityId = pId.getString(pId.getColumnIndex(KEY_ID));
+        pId.close();
 
         //insert new task
         ContentValues cv = new ContentValues();
@@ -245,7 +251,6 @@ public class DatabaseControl {
         String[] columns = {
                 KEY_ID + " AS _id",
                 KEY_NAME + " AS " + DatabaseDefines.PRIORITIES_NAME,
-                KEY_MARK + " AS " + DatabaseDefines.PRIORITIES_MARK,
                 KEY_COLOR + " AS " + DatabaseDefines.PRIORITIES_COLOR
         };
         Cursor c  = this.db.query(TABLE_PRIORITIES, columns, null, null, null, null, null);
@@ -273,7 +278,7 @@ public class DatabaseControl {
     }
 
     private class DatabaseHelper extends SQLiteOpenHelper {
-        public DatabaseHelper(Context context) {
+        DatabaseHelper(Context context) {
             super(context, DATABASE_NAME, null, DATABASE_VERSION);
         }
 
@@ -292,19 +297,16 @@ public class DatabaseControl {
             //Priorities data
             ContentValues cv = new ContentValues();
             cv.put(KEY_NAME, "High");
-            cv.put(KEY_MARK, "!!!");
             cv.put(KEY_COLOR, "#FF0000");
             db.insert(TABLE_PRIORITIES, null, cv);
             cv.clear();
 
             cv.put(KEY_NAME, "Normal");
-            cv.put(KEY_MARK, "!!");
             cv.put(KEY_COLOR, "#FFFF00");
             db.insert(TABLE_PRIORITIES, null, cv);
             cv.clear();
 
             cv.put(KEY_NAME, "Low");
-            cv.put(KEY_MARK, "!");
             cv.put(KEY_COLOR, "#008000");
             db.insert(TABLE_PRIORITIES, null, cv);
             cv.clear();

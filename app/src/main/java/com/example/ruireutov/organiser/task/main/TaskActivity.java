@@ -23,6 +23,7 @@ import com.example.ruireutov.organiser.task.taskList.TaskListFragment;
 import java.util.HashMap;
 
 public class TaskActivity extends AppCompatActivity implements IFragmentNotifier, ITaskActivity, ITaskActivityTaskFilterControl{
+    public static String PACKAGE_NAME;
     private ToolBarControl toolBarControl;
     private SideMenuBar sideMenuBar;
     private ITaskListActivityControl taskListFragment;
@@ -34,6 +35,8 @@ public class TaskActivity extends AppCompatActivity implements IFragmentNotifier
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task);
+
+        PACKAGE_NAME = getApplicationContext().getPackageName();
 
         setSupportActionBar((Toolbar) findViewById(R.id.task_list_tool_bar));
         //getSupportActionBar().setDisplayShowHomeEnabled(true);

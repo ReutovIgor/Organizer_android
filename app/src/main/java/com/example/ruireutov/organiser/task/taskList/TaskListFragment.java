@@ -5,13 +5,17 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.ruireutov.organiser.R;
+import com.example.ruireutov.organiser.RecyclerViewItemTouchListener;
 import com.example.ruireutov.organiser.task.main.TaskActivity;
 import com.example.ruireutov.organiser.task.TaskDefines;
 import com.example.ruireutov.organiser.task.filters.TasksFilter;
@@ -20,8 +24,11 @@ import java.util.HashSet;
 
 public class TaskListFragment extends Fragment implements ITaskListUiControl, ITaskListActivityControl{
 
+    private RecyclerView taskListView;
+    private RecyclerView.Adapter taskListViewAdapter;
+    private RecyclerView.LayoutManager taskListViewLayoutManager;
     private ListView listView;
-    private TaskListAdapter cursorAdapter;
+    private TaskListAdapter_old cursorAdapter;
     private ITaskListControl listControl;
 
 
@@ -31,6 +38,31 @@ public class TaskListFragment extends Fragment implements ITaskListUiControl, IT
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_task_list, container, false);
         this.listView = view.findViewById(R.id.toDoListView_list);
+        this.taskListView = view.findViewById(R.id.to_do_list);
+
+        this.taskListViewLayoutManager = new LinearLayoutManager(this.getContext());
+        this.taskListView.setLayoutManager(this.taskListViewLayoutManager);
+        this.taskListView.addOnItemTouchListener(new RecyclerViewItemTouchListener(this.getContext(), new RecyclerViewItemTouchListener.OnTouchActionListener() {
+            @Override
+            public void onItemClick(RecyclerView.ViewHolder viewHolder) {
+                ((TaskListAdapter.ViewHolder) viewHolder).onClick();
+            }
+
+            @Override
+            public void onItemLongClick(RecyclerView.ViewHolder viewHolder) {
+                ((TaskListAdapter.ViewHolder) viewHolder).onLongClick();
+            }
+
+            @Override
+            public void onItemSwipe(RecyclerView.ViewHolder viewHolder, float dx) {
+                ((TaskListAdapter.ViewHolder) viewHolder).onSwipe(dx);
+            }
+
+            @Override
+            public void onItemRelease(RecyclerView.ViewHolder viewHolder) {
+                ((TaskListAdapter.ViewHolder) viewHolder).onRelease();
+            }
+        }));
 
         FloatingActionButton newTaskButton = view.findViewById(R.id.new_task_button);
         newTaskButton.setOnClickListener(new ElementClickListener());
@@ -44,9 +76,12 @@ public class TaskListFragment extends Fragment implements ITaskListUiControl, IT
     @Override
     public void updateList(Cursor cursor) {
         if (this.cursorAdapter == null) {
-            this.cursorAdapter = new TaskListAdapter(getActivity(), cursor, 0);
+            this.cursorAdapter = new TaskListAdapter_old(getActivity(), cursor, 0);
             this.listView.setAdapter(this.cursorAdapter);
+            this.taskListViewAdapter = new TaskListAdapter(cursor, this.getContext());
+            this.taskListView.setAdapter(this.taskListViewAdapter);
         } else {
+            ((TaskListAdapter) this.taskListViewAdapter).setListData(cursor);
             this.cursorAdapter.swapCursor(cursor);
         }
     }

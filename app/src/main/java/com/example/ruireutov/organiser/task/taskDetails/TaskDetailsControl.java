@@ -40,6 +40,8 @@ public class TaskDetailsControl implements ITaskDetailsControl{
     public void addTask() {
         this.taskDetailsData.setDateStart(Calendar.getInstance().getTime());
         this.taskDetailsData.setStatus(DatabaseDefines.TASK_STATUS_IN_PROGRESS);
+        this.taskDetailsData.setType(DatabaseDefines.TASK_TYPE_SCHEDULED);
+        this.taskDetailsData.setRepeat("");
         this.dbControl.addTask(this.taskDetailsData);
         this.taskActivity.onTaskListUpdate();
         this.taskActivity.showTaskList();

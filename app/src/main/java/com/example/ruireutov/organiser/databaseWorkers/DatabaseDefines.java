@@ -13,15 +13,23 @@ public class DatabaseDefines {
     public static final String TASK_LIST_START = "Start";
     public static final String TASK_LIST_END = "End";
     public static final String TASK_LIST_STATUS = "Status";
+    public static final String TASK_LIST_TYPE = "Type";
+    public static final String TASK_LIST_REPEAT = "Repeat";
     public static final String TASK_LIST_CATEGORY = "Category";
     public static final String TASK_LIST_CATEGORY_ICON = "CategoryIcon";
     public static final String TASK_LIST_CATEGORY_COLOR = "CategoryColor";
     public static final String TASK_LIST_PRIORITY = "Priority";
-    public static final String TASK_LIST_PRIORITY_MARK = "PriorityMark";
-    public static final String TASK_LIST_PRIORITY_COLOR = "PriorityColor";
 
     public static final int TASK_STATUS_IN_PROGRESS = 0;
     public static final int TASK_STATUS_COMPLETED = 1;
+    public static final int TASK_STATUS_CANCELLED = 2;
+
+    public static final int TASK_TYPE_DEFAULT = 0;
+    public static final int TASK_TYPE_SCHEDULED = 1;
+    public static final int TASK_TYPE_DAILY = 2;
+    public static final int TASK_TYPE_WEEKLY = 3;
+    public static final int TASK_TYPE_MONTHLY = 4;
+    public static final int TASK_TYPE_YEARLY = 5;
 
     //Categories table names
     public static final String CATEGORIES_NAME = "Name";
@@ -30,7 +38,6 @@ public class DatabaseDefines {
 
     //Categories table names
     public static final String PRIORITIES_NAME = "Name";
-    public static final String PRIORITIES_MARK = "PriorityMark";
     public static final String PRIORITIES_COLOR = "PriorityColor";
 
     //Filters names
