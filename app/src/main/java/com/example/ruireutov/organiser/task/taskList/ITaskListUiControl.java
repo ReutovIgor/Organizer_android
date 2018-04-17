@@ -1,5 +1,7 @@
 package com.example.ruireutov.organiser.task.taskList;
 
+import android.app.Activity;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 
 /**
@@ -7,5 +9,7 @@ import android.database.Cursor;
  */
 
 public interface ITaskListUiControl {
-    void updateList(Cursor cursor);
+    SharedPreferences getSharedPreferences();
+    void onNewListData(Cursor cursor);
+    void onListItemRemoval(Cursor cursor, int position);
 }

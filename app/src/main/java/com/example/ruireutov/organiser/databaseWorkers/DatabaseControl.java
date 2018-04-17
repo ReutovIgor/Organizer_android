@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import com.example.ruireutov.organiser.task.TaskDetailsData;
 import com.example.ruireutov.organiser.task.filters.ITaskListFilter;
-import com.example.ruireutov.organiser.task.filters.TasksFilter;
+import com.example.ruireutov.organiser.task.filters.TaskFilter;
 
 import java.util.HashMap;
 
@@ -102,11 +102,11 @@ public class DatabaseControl {
         this.dbHelper = new DatabaseHelper(context);
 
         this.taskListFilterMapping = new HashMap<>();
-        this.taskListFilterMapping.put(TasksFilter.TASK_FILTER_TIME_END, KEY_END);
-        this.taskListFilterMapping.put(TasksFilter.TASK_FILTER_STATUS, KEY_STATUS);
-        this.taskListFilterMapping.put(TasksFilter.TASK_FILTER_TIME_START, KEY_START);
-        this.taskListFilterMapping.put(TasksFilter.TASK_FILTER_CATEGORY, TABLE_CATEGORIES + "." + KEY_NAME);
-        this.taskListFilterMapping.put(TasksFilter.TASK_FILTER_PRIORITY, TABLE_PRIORITIES + "." + KEY_NAME);
+        this.taskListFilterMapping.put(TaskFilter.TASK_FILTER_TIME_END, KEY_END);
+        this.taskListFilterMapping.put(TaskFilter.TASK_FILTER_STATUS, KEY_STATUS);
+        this.taskListFilterMapping.put(TaskFilter.TASK_FILTER_TIME_START, KEY_START);
+        this.taskListFilterMapping.put(TaskFilter.TASK_FILTER_CATEGORY, TABLE_CATEGORIES + "." + KEY_NAME);
+        this.taskListFilterMapping.put(TaskFilter.TASK_FILTER_PRIORITY, TABLE_PRIORITIES + "." + KEY_NAME);
     }
 
     public void open() {

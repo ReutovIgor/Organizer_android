@@ -42,10 +42,10 @@ public abstract class ATaskView {
         ImageView priorityIndication = view.findViewById(R.id.task_priority_indication);
         ImageView categoryImage = view.findViewById(R.id.task_category_icon);
         TextView taskTitle = view.findViewById(R.id.task_title_text);
-        this.completeTask = view.findViewById(R.id.complete_task_button);
-        this.completeTaskLayout = view.findViewById(R.id.complete_task_layout);
-        this.taskDetailsLayout = view.findViewById(R.id.task_details_layout);
-        this.taskDetails = view.findViewById(R.id.task_description_text);
+//        this.completeTask = view.findViewById(R.id.complete_task_button);
+//        this.completeTaskLayout = view.findViewById(R.id.complete_task_layout);
+        //this.taskDetailsLayout = view.findViewById(R.id.task_details_layout);
+        //this.taskDetails = view.findViewById(R.id.task_description_text);
 
         String priorityStr = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_PRIORITY) );
         switch (priorityStr) {

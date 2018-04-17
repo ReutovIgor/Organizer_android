@@ -9,6 +9,8 @@
     <!--Task List strings-->
     <string name="task_list_due">Due: </string>
     <string name="task_list_left">Left: </string>
+    <string name="task_list_completed">Completed</string>
+    <string name="task_list_cancelled">Cancelled</string>
     <string name="task_list_overdue">Overdue</string>
     <string name="task_list_expiring">Expiring</string>
     <string name="task_list_created">Due: </string>

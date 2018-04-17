@@ -52,7 +52,9 @@ public class RecyclerViewItemTouchListener implements RecyclerView.OnItemTouchLi
             @Override
             public boolean onSingleTapUp(MotionEvent e) {
                 Log.d("GestureDetector", "onSingleTapUp is called");
-                onTouchActionListener.onItemClick(activeItem);
+                if(activeItem != null) {
+                    onTouchActionListener.onItemClick(activeItem);
+                }
                 return false;
             }
 
@@ -70,7 +72,9 @@ public class RecyclerViewItemTouchListener implements RecyclerView.OnItemTouchLi
 
                 if(moveLock == SWIPE_LOCK) {
                     Log.d("GestureDetector", "SWIPE_LOCK handled");
-                    onTouchActionListener.onItemSwipe(activeItem, deltaX);
+                    if(activeItem != null) {
+                        onTouchActionListener.onItemSwipe(activeItem, deltaX);
+                    }
                     return true;
                 } else {
                     return false;
@@ -80,8 +84,10 @@ public class RecyclerViewItemTouchListener implements RecyclerView.OnItemTouchLi
             @Override
             public void onLongPress(MotionEvent e) {
                 Log.d("GestureDetector", "onLongPress is called");
-                moveLock = LONG_CLICK_LOCK;
-                onTouchActionListener.onItemLongClick(activeItem);
+                if(activeItem != null) {
+                    moveLock = LONG_CLICK_LOCK;
+                    onTouchActionListener.onItemLongClick(activeItem);
+                }
             }
 
             @Override
@@ -96,8 +102,6 @@ public class RecyclerViewItemTouchListener implements RecyclerView.OnItemTouchLi
     @Override
     public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
         Log.d("ItemTouchListener", "onInterceptTouchEvent received " + e.getAction());
-        if(!this.scrollDisabled && this.moveLock == SCROLL_LOCK) return false; //no action is needed, as recycler view scroll is in progress
-
         switch (e.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 Log.d("ItemTouchListener", "ACTION_DOWN event");
@@ -105,7 +109,10 @@ public class RecyclerViewItemTouchListener implements RecyclerView.OnItemTouchLi
                     return false;
                 }
                 View activeView = rv.findChildViewUnder(e.getX(), e.getY());
-                if(activeView == null) return false; //case if item is not found
+                if (activeView == null) { //case if item is not found
+                    this.moveLock = SCROLL_LOCK;
+                    return false;
+                }
                 this.activeItem = rv.findViewHolderForAdapterPosition(rv.getChildAdapterPosition(activeView));
                 return this.gestureDetector.onTouchEvent(e);
             case MotionEvent.ACTION_UP:
@@ -115,7 +122,7 @@ public class RecyclerViewItemTouchListener implements RecyclerView.OnItemTouchLi
                 this.moveLock = UNLOCKED;
                 return false;
             default:
-                return (this.moveLock == LONG_CLICK_LOCK) || this.gestureDetector.onTouchEvent(e);
+                return (this.scrollDisabled || this.moveLock != SCROLL_LOCK) && ((this.moveLock == LONG_CLICK_LOCK) || this.gestureDetector.onTouchEvent(e));
         }
 //        boolean a = (this.moveLock == LONG_CLICK_LOCK) || this.gestureDetector.onTouchEvent(e);
 //        Log.d("ItemTouchListener", "onInterceptTouchEvent returns  " + a);

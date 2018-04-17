@@ -1,10 +1,12 @@
 package com.example.ruireutov.organiser.task.taskList;
 
-import com.example.ruireutov.organiser.task.filters.TasksFilter;
+import com.example.ruireutov.organiser.task.TaskDetailsData;
 
 public interface ITaskListControl {
     void newTask();
-    void showDetails(int position);
+    void showDetails(TaskDetailsData data);
+    void closeTask(TaskDetailsData data, int pos);
+    void removeTask(TaskDetailsData data, int pos);
     void onDestroy();
-    void getTaskList(TasksFilter filter);
+    void getTaskList();
 }

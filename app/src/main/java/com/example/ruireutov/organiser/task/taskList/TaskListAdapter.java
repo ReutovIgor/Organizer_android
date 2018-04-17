@@ -5,65 +5,67 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.content.res.ResourcesCompat;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.ruireutov.organiser.R;
 import com.example.ruireutov.organiser.databaseWorkers.DatabaseDefines;
+import com.example.ruireutov.organiser.task.TaskDetailsData;
 import com.example.ruireutov.organiser.task.main.TaskActivity;
-import com.example.ruireutov.organiser.task.taskList.taskViews.ATaskView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
 public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.ViewHolder>{
     private Context context;
     private LayoutInflater layoutInflater;
-    private ArrayList<ATaskView> taskViews;
     private Cursor listData;
+
+    private float maxLeft;
+    private float maxRight;
 
     TaskListAdapter(Cursor cursor, Context context) {
         this.context = context;
         this.layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.taskViews = new ArrayList<>();
+
         this.listData = cursor;
+
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        this.maxLeft = -40 * ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+        this.maxRight = 40 * ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        private CardView taskCard;
+
+        private ConstraintLayout taskView;
 
         private View taskLayout;
-        private View completeTaskLayout;
-        private View taskDetailsLayout;
+        private View deleteTaskLayout;
 
         private ImageView priority;
         private ImageView category;
         private TextView taskTitle;
         private TextView taskStatus;
         private TextView taskInfo;
-        private TextView taskDetails;
-        private CheckBox completeTask;
 
+        private float maxLeft;
+        private float maxRight;
 
-        ViewHolder(View itemView) {
+        ViewHolder(View itemView, float maxLeft, float maxRight) {
             super(itemView);
-            this.taskCard = (CardView) itemView;
+            this.taskView = (ConstraintLayout) itemView;
 
             this.taskLayout = itemView.findViewById(R.id.task_layout);
-            this.completeTaskLayout = itemView.findViewById(R.id.complete_task_layout);
-            this.taskDetailsLayout = itemView.findViewById(R.id.task_details_layout);
+            this.deleteTaskLayout = itemView.findViewById(R.id.delete_task_layout);
 
             this.priority = this.taskLayout.findViewById(R.id.task_priority_indication);
             this.category = this.taskLayout.findViewById(R.id.task_category_icon);
@@ -71,9 +73,8 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.ViewHo
             this.taskStatus = this.taskLayout.findViewById(R.id.task_status_text);
             this.taskInfo = this.taskLayout.findViewById(R.id.task_info_text);
 
-            this.completeTask = this.completeTaskLayout.findViewById(R.id.complete_task_button);
-
-            this.taskDetails = this.taskDetailsLayout.findViewById(R.id.task_description_text);
+            this.maxLeft = maxLeft;
+            this.maxRight = maxRight;
         }
 
         void fillView(Cursor cursor, Context context) {
@@ -91,11 +92,9 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.ViewHo
                     break;
             }
             String iconName = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_CATEGORY_ICON) );
-            //this.category.setImageDrawable(resources.getDrawable(resources.getIdentifier(iconName, "drawable", TaskActivity.PACKAGE_NAME)));
             this.category.setImageDrawable(ResourcesCompat.getDrawable(resources, resources.getIdentifier(iconName, "drawable", TaskActivity.PACKAGE_NAME), null));
             this.category.setBackgroundColor(Color.parseColor(cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_CATEGORY_COLOR))));
             this.taskTitle.setText(cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_NAME)));
-            this.taskDetails.setText(cursor.getString(cursor.getColumnIndex(DatabaseDefines.TASK_LIST_DETAILS)));
 
             int type = cursor.getInt(cursor.getColumnIndex(DatabaseDefines.TASK_LIST_TYPE));
             switch (type) {
@@ -162,27 +161,38 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.ViewHo
 
                 Date currentDate = new Date ((Calendar.getInstance().getTime()).getTime());
 
-                long secondsInMilli = 1000;
-                long minutesInMilli = secondsInMilli * 60;
-                long hoursInMilli = minutesInMilli * 60;
-                long daysInMilli = hoursInMilli * 24;
 
-                long difference =  date.getTime() - currentDate.getTime();
-
-                //get task status
                 StringBuilder taskStatusStr = new StringBuilder();
-                if(difference / daysInMilli > 0) {
-                    taskStatusStr.append(res.getString(R.string.task_list_left));
-                    taskStatusStr.append(String.valueOf(difference / daysInMilli));
-                    taskStatusStr.append(" days");
-                } else if( difference / hoursInMilli > 0 ) {
-                    taskStatusStr.append(res.getString(R.string.task_list_left));
-                    taskStatusStr.append(String.valueOf(difference / hoursInMilli));
-                    taskStatusStr.append(" hours");
-                } else if( difference / minutesInMilli <= 0 ) {
-                    taskInfoStr.append(res.getString(R.string.task_list_overdue));
-                } else {
-                    taskInfoStr.append(res.getString(R.string.task_list_expiring));
+                int status = cursor.getInt(cursor.getColumnIndex(DatabaseDefines.TASK_LIST_STATUS));
+                switch (status) {
+                    case DatabaseDefines.TASK_STATUS_IN_PROGRESS:
+                        long secondsInMilli = 1000;
+                        long minutesInMilli = secondsInMilli * 60;
+                        long hoursInMilli = minutesInMilli * 60;
+                        long daysInMilli = hoursInMilli * 24;
+
+                        long difference =  date.getTime() - currentDate.getTime();
+
+                        if(difference / daysInMilli > 0) {
+                            taskStatusStr.append(res.getString(R.string.task_list_left));
+                            taskStatusStr.append(String.valueOf(difference / daysInMilli));
+                            taskStatusStr.append(" days");
+                        } else if( difference / hoursInMilli > 0 ) {
+                            taskStatusStr.append(res.getString(R.string.task_list_left));
+                            taskStatusStr.append(String.valueOf(difference / hoursInMilli));
+                            taskStatusStr.append(" hours");
+                        } else if( difference / minutesInMilli <= 0 ) {
+                            taskStatusStr.append(res.getString(R.string.task_list_overdue));
+                        } else {
+                            taskStatusStr.append(res.getString(R.string.task_list_expiring));
+                        }
+                        break;
+                    case DatabaseDefines.TASK_STATUS_COMPLETED:
+                        taskStatusStr.append(res.getString(R.string.task_list_completed));
+                        break;
+                    case DatabaseDefines.TASK_STATUS_CANCELLED:
+                        taskStatusStr.append(res.getString(R.string.task_list_cancelled));
+                        break;
                 }
 
                 this.taskInfo.setText(taskInfoStr.toString());
@@ -192,22 +202,35 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.ViewHo
             }
         }
 
-        public  void onClick() {
-            if(this.taskDetails.getText().length() > 0) {
-                this.taskDetails.setVisibility(View.VISIBLE);
-            }
+        public int onClick() {
+            this.taskInfo.setText(R.string.task_list_completed);
+            return getAdapterPosition();
         }
 
-        public void onLongClick() {
-
+        public int onLongClick() {
+            return getAdapterPosition();
         }
 
         public void onSwipe(float deltaX) {
-
+            deltaX = deltaX <= 0 ? 0 : deltaX;
+            this.deleteTaskLayout.setTranslationX(this.maxLeft + deltaX);
+            this.taskLayout.setTranslationX(deltaX);
         }
 
-        public void onRelease() {
+        public int onRelease() {
+            float deltaX = this.taskLayout.getTranslationX();
+            if(deltaX > this.maxRight) {
+                return getAdapterPosition();
+            } else {
+                this.deleteTaskLayout.animate().translationX(this.maxLeft);
+                this.taskLayout.animate().translationX(0);
+                return RecyclerView.NO_POSITION;
+            }
+        }
 
+        void resetPosition() {
+            this.deleteTaskLayout.setTranslationX(this.maxLeft);
+            this.taskLayout.setTranslationX(0);
         }
 
     }
@@ -215,12 +238,13 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.ViewHo
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = this.layoutInflater.inflate(R.layout.task_list_child_view, parent, false);
-        return new ViewHolder(view);
+        return new ViewHolder(view, this.maxLeft, this.maxRight);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         if(this.listData.moveToPosition(position)) {
+            holder.resetPosition();
             holder.fillView(this.listData, context);
         }
     }
@@ -233,11 +257,18 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.ViewHo
         return this.listData.getCount();
     }
 
+    public TaskDetailsData getTaskData(int pos) {
+        TaskDetailsData data = null;
+        if(this.listData.moveToPosition(pos)) {
+            data = new TaskDetailsData(this.listData);
+        }
+        return data;
+    }
+
     public void setListData(Cursor c) {
         if(this.listData != null) {
             this.listData.close();
         }
         this.listData = c;
-        this.notifyDataSetChanged();
     }
 }
