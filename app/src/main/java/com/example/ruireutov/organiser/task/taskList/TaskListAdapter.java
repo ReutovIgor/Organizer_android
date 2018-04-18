@@ -203,31 +203,6 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.ViewHo
             }
         }
 
-        public void onClick() {
-        }
-
-        public void onLongClick(final ITaskListControl listControl, final TaskDetailsData data) {
-//            this.taskStatus.animate().setDuration(600).translationX(this.taskStatus.getWidth()).alpha(0).withEndAction(new Runnable() {
-//                @Override
-//                public void run() {
-//                    taskStatus.setText(R.string.task_list_completed);
-//                    taskStatus.animate().setDuration(600).translationX(0).alpha(1).withEndAction(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            listControl.closeTask(data, getAdapterPosition());
-//                        }
-//                    });
-//                }
-//            });
-            //this.taskStatus.setText(R.string.task_list_completed);
-//            this.taskStatus.animate().alpha(1).setStartDelay(1000).setDuration(1000).withEndAction(new Runnable() {
-//                @Override
-//                public void run() {
-//                    listControl.closeTask(data, getAdapterPosition());
-//                }
-//            });
-        }
-
         public void onSwipe(float deltaX) {
             Resources res = this.taskView.getContext().getResources();
             if(deltaX > 0 ) {

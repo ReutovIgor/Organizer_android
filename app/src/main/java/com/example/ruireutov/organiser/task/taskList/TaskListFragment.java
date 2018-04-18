@@ -38,7 +38,7 @@ public class TaskListFragment extends Fragment implements ITaskListUiControl, IT
         this.taskListView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         DividerItemDecoration divider = new DividerItemDecoration(this.taskListView.getContext(), RecyclerView.VERTICAL);
         this.taskListView.addItemDecoration(divider);
-        this.taskListView.addOnItemTouchListener(new RecyclerViewItemTouchListener(this.getContext(), new RecyclerViewItemTouchListener.OnTouchActionListener() {
+        this.taskListView.addOnItemTouchListener(new RecyclerViewItemTouchListener(this.getContext(), false, new RecyclerViewItemTouchListener.OnTouchActionListener() {
             @Override
             public void onItemClick(RecyclerView.ViewHolder viewHolder) {
                 TaskListAdapter.ViewHolder vh = (TaskListAdapter.ViewHolder) viewHolder;
@@ -48,13 +48,7 @@ public class TaskListFragment extends Fragment implements ITaskListUiControl, IT
             }
 
             @Override
-            public void onItemLongClick(RecyclerView.ViewHolder viewHolder) {
-                TaskListAdapter.ViewHolder vh = (TaskListAdapter.ViewHolder) viewHolder;
-                int pos = vh.getAdapterPosition();
-                TaskDetailsData data = taskListViewAdapter.getTaskData(pos);
-                vh.onLongClick(listControl, data);
-                //listControl.closeTask(data, pos);
-            }
+            public void onItemLongClick(RecyclerView.ViewHolder viewHolder) {}
 
             @Override
             public void onItemSwipe(RecyclerView.ViewHolder viewHolder, float dx) {

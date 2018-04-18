@@ -33,7 +33,7 @@ public class RecyclerViewItemTouchListener implements RecyclerView.OnItemTouchLi
         void onItemRelease(RecyclerView.ViewHolder viewHolder);
     }
 
-    public RecyclerViewItemTouchListener(Context context, final OnTouchActionListener onTouchActionListener) {
+    public RecyclerViewItemTouchListener(Context context, boolean longClickEnabled, final OnTouchActionListener onTouchActionListener) {
         this.scrollDisabled = false;
         this.moveLock = UNLOCKED;
         this.onTouchActionListener = onTouchActionListener;
@@ -96,7 +96,7 @@ public class RecyclerViewItemTouchListener implements RecyclerView.OnItemTouchLi
                 return false;
             }
         });
-        this.gestureDetector.setIsLongpressEnabled(true);
+        this.gestureDetector.setIsLongpressEnabled(longClickEnabled);
     }
 
     @Override
@@ -124,9 +124,6 @@ public class RecyclerViewItemTouchListener implements RecyclerView.OnItemTouchLi
             default:
                 return (this.scrollDisabled || this.moveLock != SCROLL_LOCK) && ((this.moveLock == LONG_CLICK_LOCK) || this.gestureDetector.onTouchEvent(e));
         }
-//        boolean a = (this.moveLock == LONG_CLICK_LOCK) || this.gestureDetector.onTouchEvent(e);
-//        Log.d("ItemTouchListener", "onInterceptTouchEvent returns  " + a);
-//        return a;
     }
 
     @Override
