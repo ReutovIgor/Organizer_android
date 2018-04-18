@@ -26,7 +26,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.ViewHolder>{
-    private Context context;
+
     private LayoutInflater layoutInflater;
     private Cursor listData;
 
@@ -34,7 +34,6 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.ViewHo
     private float maxRight;
 
     TaskListAdapter(Cursor cursor, Context context) {
-        this.context = context;
         this.layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         this.listData = cursor;
@@ -50,6 +49,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.ViewHo
 
         private View taskLayout;
         private View deleteTaskLayout;
+        private View completeTaskLayout;
 
         private ImageView priority;
         private ImageView category;
@@ -66,6 +66,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.ViewHo
 
             this.taskLayout = itemView.findViewById(R.id.task_layout);
             this.deleteTaskLayout = itemView.findViewById(R.id.delete_task_layout);
+            this.completeTaskLayout = itemView.findViewById(R.id.complete_task_layout);
 
             this.priority = this.taskLayout.findViewById(R.id.task_priority_indication);
             this.category = this.taskLayout.findViewById(R.id.task_category_icon);
@@ -77,8 +78,8 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.ViewHo
             this.maxRight = maxRight;
         }
 
-        void fillView(Cursor cursor, Context context) {
-            Resources resources = context.getResources();
+        void fillView(Cursor cursor) {
+            Resources resources = this.taskView.getContext().getResources();
             String priorityStr = cursor.getString( cursor.getColumnIndex(DatabaseDefines.TASK_LIST_PRIORITY) );
             switch (priorityStr) {
                 case "High":
@@ -202,35 +203,76 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.ViewHo
             }
         }
 
-        public int onClick() {
-            this.taskInfo.setText(R.string.task_list_completed);
-            return getAdapterPosition();
+        public void onClick() {
         }
 
-        public int onLongClick() {
-            return getAdapterPosition();
+        public void onLongClick(final ITaskListControl listControl, final TaskDetailsData data) {
+//            this.taskStatus.animate().setDuration(600).translationX(this.taskStatus.getWidth()).alpha(0).withEndAction(new Runnable() {
+//                @Override
+//                public void run() {
+//                    taskStatus.setText(R.string.task_list_completed);
+//                    taskStatus.animate().setDuration(600).translationX(0).alpha(1).withEndAction(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            listControl.closeTask(data, getAdapterPosition());
+//                        }
+//                    });
+//                }
+//            });
+            //this.taskStatus.setText(R.string.task_list_completed);
+//            this.taskStatus.animate().alpha(1).setStartDelay(1000).setDuration(1000).withEndAction(new Runnable() {
+//                @Override
+//                public void run() {
+//                    listControl.closeTask(data, getAdapterPosition());
+//                }
+//            });
         }
 
         public void onSwipe(float deltaX) {
-            deltaX = deltaX <= 0 ? 0 : deltaX;
-            this.deleteTaskLayout.setTranslationX(this.maxLeft + deltaX);
+            Resources res = this.taskView.getContext().getResources();
+            if(deltaX > 0 ) {
+                this.taskView.setBackgroundColor(res.getColor(R.color.deleteTaskHighlight));
+            } else {
+                this.taskView.setBackgroundColor(res.getColor(R.color.completeTaskHighlight));
+            }
+            float deleteTaskTranslation = this.maxLeft + deltaX > 0 ? 0 : this.maxLeft + deltaX;
+            float completeTaskTranslation = this.maxRight + deltaX < 0 ? 0: this.maxRight + deltaX;
+            this.deleteTaskLayout.setTranslationX(deleteTaskTranslation);
             this.taskLayout.setTranslationX(deltaX);
+            this.completeTaskLayout.setTranslationX(completeTaskTranslation);
         }
 
-        public int onRelease() {
+        public void onRelease(final ITaskListControl listControl, final TaskDetailsData data) {
             float deltaX = this.taskLayout.getTranslationX();
             if(deltaX > this.maxRight) {
-                return getAdapterPosition();
+                this.deleteTaskLayout.animate().translationX(this.taskLayout.getWidth());
+                this.taskLayout.animate().translationX(this.taskLayout.getWidth() + this.maxRight).withEndAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        listControl.removeTask(data, getAdapterPosition());
+                    }
+                });
+            }else if (deltaX < this.maxLeft){
+                taskStatus.setText(R.string.task_list_completed);
+                this.deleteTaskLayout.animate().translationX(this.maxLeft);
+                this.taskLayout.animate().translationX(0);
+                this.completeTaskLayout.animate().translationX(this.maxRight).withEndAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        listControl.closeTask(data, getAdapterPosition());
+                    }
+                });
             } else {
                 this.deleteTaskLayout.animate().translationX(this.maxLeft);
                 this.taskLayout.animate().translationX(0);
-                return RecyclerView.NO_POSITION;
+                this.completeTaskLayout.animate().translationX(this.maxRight);
             }
         }
 
         void resetPosition() {
             this.deleteTaskLayout.setTranslationX(this.maxLeft);
             this.taskLayout.setTranslationX(0);
+            this.completeTaskLayout.setTranslationX(this.maxRight);
         }
 
     }
@@ -245,7 +287,7 @@ public class TaskListAdapter extends RecyclerView.Adapter<TaskListAdapter.ViewHo
     public void onBindViewHolder(ViewHolder holder, int position) {
         if(this.listData.moveToPosition(position)) {
             holder.resetPosition();
-            holder.fillView(this.listData, context);
+            holder.fillView(this.listData);
         }
     }
 

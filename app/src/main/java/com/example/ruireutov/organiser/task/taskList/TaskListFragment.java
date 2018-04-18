@@ -41,16 +41,19 @@ public class TaskListFragment extends Fragment implements ITaskListUiControl, IT
         this.taskListView.addOnItemTouchListener(new RecyclerViewItemTouchListener(this.getContext(), new RecyclerViewItemTouchListener.OnTouchActionListener() {
             @Override
             public void onItemClick(RecyclerView.ViewHolder viewHolder) {
-                int pos = ((TaskListAdapter.ViewHolder) viewHolder).onClick();
+                TaskListAdapter.ViewHolder vh = (TaskListAdapter.ViewHolder) viewHolder;
+                int pos = vh.getAdapterPosition();
                 TaskDetailsData data = taskListViewAdapter.getTaskData(pos);
                 listControl.showDetails(data);
             }
 
             @Override
             public void onItemLongClick(RecyclerView.ViewHolder viewHolder) {
-                int pos = ((TaskListAdapter.ViewHolder) viewHolder).onLongClick();
+                TaskListAdapter.ViewHolder vh = (TaskListAdapter.ViewHolder) viewHolder;
+                int pos = vh.getAdapterPosition();
                 TaskDetailsData data = taskListViewAdapter.getTaskData(pos);
-                listControl.closeTask(data, pos);
+                vh.onLongClick(listControl, data);
+                //listControl.closeTask(data, pos);
             }
 
             @Override
@@ -60,11 +63,10 @@ public class TaskListFragment extends Fragment implements ITaskListUiControl, IT
 
             @Override
             public void onItemRelease(RecyclerView.ViewHolder viewHolder) {
-                int pos = ((TaskListAdapter.ViewHolder) viewHolder).onRelease();
-                if(pos != RecyclerView.NO_POSITION) {
-                    TaskDetailsData data = taskListViewAdapter.getTaskData(pos);
-                    listControl.removeTask(data, pos);
-                }
+                TaskListAdapter.ViewHolder vh = (TaskListAdapter.ViewHolder) viewHolder;
+                int pos = vh.getAdapterPosition();
+                TaskDetailsData data = taskListViewAdapter.getTaskData(pos);
+                vh.onRelease(listControl, data);
             }
         }));
         this.taskListViewAdapter = new TaskListAdapter(new MatrixCursor(new String[]{}, 0), this.getContext());

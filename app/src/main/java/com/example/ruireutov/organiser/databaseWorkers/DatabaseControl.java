@@ -17,7 +17,7 @@ public class DatabaseControl {
     private static final String DATABASE_NAME = "organiser_db";
 
     //Database version
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 6;
 
     //Database tables
     private static final String TABLE_CATEGORIES = "categories_table";

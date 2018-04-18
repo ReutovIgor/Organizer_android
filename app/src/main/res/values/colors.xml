@@ -45,5 +45,6 @@
 
     <!--Task list control highlights-->
     <color name="deleteTaskHighlight">#FFAFAF</color>
-    <color name="completeTaskHighlight">#30C030</color>
+    <color name="completeTaskHighlight">#83E083</color>
+    <color name="completeColor">#107D10</color>
 </resources>
