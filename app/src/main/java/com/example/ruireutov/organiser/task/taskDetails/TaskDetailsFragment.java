@@ -21,13 +21,19 @@ import android.widget.TextView;
 
 import com.example.ruireutov.organiser.R;
 import com.example.ruireutov.organiser.task.DateTimePickerHelper;
-import com.example.ruireutov.organiser.task.SpinnerAdapter;
 import com.example.ruireutov.organiser.task.main.TaskActivity;
 import com.example.ruireutov.organiser.task.TaskDetailsData;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 public class TaskDetailsFragment extends Fragment implements ITaskDetailsUIControl, ITaskDetailsUINotification, ITaskDetailsActivityControl{
+
+
+    private Spinner taskTypeSpinner;
+    private TaskDetailsSpinnerAdapter taskTypeAdapter;
 
     private TaskDetailsControl taskDetailsControl;
     private LinearLayout parentLayout;
@@ -35,9 +41,9 @@ public class TaskDetailsFragment extends Fragment implements ITaskDetailsUIContr
     private CheckBox deadlineCheckbox;
     private LinearLayout taskDueDateTime;
     private Spinner taskPriority;
-    private SpinnerAdapter taskPriorityAdapter;
+    private TaskDetailsSpinnerAdapter_old taskPriorityAdapter;
     private Spinner taskCategory;
-    private SpinnerAdapter taskCategoryAdapter;
+    private TaskDetailsSpinnerAdapter_old taskCategoryAdapter;
     private EditText taskDetails;
     private Button taskButton1;
     private Button taskButton2;
@@ -52,8 +58,13 @@ public class TaskDetailsFragment extends Fragment implements ITaskDetailsUIContr
 
         this.parentLayout = view.findViewById(R.id.task_detail_root);
 
-        this.taskName = view.findViewById(R.id.task_name);
+        this.taskName = view.findViewById(R.id.task_details_task_name);
         this.taskName.addTextChangedListener(new TaskDetailsFragment.ViewTextWatcher(this.taskName));
+
+        this.taskTypeSpinner = view.findViewById(R.id.task_details_task_type_spinner);
+        this.taskTypeAdapter = new TaskDetailsSpinnerAdapter(this.getContext(), TaskDetailsSpinnerAdapter.TYPE_TASK_TYPES);
+        this.taskTypeSpinner.setAdapter(this.taskTypeAdapter);
+        this.taskTypeAdapter.setData(Arrays.asList(getResources().getStringArray(R.array.task_details_task_types)));
 
         this.deadlineCheckbox = view.findViewById(R.id.task_scheduled_checkbox);
         this.deadlineCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -63,18 +74,18 @@ public class TaskDetailsFragment extends Fragment implements ITaskDetailsUIContr
             }
         });
 
-        this.taskDueDateTime = view.findViewById(R.id.to_date_time);
+        this.taskDueDateTime = view.findViewById(R.id.scheduled_task_type_view);
         this.dueDateTimeHelper = new DateTimePickerHelper(getActivity(), this,
                 (TextView) view.findViewById(R.id.task_to_date),
                 (TextView) view.findViewById(R.id.task_to_time));
 
         this.taskPriority = view.findViewById(R.id.task_priority);
-        this.taskPriorityAdapter = new SpinnerAdapter(getActivity(),null, R.layout.task_details_drop_down_item,0, SpinnerAdapter.TYPE_PRIORITY);
+        this.taskPriorityAdapter = new TaskDetailsSpinnerAdapter_old(getActivity(),null, R.layout.task_details_drop_down_item,0, TaskDetailsSpinnerAdapter_old.TYPE_PRIORITY);
         this.taskPriority.setAdapter(this.taskPriorityAdapter);
         this.taskPriority.setOnItemSelectedListener(new TaskDetailsFragment.SpinnerSelectionChangeListener());
 
         this.taskCategory = view.findViewById(R.id.task_category);
-        this.taskCategoryAdapter = new SpinnerAdapter(getActivity(), null, R.layout.task_details_drop_down_item, 0, SpinnerAdapter.TYPE_CATEGORY);
+        this.taskCategoryAdapter = new TaskDetailsSpinnerAdapter_old(getActivity(), null, R.layout.task_details_drop_down_item, 0, TaskDetailsSpinnerAdapter_old.TYPE_CATEGORY);
         this.taskCategory.setAdapter(this.taskCategoryAdapter);
         this.taskCategory.setOnItemSelectedListener(new TaskDetailsFragment.SpinnerSelectionChangeListener());
 
@@ -89,7 +100,7 @@ public class TaskDetailsFragment extends Fragment implements ITaskDetailsUIContr
 
         this.taskButton3 = view.findViewById(R.id.task_button_3);
         this.taskButton3.setOnClickListener(new TaskDetailsFragment.ElementClickListener());
-
+//
         TaskActivity activity = (TaskActivity) getActivity();
         this.taskDetailsControl = new TaskDetailsControl(activity, this, activity);
 
@@ -218,7 +229,7 @@ public class TaskDetailsFragment extends Fragment implements ITaskDetailsUIContr
         @Override
         public void afterTextChanged(Editable editable) {
             switch (this.textView.getId()) {
-                case R.id.task_name:
+                case R.id.task_details_task_name:
                     taskDetailsControl.setName(editable.toString());
                     break;
                 case R.id.task_details:

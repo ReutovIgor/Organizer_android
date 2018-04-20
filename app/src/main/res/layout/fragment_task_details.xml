@@ -6,8 +6,9 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <include layout="@layout/task_details" />
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimaryBackground">
+        <include layout="@layout/task_details_old" />
     </ScrollView>
 
 </FrameLayout>

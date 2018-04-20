@@ -1,4 +1,4 @@
-package com.example.ruireutov.organiser.task;
+package com.example.ruireutov.organiser.task.taskDetails;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -17,15 +17,16 @@ import com.example.ruireutov.organiser.databaseWorkers.DatabaseDefines;
 
 import java.util.HashMap;
 
-public class SpinnerAdapter extends ResourceCursorAdapter {
-        public static final String TYPE_CATEGORY = "Category";
-        public static final String TYPE_PRIORITY = "Priority";
+public class TaskDetailsSpinnerAdapter_old extends ResourceCursorAdapter {
+        public static final String TYPE_TASK_TYPES = "1";
+        public static final String TYPE_CATEGORY = "2";
+        public static final String TYPE_PRIORITY = "3";
         private Context context;
         private LayoutInflater layoutInflater;
         private String type;
         private HashMap<String, Integer> mapping;
 
-        public SpinnerAdapter(@NonNull Context context, Cursor cursor, int layout, int flags, String type) {
+        TaskDetailsSpinnerAdapter_old(@NonNull Context context, Cursor cursor, int layout, int flags, String type) {
             super(context, layout, cursor, flags);
 
             this.context = context;

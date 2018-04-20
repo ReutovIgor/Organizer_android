@@ -20,7 +20,23 @@
     <string name="task_list_category_description">TaskCategory</string>
 
     <!--Task Details strings-->
+    <string-array name="task_details_task_types">
+        <item>Default</item>
+        <item>Scheduled</item>
+        <item>Daily</item>
+        <item>Weekly</item>
+        <item>Monthly</item>
+        <item>Yearly</item>
+    </string-array>
+    <string name="task_details_mon">Mon</string>
+    <string name="task_details_tue">Tue</string>
+    <string name="task_details_wed">Wed</string>
+    <string name="task_details_thu">Thu</string>
+    <string name="task_details_fri">Fri</string>
+    <string name="task_details_sat">Sat</string>
+    <string name="task_details_sun">Sun</string>
     <string name="task_hint_name">Task name</string>
+    <string name="task_hint_task_type">Type:</string>
     <string name="task_hint_priority">Priority:</string>
     <string name="task_hint_category">Category:</string>
     <string name="task_hint_time_options">Scheduled?</string>
