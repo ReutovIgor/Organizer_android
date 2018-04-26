@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/task_detail_root"
+    android:descendantFocusability="beforeDescendants"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingStart="5dp"
-    android:paddingEnd="5dp">
+    android:layout_margin="20dp"
+    android:orientation="vertical">
+
     <EditText
         android:id="@+id/task_details_task_name"
         android:layout_width="match_parent"
@@ -14,21 +18,181 @@
         android:inputType="text"
         android:maxLines="1"/>
 
-    <TextView
-        android:id="@+id/task_details_task_type_hint"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@id/task_details_task_type_spinner"
-        app:layout_constraintTop_toTopOf="@id/task_details_task_type_spinner"
-        android:background="@android:color/holo_red_light"
-        android:gravity="center_vertical"
-        android:text="@string/task_hint_task_type"/>
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/task_details_task_type_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/task_details_scroll_left_task_type"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/scroll_list_left"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+        <ListView
+            android:id="@+id/task_detail_task_type_list_view"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:orientation="horizontal"
+            android:background="@android:color/holo_red_light"
+            app:layout_constraintStart_toEndOf="@id/task_details_scroll_left_task_type"
+            app:layout_constraintEnd_toStartOf="@id/task_details_scroll_right_task_type"/>
+        <ImageView
+            android:id="@+id/task_details_scroll_right_task_type"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/scroll_list_right"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+    </android.support.constraint.ConstraintLayout>
 
-    <Spinner
-        android:id="@+id/task_details_task_type_spinner"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/scheduled_task_type_view"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:popupBackground="@color/colorDateTime"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/task_details_task_name" />
-</android.support.constraint.ConstraintLayout>
+        android:visibility="gone"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/task_to_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:gravity="end"
+            android:padding="10dp"
+            android:background="@color/colorDateTime"/>
+        <TextView
+            android:id="@+id/task_to_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:layout_marginStart="10dp"
+            android:gravity="end"
+            android:padding="10dp"
+            android:background="@color/colorDateTime"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/daily_task_type_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="@string/task_details_mon"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="@string/task_details_tue"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="@string/task_details_wed"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="@string/task_details_thu"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="@string/task_details_fri"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="@string/task_details_sat"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="@string/task_details_sun"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity="center_vertical"
+            android:text="@string/task_hint_priority"/>
+
+        <Spinner
+            android:id="@+id/task_priority"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:popupBackground="@color/colorDateTime"/>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:gravity="center_vertical"
+            android:text="@string/task_hint_category"/>
+
+        <Spinner
+            android:id="@+id/task_category"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:popupBackground="@color/colorDateTime"/>
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/task_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="top"
+        android:hint="@string/task_hint_details"
+        android:inputType="textMultiLine"
+        android:maxHeight="250dp"
+        android:textColorHint="@color/colorTextHint" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/task_button_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@id/task_button_2"
+            android:textAlignment="center"
+            android:text="@string/task_button_finish"/>
+        <Button
+            android:id="@+id/task_button_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@id/task_button_3"
+            android:layout_alignWithParentIfMissing="true"
+            android:layout_marginLeft="8dp"
+            android:textAlignment="center"
+            android:text="@string/task_button_create"/>
+        <Button
+            android:id="@+id/task_button_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginLeft="8dp"
+            android:textAlignment="center"
+            android:text="@string/task_button_delete"/>
+    </RelativeLayout>
+
+
+</LinearLayout>

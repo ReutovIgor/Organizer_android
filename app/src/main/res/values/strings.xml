@@ -28,6 +28,13 @@
         <item>Monthly</item>
         <item>Yearly</item>
     </string-array>
+
+    <string name="task_details_default_task_type">Default task</string>
+    <string name="task_details_scheduled_task_type">Scheduled task</string>
+    <string name="task_details_daily_task_type">Daily task</string>
+    <string name="task_details_weekly_task_type">Weekly task</string>
+    <string name="task_details_monthly_task_type">Monthly task</string>
+    <string name="task_details_yearly_task_type">Yearly task</string>
     <string name="task_details_mon">Mon</string>
     <string name="task_details_tue">Tue</string>
     <string name="task_details_wed">Wed</string>

@@ -3,7 +3,9 @@ package com.example.ruireutov.organiser.task.taskDetails;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -11,11 +13,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -31,14 +35,12 @@ import java.util.List;
 
 public class TaskDetailsFragment extends Fragment implements ITaskDetailsUIControl, ITaskDetailsUINotification, ITaskDetailsActivityControl{
 
-
-    private Spinner taskTypeSpinner;
-    private TaskDetailsSpinnerAdapter taskTypeAdapter;
+    ConstraintLayout taskTypeLayout;
+    RecyclerView taskTypeList;
 
     private TaskDetailsControl taskDetailsControl;
     private LinearLayout parentLayout;
     private EditText taskName;
-    private CheckBox deadlineCheckbox;
     private LinearLayout taskDueDateTime;
     private Spinner taskPriority;
     private TaskDetailsSpinnerAdapter_old taskPriorityAdapter;
@@ -61,18 +63,9 @@ public class TaskDetailsFragment extends Fragment implements ITaskDetailsUIContr
         this.taskName = view.findViewById(R.id.task_details_task_name);
         this.taskName.addTextChangedListener(new TaskDetailsFragment.ViewTextWatcher(this.taskName));
 
-        this.taskTypeSpinner = view.findViewById(R.id.task_details_task_type_spinner);
-        this.taskTypeAdapter = new TaskDetailsSpinnerAdapter(this.getContext(), TaskDetailsSpinnerAdapter.TYPE_TASK_TYPES);
-        this.taskTypeSpinner.setAdapter(this.taskTypeAdapter);
-        this.taskTypeAdapter.setData(Arrays.asList(getResources().getStringArray(R.array.task_details_task_types)));
 
-        this.deadlineCheckbox = view.findViewById(R.id.task_scheduled_checkbox);
-        this.deadlineCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                toggleDateTime(isChecked);
-            }
-        });
+        ListView taskTypeList = view.findViewById(R.id.task_detail_task_type_list_view);
+        taskTypeList.setAdapter(new TaskDetailsTaskTypeAdapter(this.getContext()));
 
         this.taskDueDateTime = view.findViewById(R.id.scheduled_task_type_view);
         this.dueDateTimeHelper = new DateTimePickerHelper(getActivity(), this,
@@ -136,7 +129,7 @@ public class TaskDetailsFragment extends Fragment implements ITaskDetailsUIContr
 
     @Override
     public void applyTaskDetails(TaskDetailsData data) {
-        this.taskDetailsControl.parseTaskData(data);
+        //this.taskDetailsControl.parseTaskData(data);
     }
 
     @Override
@@ -147,7 +140,6 @@ public class TaskDetailsFragment extends Fragment implements ITaskDetailsUIContr
         } else {
             this.dueDateTimeHelper.setDefault();
         }
-        this.deadlineCheckbox.setChecked(data.hasDeadline());
         this.toggleDateTime(data.hasDeadline());
         int priorityPos = this.taskPriorityAdapter.getItemPosition(data.getPriority());
         this.taskPriority.setSelection(priorityPos);
@@ -165,7 +157,6 @@ public class TaskDetailsFragment extends Fragment implements ITaskDetailsUIContr
     public void showTaskCreation() {
         this.taskName.setText("");
         this.dueDateTimeHelper.setDefault();
-        this.deadlineCheckbox.setChecked(false);
         this.toggleDateTime(false);
         this.taskPriority.setSelection(0);
         this.taskDetailsControl.setPriority(this.taskPriority.getSelectedItem().toString());

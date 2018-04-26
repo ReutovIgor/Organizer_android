@@ -3,12 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.ruireutov.organiser.task.taskDetails.TaskDetailsFragment">
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/colorPrimaryBackground">
-        <include layout="@layout/task_details_old" />
+        <include layout="@layout/task_details" />
     </ScrollView>
-
 </FrameLayout>
